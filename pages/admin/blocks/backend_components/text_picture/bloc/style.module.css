@@ -1,0 +1,32 @@
+.titre,
+.image {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.titre input {
+  width: 100%;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+.image input {
+  width: 100%;
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+.image input,
+.titre input {
+  height: 25px;
+}
+.image input {
+  margin-bottom: 25px;
+}
+.text {
+  border: 1px solid gray;
+  margin-bottom: 25px;
+  padding: 0;
+  margin-bottom: 25px;
+}

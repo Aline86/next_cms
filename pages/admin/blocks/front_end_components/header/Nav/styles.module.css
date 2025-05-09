@@ -1,0 +1,111 @@
+.side_menu {
+  position: fixed;
+  top: 0;
+  right: -310px;
+  height: 100vh;
+  width: 310px;
+  background-color: rgb(249, 249, 249);
+  z-index: 101;
+  margin: 0;
+  padding: 0;
+  padding-top: 150px;
+  transition: right 0.5s ease-in-out;
+}
+.overlay {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 80;
+}
+.side_menu_edition {
+  /*position: relative;
+
+  right: -310px;
+
+  width: 310px;
+  background-color: white;
+  z-index: 101;
+  margin: 0;
+  padding: 0;
+  padding-top: 150px;
+  transition: right 0.5s ease-in-out;*/
+  display: none;
+}
+.ul_menu {
+  margin: 0;
+  padding: 0;
+}
+
+.ul_menu a li div {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+.ul_menu a li {
+  list-style-type: none;
+  height: 55px;
+  line-height: 55px;
+  margin: 0;
+  padding: 0;
+  padding-left: 25px;
+}
+.ul_menu a li div h3::first-letter {
+  text-transform: uppercase;
+}
+.ul_menu a li:hover span {
+  position: relative;
+  top: -10px;
+  border: 1px solid rgb(92, 92, 92);
+}
+.ul_menu a li:hover span {
+  animation-duration: 0.5s;
+  animation-name: slidein;
+}
+
+.ul_menu a {
+  text-decoration: none;
+  color: gray;
+  font-size: 20px;
+}
+
+.open_side_bar {
+  position: fixed;
+  top: 0px !important;
+  right: 0px !important;
+  min-height: 100vh;
+  overflow-y: auto;
+  height: fit-content;
+}
+
+@media screen and (max-width: 800px) {
+  .open_side_bar {
+    position: absolute !important;
+
+    padding-top: 75px;
+    right: 0px !important;
+    overflow-y: auto !important;
+    height: 100% !important;
+    min-height: 100vh;
+  }
+  .side_menu {
+    padding-top: 75px;
+  }
+  .ul_menu a {
+    font-size: 15px;
+  }
+}
+@keyframes slidein {
+  from {
+    border-bottom: 1px solid transparent;
+    width: 0px;
+  }
+
+  to {
+    border-bottom: 1px solid rgb(92, 92, 92);
+    width: 100%;
+  }
+}

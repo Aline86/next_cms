@@ -1,0 +1,69 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  border: 1px solid lightgray;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.container input {
+  display: inline;
+}
+
+.container select {
+  height: 35px;
+  background-color: white;
+  border: 1px solid lightgray;
+  margin: 5px;
+  width: 250px;
+}
+
+.container input {
+  width: 98%;
+}
+.color input {
+  width: 75px !important;
+  height: 35px !important;
+}
+.delete img {
+  width: 100px;
+}
+.delete .button_remove_container {
+  width: 15px !important;
+}
+
+.bg div div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: right;
+}
+.bg span {
+  width: 250px;
+}
+.color {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+.right_inside {
+  display: flex;
+  flex-direction: column !important;
+  justify-content: end !important;
+  align-items: end !important;
+  width: 150px !important;
+  text-align: right !important;
+  cursor: pointer;
+}
+.delete {
+  width: 25px;
+}

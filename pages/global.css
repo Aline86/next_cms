@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+.tiptap {
+  border: 1px solid black;
+  width: 50%;
+  padding: 5px 10px 10px 10px;
+}
+body {
+  font-size: 20px;
+}
+.flex button {
+  cursor: pointer;
+}
+.tiptap a {
+  color: blue;
+  text-decoration: underline;
+}
+
+.tiptap h1 {
+  font-size: 40px;
+}
+.none {
+  border: none !important;
+}
+.cursor-pointer:hover {
+  opacity: 0.8;
+}
+.burger_line_color {
+  color: white !important;
+}
+.cursor-pointer-not-big {
+  cursor: pointer;
+}
+.cursor-none {
+  pointer-events: none;
+}
+.light {
+  color: white;
+}
+.dark {
+  color: black;
+}
+.page_title {
+  font-size: 40px;
+}
+.page_title::first-letter {
+  text-transform: uppercase;
+}
+.tiptap {
+  width: 100%;
+}
+.tiptap ul.list-disc li::marker {
+  display: inline !important;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}
+.bg_img_group img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.text-fiori {
+  position: relative; /* Nécessaire pour que ::after se positionne par rapport à lui */
+}
+.text-fiori::before {
+  content: "";
+  margin-top: 0px;
+  width: 50px;
+  height: 25px;
+  border-left: 3px solid rgb(159, 159, 159);
+  border-top: 3px solid rgb(159, 159, 159);
+}
+.text-fiori::after {
+  content: "";
+  width: 50px;
+  height: 25px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-right: 3px solid rgb(159, 159, 159);
+  border-bottom: 3px solid rgb(159, 159, 159);
+}
+.buttons {
+  overflow: hidden;
+  font-weight: 200;
+  transition: all 0.3s ease;
+}
+.buttons::before {
+  content: "";
+  position: absolute;
+  height: 25px;
+  width: 100%;
+  left: 0;
+  top: 0;
+  transition: all 0.8s;
+  transform: translateX(-100%) rotate(45deg);
+
+  background-color: rgb(229, 227, 227, 0.7);
+}
+.bg_img_group:hover div > .buttons::before {
+  content: "";
+  position: absolute;
+  height: 25px;
+  width: 100%;
+  left: 0;
+  top: 0;
+  transform: translateX(100%) rotate(45deg);
+  z-index: 0;
+}
+
+.bg_img_group:hover div > .buttons {
+  color: rgb(229, 227, 227) !important;
+  border: 3px solid white;
+  font-weight: bold;
+}
+.full_pic {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  opacity: 1;
+}
+.full_pic:hover {
+  width: 150px;
+  height: 150px;
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
+}
+.big_pic img {
+  width: auto;
+  height: 90vh;
+  object-fit: contain;
+}
+h2,
+h1 {
+  color: rgb(68, 68, 68);
+}
+.bg_img_group {
+  perspective: 800px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  overflow: visible;
+}
+.bg_img_group:hover div > .buttons {
+  transform: translateZ(200px) scale(1.1) rotateX(5deg) rotateY(-5deg);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+@media screen and (max-width: 900px) {
+  .smaller h2 {
+    font-size: 35px;
+  }
+}
+@media screen and (max-width: 700px) {
+  .padding_footer {
+    padding-bottom: 25px;
+  }
+  .text-fiori::before {
+    content: "";
+    margin-top: 0px;
+    width: 25px;
+    height: 12px;
+    border-left: 3px solid rgb(159, 159, 159);
+    border-top: 3px solid rgb(159, 159, 159);
+  }
+  .text-fiori::after {
+    content: "";
+    width: 25px;
+    height: 12px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    border-right: 3px solid rgb(159, 159, 159);
+    border-bottom: 3px solid rgb(159, 159, 159);
+  }
+}
+
+@layer utilities {
+  .grid-cols-dynamic {
+    grid-template-columns: repeat(var(--columns, 1), minmax(0, 1fr));
+  }
+}

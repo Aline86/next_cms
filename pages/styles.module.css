@@ -1,0 +1,27 @@
+.carousel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.app_container {
+  background-color: var(--background);
+}
+.video {
+  height: auto;
+}
+.grid {
+  height: fit-content;
+}
+.parallaxe {
+  margin-bottom: 15px;
+}
+.bloc {
+  margin-bottom: 30px;
+}
+
+.parallaxe {
+  height: fit-content;
+}

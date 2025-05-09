@@ -1,0 +1,13 @@
+.bloc_content {
+  /* display: flex;*/
+  margin: 0 auto;
+}
+
+.text {
+  display: inline-block;
+  /* margin-left: 30px;*/
+}
+
+.clear_box {
+  clear: both; /* Ensures the content starts below any floated elements */
+}
