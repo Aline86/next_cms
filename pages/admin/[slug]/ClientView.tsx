@@ -140,6 +140,8 @@ export default function ClientView({ id }: { id: string }) {
         className={
           isReponsive
             ? "w-sm top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[600px] absolute overflow-x-hidden overflow-y-auto"
+            : blocs[0] !== undefined && blocs[0].type !== "screen"
+            ? "w-full mt-[-150px]"
             : "w-full mt-[-350px]"
         }
       >
