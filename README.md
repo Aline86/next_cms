@@ -8,13 +8,14 @@ When you build a page, you see directly what you create :
 ![Bloc Image edition](./readme_pictures/bloc_image_edition.png)
 ![Screen bloc edition](./readme_pictures/grid_bloc_edition.png)
 
-One click and you seen full page result
-Two clicks and you see responsive mode
+One click and you see the full page result
+
+Two clicks and you see page result in responsive mode
 
 ![Screen bloc edition](./readme_pictures/edition_visualization.png)
 ![Screen bloc edition](./readme_pictures/responsive_visualization_mode.png)
 
-- creating pages fully customizable (create, delete modify, change page position)
+- creating pages fully customizable (create, delete, modify, change page position)
 
 ![Administration pages](./readme_pictures/admin_pages.png)
 
@@ -23,21 +24,19 @@ Two clicks and you see responsive mode
 Only first level pages appear in burger menu.
 Sublevel pages can be chosen as redirections towards other pages within the website.
 Parent page can access direct sublevel pages. This allows you to organize your pages.
-If you click on the pen you can access page edition.
-
-Let's say you want to edit a projects page, you will land on your previously created page.
+If you click on the pen you can edit the page.
 
 ![Administration pages](./readme_pictures/page_edition.png)
 
-## You get your two block header and footer which you can edit from all your pages.
+You get your two block header and footer which you can edit from all your pages.
 
 - creating blocs :
 
 For the moment 5 customizable blocks are available :
 
-- a screen block that allows you to display a picture full width if the block is in first position or just a big picture that takes container width. You can add a title and a quotation underneath.
+- a screen block that allows you to display a picture full width if the block is in first position or just a big picture that takes container width if the block number is above 1. You can add a title and a quotation underneath.
 - a carousel
-- a text block in which you can add a picture that you can position on top of the text, on the right or left of the text. You can also add a title to this block
+- a text block in which you can add a picture that you can display on top of the text, on the right or left of the text. You can also add a title to this block
 - a grid picture block. Pictures are clickable and become bigger.
 - a rediction block made of cards. You can redirect to an inner subpage block or an external url. You have to write https:// in front of the url if you want it to redirect to external site.
 
