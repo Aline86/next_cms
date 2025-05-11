@@ -2,57 +2,53 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$envFile = './../.env';
+$envFile = '.env';
 
 require './environment_variables.php';
 $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
 $password = getenv('DB_PASSWORD');
 $database_name = getenv('DB_NAME');
-$allowed_prefix = getenv('ALLOWED_ORIGIN');
-$pattern = getenv('PATTERN');
 
-// Get the Origin header from the incoming request
-$origin = '';
-if(isset($_SERVER['HTTP_HOST'])) {
-    $origin = $_SERVER['HTTP_HOST'] ;
-} 
-if(isset($_SERVER['HTTP_ORIGIN'])) {
-    $origin = $_SERVER['HTTP_ORIGIN'] ;
-}
-$allowedPattern = '/^https:\/\/(www\.)?' . preg_quote($pattern, '/') . '\.fr$/';
 
-// Check if the origin matches the allowed prefix
-if ($origin !== '' && preg_match($allowedPattern, $origin) !== false) {
-
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
-    }
-
-}
-else {
-
-    die();
-}
 class Db {
     private static $instance = NULL;
+
     private function __construct() {}
     private function __clone() {}
-    public static function getInstance($database_name, $host, $user, $password) {
-      
+
+    public static function getInstance(
+        $database_name,
+        $host, // Docker service name
+        $user,
+        $password
+    ) {
         if (!isset(self::$instance)) {
-            $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-            self::$instance = new PDO('mysql:host=' . $host . ';dbname=' . $database_name, $user, $password, $pdo_options);
+            $dsn = 'mysql:host=' . $host . ';dbname=' . $database_name . ';charset=utf8';
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ];
+
+            try {
+                self::$instance = new PDO($dsn, $user, $password, $options);
+            } catch (PDOException $e) {
+                die('Database connection failed: ' . $e->getMessage());
+            }
         }
+
         return self::$instance;
     }
 }
 
-$db = Db::getInstance($database_name, $host, $user, $password);
+$db = Db::getInstance(
+    $database_name,   // matches MYSQL_DATABASE in docker-compose
+    $host,         // must match the service name in docker-compose
+    $user,
+    $password    // matches MYSQL_ROOT_PASSWORD in docker-compose
+);
+
+
 
 $method = htmlspecialchars(strip_tags($_GET['method'])) !== null ? $_GET['method'] : null; //return GET, POST, PUT, DELETE
 
@@ -147,7 +143,7 @@ if($method === "connexion" && htmlspecialchars(strip_tags($_POST['email'])) !== 
 
         // Prepare the response data
         $data = ['token' => $token_for_bdd];
-
+        header('Content-Type: application/json'); 
         // Output the response data as JSON
         echo json_encode($data);
         exit();

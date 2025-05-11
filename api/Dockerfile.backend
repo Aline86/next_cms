@@ -1,0 +1,31 @@
+FROM php:8.2-fpm
+
+WORKDIR /var/www/html
+
+# Install required PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Configure PHP-FPM to listen on 0.0.0.0:9000
+RUN sed -i 's|^listen = .*|listen = 0.0.0.0:9000|' /usr/local/etc/php-fpm.d/www.conf
+
+# Copy the template php.ini file
+COPY ./php.ini.template /usr/local/etc/php/conf.d/php.ini
+
+# Add a script to replace placeholders with environment variables
+COPY ./replace_env_vars.sh /usr/local/bin/replace_env_vars.sh
+RUN chmod +x /usr/local/bin/replace_env_vars.sh
+
+# Copy the application code
+COPY ./api /var/www/html/api
+RUN chown -R www-data:www-data /var/www/html/api/uploadfile \
+    && chmod -R 777 /var/www/html/api/uploadfile/
+
+
+# Set the appropriate permissions (775 in this case)
+RUN chown -R www-data:www-data /var/www/html/api/uploadfile && chmod -R 777 /var/www/html/api/uploadfile
+
+# Expose PHP-FPM port
+EXPOSE 9000
+
+# Start PHP-FPM
+CMD ["php-fpm", "-F"]

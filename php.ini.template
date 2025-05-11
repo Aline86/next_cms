@@ -1,0 +1,37 @@
+; Basic PHP Settings
+max_execution_time = 30           ; Maximum execution time of each script, in seconds
+max_input_time = 60              ; Maximum amount of time each script may spend parsing request data
+memory_limit = 256M              ; Maximum amount of memory a script may consume
+error_reporting = E_ALL          ; Report all PHP errors
+display_errors = On              ; Display errors for debugging (turn off in production)
+log_errors = On                  ; Log errors to the server's error log
+error_log = /var/log/php_errors.log  ; Path to PHP error log
+
+; File Uploads
+file_uploads = On                ; Allow file uploads
+upload_max_filesize = 10000M        ; Maximum size of uploaded files
+post_max_size = 100000M              ; Maximum size of POST data allowed
+max_file_uploads = 2000000            ; Maximum number of files allowed per upload
+upload_tmp_dir = /var/www/html/tmp ; Temporary directory for file uploads
+
+; Session Settings
+session.save_path = /var/www/html/sessions  ; Session save path
+session.gc_maxlifetime = 1440    ; Maximum lifetime of session data (in seconds)
+
+; Date and Time Settings
+date.timezone = UTC              ; Set the default timezone (adjust as needed)
+
+; MySQL Settings (PDO)
+pdo_mysql.cache_size = 2000      ; PDO MySQL cache size (adjust as needed)
+pdo_mysql.default_socket = /var/run/mysqld/mysqld.sock  ; Path to MySQL socket
+
+; Date/Time Settings
+date.timezone = "UTC"            ; Set the default timezone for your PHP scripts
+
+; Logging
+log_errors = On
+error_log = /var/log/php_errors.log ; Where to log PHP errors
+
+; Miscellaneous
+memory_limit = 256M              ; Set PHP memory limit
+output_buffering = Off           ; Disable output buffering

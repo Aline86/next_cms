@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$envFile = './../.env';
+$envFile = '.env';
 
 require './environment_variables.php';
 $host = getenv('DB_HOST');
@@ -11,7 +11,43 @@ $user = getenv('DB_USER');
 $password = getenv('DB_PASSWORD');
 $database_name = getenv('DB_NAME');
 
-$allowed_origins_env = getenv('ALLOWED_ORIGIN'); 
+
+class Db {
+    private static $instance = NULL;
+
+    private function __construct() {}
+    private function __clone() {}
+
+    public static function getInstance(
+        $database_name,
+        $host, // Docker service name
+        $user,
+        $password
+    ) {
+        if (!isset(self::$instance)) {
+            $dsn = 'mysql:host=' . $host . ';dbname=' . $database_name . ';charset=utf8';
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ];
+
+            try {
+                self::$instance = new PDO($dsn, $user, $password, $options);
+            } catch (PDOException $e) {
+                die('Database connection failed: ' . $e->getMessage());
+            }
+        }
+
+        return self::$instance;
+    }
+}
+
+$db = Db::getInstance(
+    $database_name,   // matches MYSQL_DATABASE in docker-compose
+    $host,         // must match the service name in docker-compose
+    $user,
+    $password    // matches MYSQL_ROOT_PASSWORD in docker-compose
+);
 
 function is_encoded($string_to_test) {
     if (urlencode(urldecode($string_to_test)) === $string_to_test){
@@ -25,125 +61,16 @@ function is_json($string) {
     return json_last_error() === JSON_ERROR_NONE;
 }
 
-// Get the Origin header from the incoming request
-$origin = '';
 
-$allowed_origins = array_map('trim', explode(',', $allowed_origins_env));
-
-// Get the request origin
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
-
-// Validate origin against the allowed list
-if ($origin !== '' && in_array($origin, $allowed_origins)) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-
-    // Handle preflight OPTIONS request
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
-    }
-} else {
-    http_response_code(403);
-    die('Forbidden: Origin not allowed.');
-}
-
-function getAuthorizationHeader(){
-    $headers = null;
-    if (isset($_SERVER['HTTP_X_OVHREQUEST_ID'])) {
-        $headers = trim($_SERVER["HTTP_X_OVHREQUEST_ID"]);
-    }
-    else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-        $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
-    } elseif (function_exists('apache_request_headers')) {
-        $requestHeaders = apache_request_headers();
-        // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
-        $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
-        //print_r($requestHeaders);
-        if (isset($requestHeaders['Authorization'])) {
-            $headers = trim($requestHeaders['Authorization']);
-        }
-    }
-   
-    return $headers;
-}
-function base64url_encode($data) {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-}
-
-function sign($input, $key) {
-    return base64url_encode(hash_hmac('sha256', $input, $key, true));
-}
-
-
-
-function base64url_decode($data) {
-    return base64_decode(strtr($data, '-_', '+/'));
-}
-
-function verify_signature($token, $key) {
-    list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
-
-    // Recréer la signature
-    $signature = base64url_encode(hash_hmac('sha256', "$headerEncoded.$payloadEncoded", $key, true));
-
-    // Comparer les signatures de manière sécurisée
-    return hash_equals($signatureEncoded, $signature);
-}
-
-function decrypt($session, $encodedKey) {
-    try {
-        // Diviser le token en ses parties
-        list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $session);
-
-        // Vérifier la signature
-        if (!verify_signature($session, $encodedKey)) {
-            throw new Exception("Invalid signature");
-        }
-
-        // Décoder le payload
-        $payload = json_decode(base64url_decode($payloadEncoded), true);
-
-        return $payload;
-    } catch (Exception $e) {
-        error_log("Failed to verify session: " . $e->getMessage());
-        return null;
-    }
-}
-class Db {
-    private static $instance = NULL;
-    private function __construct() {}
-    private function __clone() {}
-    public static function getInstance($database_name, $host, $user, $password) {
-        if (!isset(self::$instance)) {
-            $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-            self::$instance = new PDO('mysql:host=' . $host . ';dbname=' . $database_name, $user, $password, $pdo_options);
-        }
-        return self::$instance;
-    }
-}
-
-$db = Db::getInstance($database_name, $host, $user, $password);
 function check_token($db) {
-    $requete2 = 'SELECT token FROM user';
-    $resultat2 = $db->query($requete2);
-    $user = $resultat2->fetchAll(PDO::FETCH_ASSOC);
-  //  $auth = getAuthorizationHeader();
 
-// Exemple d'utilisation
-    $session = $user[0]['token']; // Remplacez par votre JWT
-    $encodedKey = 'O25A9CUiFrmJpfX2PbYxmp4+Fj1+qYZxSZpFc84DuUw='; // Remplacez par votre clé secrète
- 
-    $cookie_paylod = decrypt($_COOKIE['token'], $encodedKey);
-  
-    if(isset($user[0]['token']) && $cookie_paylod['userId']['token'] === $session) {
+    if(isset($_COOKIE['PHPSESSID'])) {
     
         return true;
         
     }else {
-        print_r($user[0]['token']);
-        //http_response_code(403);
+    
+        http_response_code(403);
         return false;
     }
         
@@ -167,7 +94,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
       
         
    
-        if(empty($_COOKIE['token'])) {
+        if(empty($_COOKIE['PHPSESSID'])) {
             
             http_response_code(403);
             exit();

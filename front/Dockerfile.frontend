@@ -1,0 +1,31 @@
+FROM nginx:latest
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+EXPOSE 3000
+
+RUN chown -R www-data:www-data /var/www/html
+RUN rm -rf /usr/share/nginx/html/*
+
+WORKDIR /usr/share/nginx/html/
+RUN mkdir -p /usr/share/nginx/html/front
+COPY ./front /usr/share/nginx/html/front
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# 1. Base image
+FROM node:latest
+
+WORKDIR /app
+
+
+RUN rm -rf /app/*
+
+COPY ./front .
+COPY ./front/package*.json ./
+RUN npm install
+
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+RUN npm ci
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

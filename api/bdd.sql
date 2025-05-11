@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS `picture_group` (
     `title` varchar(250)  NOT NULL default "",           
     `card_number` int(8)  NOT NULL , 
     `is_grid` boolean,   
-    `type` varchar(55)  NOT NULL default "picture_group",     
+    `type` varchar(55),     
     `width` int(11)  NOT NULL default 21,
     `height` int(11)  NOT NULL default 250,
     `gap` int(11)  NOT NULL default 30,
-    `text` text NOT NULL default "", 
+    `text` text , 
     `bloc_number` int(11)  NOT NULL ,
     `page_id` int(11)  NOT NULL,
     PRIMARY KEY  (`id`),
@@ -27,10 +27,10 @@ CREATE TABLE IF NOT EXISTS `picture_group` (
 CREATE TABLE IF NOT EXISTS `picture_group_data` (
     `id` int(11) NOT NULL auto_increment,   
     `title` varchar(250)  NOT NULL default "",          
-    `type` varchar(55)  NOT NULL default "picture_group_data",     
+    `type` varchar(55)  ,     
     `href_url` varchar(250)  NOT NULL default "",  
     `image_url` varchar(250)  NOT NULL default "",     
-    `text` text  NOT NULL default "",     
+    `text` text ,     
     `background_color` varchar(250)  NOT NULL default "",     
     `text_color` varchar(250)  NOT NULL default "",     
     `card_number` int(11)  NOT NULL,   
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `button` (
 
 `id` int(11) NOT NULL auto_increment,        
 `title` varchar(250)  NOT NULL default "",  
-`type` varchar(55)  NOT NULL default "button", 
+`type` varchar(55) , 
 `href_url` varchar(250)  NOT NULL default "",  
 `image_url` varchar(250)  NOT NULL default "",     
 `text` varchar(250)  NOT NULL default "",     
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `carousel` (
 
     `id` int(11) NOT NULL auto_increment,        
     `title` varchar(250)  NOT NULL default "",  
-    `type` varchar(55)  NOT NULL default "carousel",           
+    `type` varchar(55) ,           
     `carousel_type` varchar(55)  NOT NULL default "carousel",   
     `card_number` int(8)  NOT NULL , 
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `carousel` (
 CREATE TABLE IF NOT EXISTS `carousel_data` (
     `id` int(11) NOT NULL auto_increment,   
     `title` varchar(250)  NOT NULL default "",          
-    `type` varchar(55)  NOT NULL default "carousel_data",     
+    `type` varchar(55) ,     
     `href_url` varchar(250)  NOT NULL default "",  
     `image_url` varchar(250)  NOT NULL default "",     
     `text` varchar(250)  NOT NULL default "",     
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `carousel_data` (
 CREATE TABLE IF NOT EXISTS `parallaxe` (
     `id` int(11) NOT NULL auto_increment,  
     `title` varchar(250)  NOT NULL default "", 
-    `type` varchar(55)  NOT NULL default "parallaxe",           
+    `type` varchar(55) ,           
     `image` varchar(250)  NOT NULL default "",     
     `alt_image` varchar(250)  NOT NULL default "",     
     `bloc_number` int(11)  NOT NULL,
@@ -111,16 +111,16 @@ CREATE TABLE IF NOT EXISTS `parallaxe` (
 CREATE TABLE IF NOT EXISTS `text_picture` (
     `id` int(11) NOT NULL auto_increment,  
     `title` varchar(250)  NOT NULL default "", 
-    `type` varchar(55)  NOT NULL default "text_picture",           
+    `type` varchar(55) ,           
     `show_picture` boolean default true ,     
     `show_text` boolean default true   ,  
     `bloc_column` boolean  default false  ,     
     `image_right` boolean default false  ,     
     `text_button_more` boolean default false   ,        
-    `text` text NOT NULL default "",     
+    `text` text,     
     `image` varchar(250)  NOT NULL default "",     
     `alt_image` varchar(250)  NOT NULL default "",     
-    `css` text NOT NULL default "",     
+    `css` text ,     
     `background_color` varchar(250)  NOT NULL default "#fffffff",     
     `bloc_number` int(11)  NOT NULL,
     `page_id` int(11)  NOT NULL,
@@ -131,13 +131,13 @@ CREATE TABLE IF NOT EXISTS `text_picture` (
 
 CREATE TABLE IF NOT EXISTS `video` (
     `id` int(11) NOT NULL auto_increment,  
-    `title` varchar(250)  NOT NULL default "", 
-    `type` varchar(55)  NOT NULL default "video",           
+    `title` varchar(250) , 
+    `type` varchar(55)  ,           
     `overlay` boolean  default false  ,   
-    `text` text NOT NULL default "",    
+    `text` text,    
     `width` int(11)  NOT NULL default 100,
     `height` int(11)  NOT NULL default 100, 
-    `video_url` text NOT NULL default "", 
+    `video_url` text , 
     `bloc_number` int(11)  NOT NULL,
     `page_id` int(11)  NOT NULL,
     PRIMARY KEY  (`id`),
@@ -147,19 +147,19 @@ CREATE TABLE IF NOT EXISTS `video` (
 
 CREATE TABLE IF NOT EXISTS `header` (
     `id` int(11) NOT NULL auto_increment,        
-    `title` varchar(250)  NOT NULL default "",
-    `type` varchar(55)  NOT NULL default "header",   
-    `logo_url` varchar(250)  NOT NULL default "",
-    `image_url` varchar(250)  NOT NULL default "",
-    `background_color` varchar(50)  NOT NULL default "",
+    `title` varchar(250)  ,
+    `type` varchar(55)  ,   
+    `logo_url` varchar(250) ,
+    `image_url` varchar(250) ,
+    `background_color` varchar(50) ,
     PRIMARY KEY  (`id`)
 );
 /* user */
 CREATE TABLE IF NOT EXISTS `user` (
     `id` int(11) NOT NULL auto_increment,        
-    `email` varchar(250)  NOT NULL default "",
-    `password` varchar(250)  NOT NULL default "",       
-    `token` text  NOT NULL default "", 
+    `email` varchar(250) ,
+    `password` varchar(250)  ,       
+    `token` text , 
     `connection_attempts` int(11)  NOT NULL default 0,
     PRIMARY KEY  (`id`)
 );
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `footer` (
     `id` int(11) NOT NULL auto_increment,        
     `title` varchar(250)  NOT NULL default "",
     `type` varchar(55)  NOT NULL default "footer",         
-    `map_iframe_url` text  NOT NULL default "",
+    `map_iframe_url` text ,
     `background_color` varchar(50)  NOT NULL default "",
 
     PRIMARY KEY  (`id`)
@@ -222,8 +222,8 @@ CREATE TABLE IF NOT EXISTS `screen` (
     `title` varchar(250)  NOT NULL default "", 
     `type` varchar(55)  NOT NULL default "screen",           
     `overlay` boolean  default false  ,   
-    `text` text NOT NULL default "",    
-    `screen_url` text NOT NULL default "", 
+    `text` text,    
+    `screen_url` text , 
     `bloc_number` int(11)  NOT NULL,
     `page_id` int(11)  NOT NULL,
     PRIMARY KEY  (`id`),
