@@ -96,7 +96,7 @@ Actuellement, 5 blocs personnalisables sont disponibles :
 
 ## Local use :
 
-NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL = "http://localhost:80/your_repo_name"
+NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL = "http://localhost:80/your_repo_name/api"
 
 DB_HOST = "localhost"
 
