@@ -2,7 +2,7 @@
 
 This docker will allow you to visualize the full app with docker :
 
-please run docker-compose up
+please run docker-compose up --build
 
 You have to run script api\bdd.sql in phpmyadmin under static_cms
 
