@@ -56,12 +56,46 @@ export default function DragAndDrop({
     e.preventDefault();
 
     if (e.target.files && e.target.files[0]) {
-      setIsLoading(true);
-      const picture = await dropzone.update(e.target.files[0]);
-      if (picture !== undefined && bloc !== undefined) {
-        await update(picture, field, subfield, index, bloc);
-        setIsLoading(false);
-        setFiles(picture);
+      if (bloc instanceof PictureGroup) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.target.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, subfield, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof Header || bloc instanceof Footer) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.target.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, subfield, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof TextPicture) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.target.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, undefined, undefined, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof Carousel) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.target.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, undefined, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof ScreenHome) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.target.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, undefined, undefined, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
       }
     }
   }
@@ -72,12 +106,52 @@ export default function DragAndDrop({
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setIsLoading(true);
-      const picture = await dropzone.update(e.dataTransfer.files[0]);
-      if (picture !== undefined && bloc !== undefined) {
-        await update(picture, field, subfield, index, bloc);
-        setIsLoading(false);
-        setFiles(picture);
+      if (bloc instanceof PictureGroup) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.dataTransfer.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, subfield, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof Header || bloc instanceof Footer) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.dataTransfer.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, subfield, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof TextPicture) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.dataTransfer.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, undefined, undefined, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof Carousel) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.dataTransfer.files[0]);
+        if (picture !== undefined) {
+          await update(picture, field, undefined, index, bloc);
+          setIsLoading(false);
+          setFiles(picture);
+        }
+      } else if (bloc instanceof ScreenHome) {
+        setIsLoading(true);
+        const picture = await dropzone.update(e.dataTransfer.files[0]);
+        if (picture !== undefined) {
+          await update(
+            e.dataTransfer.files[0],
+            field,
+            undefined,
+            undefined,
+            bloc
+          );
+          setIsLoading(false);
+          setFiles(picture);
+        }
       }
     }
   }
@@ -103,7 +177,11 @@ export default function DragAndDrop({
   async function removeFile(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
 
-    if (bloc instanceof Header) {
+    if (bloc !== undefined && bloc instanceof PictureGroup) {
+      await update(e, "delete_picture", undefined, index, bloc);
+    } else if (bloc instanceof TextPicture) {
+      await update(e, "delete_picture", "", undefined, bloc);
+    } else if (bloc instanceof Header) {
       if (index !== undefined) {
         await update(e, "remove", subfield, index, bloc);
       } else {
@@ -111,9 +189,19 @@ export default function DragAndDrop({
         bloc.background_color = "#ffffff";
       }
     } else if (bloc instanceof Footer) {
-      await update(e, "social_network", "delete_picture", index, bloc);
+      await update(
+        e,
+        "social_network",
+        "delete_picture",
+        index?.toString(),
+        bloc
+      );
+    } else if (bloc instanceof Carousel) {
+      await update(e, "delete_picture", undefined, index, bloc);
+    } else if (bloc instanceof ScreenHome) {
+      await update(e, "delete_picture", undefined, undefined, bloc);
     } else {
-      await update(e, "delete_picture", "", index, bloc);
+      await update(e, "remove", undefined, undefined, bloc);
     }
 
     setFiles("");
@@ -175,7 +263,11 @@ export default function DragAndDrop({
                   className="mt-6 grid justify-end space-x-5 grid-flow-col"
                 >
                   <img
-                    src={"http://localhost/api/uploadfile/" + files}
+                    src={
+                      process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                      "/api/uploadfile/" +
+                      files
+                    }
                     alt="drag and drop image"
                     width="200px"
                     height="auto"

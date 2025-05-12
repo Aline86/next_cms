@@ -78,7 +78,7 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new PictureGroup(page.id, blocs.length + 1, -1, 0)
+                  new PictureGroup(page.id, blocs.length + 1, -1, false)
                 );
 
                 setOpen(!open);
@@ -98,7 +98,7 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new PictureGroup(page.id, blocs.length + 1, -1, 1)
+                  new PictureGroup(page.id, blocs.length + 1, -1, true)
                 );
 
                 setOpen(!open);

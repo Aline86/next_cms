@@ -28,7 +28,7 @@ function Shrink({ props, bloc, index, isOpen }: ShrinkData) {
               {index > 0 && `${"Bloc n° " + index} : `}{" "}
               {bloc !== undefined &&
               bloc instanceof PictureGroup &&
-              Boolean(bloc.is_grid)
+              bloc.is_grid
                 ? "Grille d'images"
                 : bloc !== undefined && bloc.type === "picture_group"
                 ? "Grille de cartes"

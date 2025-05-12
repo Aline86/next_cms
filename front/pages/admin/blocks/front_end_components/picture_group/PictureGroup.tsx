@@ -72,11 +72,11 @@ function PictureGroupVizualisation({
           : input_bloc.width,
       });
     }
-  }, [input_bloc.width, isResponsive, dataValue]);
+  }, [input_bloc.width, isResponsive]);
 
   useEffect(() => {}, [col]);
   return input_bloc !== undefined ? (
-    <div className=" mt-16 mb-16">
+    <div className=" mt-8">
       {input_bloc.title !== "" && (
         <h2 className="text-center mb-8 text-3xl">{input_bloc.title}</h2>
       )}

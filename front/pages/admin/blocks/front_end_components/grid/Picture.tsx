@@ -23,7 +23,7 @@ function Picture({
   const [, setResize] = useState(0);
   const image =
     data !== undefined && data?.image_url !== undefined
-      ? "/" + data.image_url
+      ? "http://localhost/api/uploadfile/" + data.image_url
       : "";
   function updateSize() {
     setResize(window?.innerWidth);
@@ -40,11 +40,6 @@ function Picture({
   return data !== undefined && data instanceof PictureGroupData ? (
     <>
       <div
-        style={
-          result?.matches
-            ? { transform: "scale(1.6)" }
-            : { transform: "scale(1)" }
-        }
         className={`transition-opacity duration-600 ease-in-out ${
           clicked_pic
             ? "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 block rounded-xl z-110 opacity-100 m-auto z-90 opacity-100"
@@ -56,11 +51,11 @@ function Picture({
         }}
       >
         <img
-          width={"1200px"} // Original width of the image
-          height={"800px"} // Original height
-          className=" max-h-[90vh] block rounded-xl cursor-pointer-not-big w-full h-auto"
           src={image}
           alt={data.title}
+          className={
+            "h-auto max-h-[700px] block rounded-xl cursor-pointer-not-big"
+          }
         />
       </div>
       <div
@@ -102,13 +97,11 @@ function Picture({
           }
         }}
       >
-        <Image
-          width={1200} // Original width of the image
-          height={800}
+        <img
           src={image}
           alt={data.title}
           className={
-            "relative w-[100%] h-auto block rounded cursor-pointer-not-big z-10  w-full h-auto" +
+            "relative w-[100%] h-auto block rounded-xl cursor-pointer-not-big z-10 " +
             clicked
               ? "pointer-events-none"
               : "cursor-pointer"
@@ -116,7 +109,7 @@ function Picture({
         />
         <div
           className={
-            "absolute inset-0 rounded bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4 text-white"
+            "absolute inset-0 rounded-xl bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4 text-white"
           }
         ></div>
       </div>

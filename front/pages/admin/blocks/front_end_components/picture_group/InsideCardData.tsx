@@ -3,31 +3,6 @@
 import Image from "next/image";
 import PictureGroupData from "../../../../../models/PictureGroupData";
 
-function rotateToMouse(e: React.MouseEvent<HTMLElement>): void {
-  const card = e.currentTarget as HTMLElement;
-  const bounds = card.getBoundingClientRect();
-
-  const mouseX: number = e.clientX;
-  const mouseY: number = e.clientY;
-  const leftX: number = mouseX - bounds.x;
-  const topY: number = mouseY - bounds.y;
-  const center = {
-    x: leftX - bounds.width / 2,
-    y: topY - bounds.height / 2,
-  };
-  const distance: number = Math.sqrt(center.x ** 2 + center.y ** 2);
-
-  card.style.transform = `
-      scale3d(1.07, 1.07, 1.07)
-      rotate3d(
-          ${center.y / 100},
-          ${-center.x / 100},
-          0,
-          ${Math.log(distance) * 4}deg
-      )
-  `;
-}
-
 interface CardDatas {
   data: PictureGroupData;
 
@@ -41,11 +16,11 @@ function InsideCardData({
 }: CardDatas) {
   const hw = full ? "h-106 w-72" : "h-full w-36";
 
-  const left_out = "shadow-sm rounded-xl duration-500 hover:scale-105";
+  const left_out = "shadow-md rounded-xl duration-500 hover:scale-105";
 
   const size = full
-    ? hw + " object-cover rounded-t-xl bg-white shadow-sm " + left_out
-    : hw + " w-36 object-cover rounded-t-xl bg-white shadow-sm " + left_out;
+    ? hw + " object-cover rounded-t-xl bg-white shadow-md " + left_out
+    : hw + " w-36 object-cover rounded-t-xl bg-white shadow-md " + left_out;
   const img =
     data !== undefined
       ? "http://localhost/api/uploadfile/" + data.image_url
@@ -66,8 +41,8 @@ function InsideCardData({
       ? "absolute p-3 top-6 w-full h-full flex flex-col justify-spacing "
       : "absolute p-3 top-3 w-full h-full flex flex-col ";
   const button_height = full
-    ? "absolute bottom-15 left-7 h-[50px] leading-[50px]"
-    : "absolute h-[35px] absolute left-3.5 bottom-8";
+    ? "absolute bottom-15 left-6 h-[50px] leading-[50px]"
+    : "absolute h-[35px] absolute left-3 bottom-8";
   const flex_position =
     data !== undefined && data.text !== "" && !data.is_data_button && full
       ? " flex-col justify-end mb-12 ml-4 mr-4"
@@ -76,19 +51,14 @@ function InsideCardData({
       : !full
       ? ""
       : "ml-4 mr-4";
-  const background_picture = `h-full relative shadow-sm  rounded-xl`;
+  const background_picture = `h-full relative shadow-md  rounded-xl duration-500 hover:scale-105 border-[15px] border-white`;
   return data !== undefined ? (
     <div
-      onMouseMove={(e) => rotateToMouse(e)}
-      onMouseLeave={(e) => {
-        const card = e.currentTarget as HTMLElement;
-        card.style.transform = `scale3d(1, 1, 1)`;
-      }}
-      className={"bg_img_group " + background_picture + " card"}
+      className={"bg_img_group " + background_picture}
       style={{ backgroundColor: data.background_color }}
     >
       {data.image_url != "" ? (
-        <img src={`${img}`} alt="Image" className={size} />
+        <Image src={`${img}`} alt="Image" className={size} fill={true} />
       ) : (
         ""
       )}

@@ -11,16 +11,6 @@
   padding-top: 150px;
   transition: right 0.5s ease-in-out;
 }
-.overlay {
-  position: fixed;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  top: 0;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 80;
-}
 .side_menu_edition {
   /*position: relative;
 

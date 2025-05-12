@@ -51,7 +51,7 @@ function CssPictureGroupPosition({
               marginTop: "30px",
             }}
           >
-            {Boolean(bloc.is_grid) ? "Grille d'images" : "Groupe d'images"}
+            {bloc.is_grid ? "Grille d'images" : "Groupe d'images"}
           </h3>
         </div>
         <div className="flex flex-col justify-start">

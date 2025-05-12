@@ -26,6 +26,7 @@ services:
 
   mysqldb:
     image: mysql:8.0.33
+
     container_name: mysql
     expose:
       - "3306"
@@ -34,7 +35,7 @@ services:
     environment:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-
+    command: --sql-mode="NO_ENGINE_SUBSTITUTION"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -46,7 +47,7 @@ services:
       timeout: 30s
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin:5.2.1
     container_name: phpmyadmin
     restart: always
     ports:

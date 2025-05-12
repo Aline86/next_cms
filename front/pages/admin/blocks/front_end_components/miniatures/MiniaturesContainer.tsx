@@ -42,7 +42,7 @@ function MiniaturesContainer({
   setCardValue,
   updateCardEnd,
   clic,
-  cardValue,
+
   isResponsive,
 }: CarouselDataValue) {
   const [trigger, setTrigger] = useState(0);
@@ -95,18 +95,21 @@ function MiniaturesContainer({
   }
 
   function moveLeft() {
-    if (carousel_cards !== undefined && carousel_cards[1] !== undefined) {
+    if (
+      carousel_cards !== undefined &&
+      carousel_cards[cardNumber] !== undefined
+    ) {
       setMove(-cardWidth);
       setIsClic(false);
       setIsLeft(true);
       setTrigger(trigger + 1);
       updateTransitionState(true);
-      setCard(carousel_cards[2]);
+      setCard(carousel_cards[cardNumber]);
     }
   }
 
   function moveRight() {
-    if (carousel_cards !== undefined && carousel_cards[1] !== undefined) {
+    if (carousel_cards !== undefined && carousel_cards[0] !== undefined) {
       setMove(cardWidth);
       setIsClic(false);
       setIsLeft(false);
@@ -117,7 +120,7 @@ function MiniaturesContainer({
   }
 
   useEffect(() => {
-    setCard(carousel_cards[1]);
+    setCard(carousel_cards[2]);
   }, []);
 
   useEffect(() => {
@@ -132,13 +135,9 @@ function MiniaturesContainer({
 
   return carousel_cards !== undefined ? (
     <div
-      className={
-        isResponsive
-          ? "w-sm m-auto"
-          : `m-auto  w-full max-w-[1050px] h-full mt-16 flex flex-col justify-end items-end`
-      }
+      className={isResponsive ? "w-sm m-auto" : `m-auto  w-full max-w-[1400px]`}
     >
-      <div className="flex w-full m-auto mb-4">
+      <div className="flex w-full m-auto  ">
         {card !== undefined && (
           <BigCard
             key={-1}
@@ -184,7 +183,7 @@ function MiniaturesContainer({
           </span>
         )}
         <div
-          className="relative m-auto overflow-hidden items-center justify-center "
+          className="relative m-auto overflow-hidden items-center justify-center py-5"
           style={{
             minWidth: `${cardWidth}px`,
             margin: `${gap}px auto`,
@@ -204,11 +203,11 @@ function MiniaturesContainer({
             className={s.card_container}
             style={{
               minWidth: `fit-content `,
-              height: "170px",
+              height: "250px",
             }}
           >
             <div
-              className="m-auto absolute flex flex justify-center items-center h-[170px] gap-4"
+              className="m-auto absolute flex flex justify-center items-center py-5 h-[250px] gap-4"
               style={{
                 marginLeft: `-${cardWidth}px`,
               }}
@@ -221,9 +220,7 @@ function MiniaturesContainer({
                       index={index}
                       value={value}
                       transitionFinished={transitionFinished}
-                      trasnsType={
-                        "transform " + 0.1 * Number(cardValue + 1) + "s ease-in"
-                      }
+                      trasnsType={"transform 0.3s ease"}
                       transX={move}
                       updateCard={updateCard}
                       toggle={false}

@@ -308,8 +308,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
       setTextWidth({
         display: bloc.show_text ? "block" : "none",
         marginTop: bloc.bloc_column || result?.matches ? "30px" : "0px",
-        //   paddingBottom: bloc.bloc_column || result?.matches ? "10px" : "40px",
-        marginBottom: bloc.bloc_column || result?.matches ? "30px" : "0px",
+        marginBottom: "30px",
         color:
           bloc?.background_color !== undefined
             ? isLightOrDark_func(bloc?.background_color)
@@ -372,13 +371,13 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
   }, [bloc, toggle]);
   useEffect(() => {}, [colorImage, float]);
   return (
-    <div className="flex  pb-8 mb-16 text-fiori flex-col align-center m-auto smaller max-w-[1000px] mx-auto">
+    <div className="flex text-fiori flex-col align-center m-auto smaller max-w-[800px] mx-auto">
       {bloc !== undefined && bloc.title !== "" && (
         <h2 className="text-6xl text-center mb-16 mt-8">{bloc.title}</h2>
       )}
 
       <div
-        className="rounded h-full md:flex md:items-center md:justify-center"
+        className="rounded  md:min-h-[1px] md:flex md:items-center "
         style={colorImage}
       >
         {bloc !== undefined && bloc.image.length > 0 && (

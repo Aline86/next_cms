@@ -5,11 +5,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL:
       process.env.NEXT_VITE_REACT_APP_BACKEND_URL,
     NEXT_HOST: process.env.NEXT_HOST,
-    NEXT_PUBLIC_NEXT_SECRET: process.env.NEXT_PUBLIC_NEXT_SECRET,
   },
   images: {
     // domains: ["https://www.static-cms-aline86.fr"],
-    domains: ["localhost"],
+    domains: ["localhost", "www.static-cms-aline86.fr"],
   },
   reactStrictMode: false,
 };

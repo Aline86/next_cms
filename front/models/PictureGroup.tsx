@@ -11,13 +11,13 @@ export default class PictureGroup extends Container {
   picture_group_data: Array<PictureGroupData>;
   parameters: string;
   page_id: number;
-  is_grid: number;
+  is_grid: boolean;
 
   constructor(
     page_id: number,
     bloc_number: number,
     id: number = -1,
-    is_grid: number = 0,
+    is_grid: boolean = false,
     card_number: number = 4,
     width: number = 3,
     height: number = 35,
@@ -304,7 +304,7 @@ export default class PictureGroup extends Container {
       return this;
     }
   }
-  public set_is_grid(is_grid: number) {
+  public set_is_grid(is_grid: boolean) {
     this.is_grid = is_grid;
   }
   public get_is_grid() {

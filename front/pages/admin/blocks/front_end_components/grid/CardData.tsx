@@ -17,7 +17,7 @@ function CardDataGrid({ data, index, isResponsive }: CardDatas) {
   return data !== undefined &&
     data instanceof PictureGroupData &&
     data.image_url !== "" ? (
-    <div key={data.id} className="relative w-full overflow-hidden rounded">
+    <div key={data.id} className="relative w-full overflow-hidden rounded-lg">
       <Picture
         data={data}
         update_clicked_pic={handle_pic_click}

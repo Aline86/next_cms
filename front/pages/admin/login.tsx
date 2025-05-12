@@ -17,6 +17,12 @@ export default function Login() {
     e.preventDefault();
 
     if (input.email !== "" && input.password !== "") {
+      /*await fetch("/api/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+        credentials: "include",
+      });*/
       const user = new User(input.email, input.password, "");
       const formdata = user.loginAction() as FormData;
 

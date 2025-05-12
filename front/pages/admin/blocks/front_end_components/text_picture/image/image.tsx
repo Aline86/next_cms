@@ -34,7 +34,11 @@ function Image({ bloc }: ImageParams) {
             width: width,
             height: `auto`,
           }}
-          src={"http://localhost/api/uploadfile/" + bloc.image}
+          src={
+            process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+            "/api/uploadfile/" +
+            bloc.image
+          }
           alt={bloc.alt_image}
         />
       </div>

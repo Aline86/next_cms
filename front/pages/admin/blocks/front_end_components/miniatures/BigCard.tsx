@@ -3,7 +3,6 @@ import { useSwipeable } from "react-swipeable";
 
 import CarouselData from "../../../../../models/CarouselData";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 interface CardData {
   value: CarouselData;
@@ -28,7 +27,6 @@ function BigCard({
 }: CardData) {
   const [result, setResult] = useState<MediaQueryList>();
   const [, setResize] = useState(0);
-
   const image =
     value !== undefined
       ? "http://localhost/api/uploadfile/" + value.image_url
@@ -49,34 +47,29 @@ function BigCard({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
   }, []);
-  useEffect(() => {}, [isResponsive, full]);
+  useEffect(() => {}, [isResponsive]);
   return value !== undefined ? (
     <div
       className={
-        isResponsive || result?.matches
-          ? "max-h-[400px] w-full m-auto rounded-xl "
-          : "max-h-[600px] w-full m-auto rounded-xl  max-w-[800px]"
+        isResponsive
+          ? "m-auto w-sm  rounded overflow-hidden shadow-lg p-8"
+          : "m-auto w-lg  rounded overflow-hidden shadow-lg p-8"
       }
+      style={{ transition: "all 0.4s ease-in-out" }}
     >
-      <Image
+      <div
         {...swipeHandlers}
-        onClick={(e) => {
-          updateCard(e);
-        }}
-        style={{
-          transition: "all 0.5s ease",
-        }}
-        className={
-          isResponsive || result?.matches
-            ? "h-200 max-h-[200px] w-auto mx-auto rounded-xl overflow-hidden"
-            : "h-300 max-h-[400px] w-auto mx-auto rounded-xl overflow-hidden"
-        }
+        onClick={updateCard}
+        className="w-full"
         data-value={index}
-        width={isResponsive || result?.matches ? 600 : 800} // or "1000" depending on your layout
-        height={isResponsive || result?.matches ? 200 : 400}
-        alt={"Image"}
-        src={image !== undefined ? image : ""}
-      />
+        style={{
+          background: `url("${image}") no-repeat center / contain`,
+
+          height: `${
+            !result?.matches && full && !isResponsive ? `400px` : `250px`
+          }`,
+        }}
+      ></div>
     </div>
   ) : (
     <></>

@@ -1,6 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import Image from "next/image";
 import ScreenHome from "../../../../../models/Screen";
 import s from "./style.module.css";
 
@@ -40,35 +38,33 @@ function ScreenVizualisation({
         full
           ? bloc.bloc_number === 1
             ? isResponsive
-              ? "relative 600px mt-[-35px] h-[550px]"
-              : "h-screen"
+              ? "600px mt-[-35px]"
+              : "h-[90vh]"
             : isResponsive
             ? "relative w-sm"
             : "relative h-screen"
-          : "relative h-screen"
+          : s.admin_screen_basis
       }
     >
       {bloc.screen_url !== "" ? (
         <div
-        //style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+          className={
+            full
+              ? isResponsive
+                ? "relative h-600px"
+                : s.screen_container
+              : "relative h-screen"
+          }
+          style={{
+            background: `url(${
+              "http://localhost/api/uploadfile/" + bloc.screen_url
+            }) no-repeat center / cover`,
+          }}
         >
-          <img
-            alt={bloc.title}
-            style={{ objectFit: "cover" }}
-            className={
-              full
-                ? isResponsive
-                  ? "relative h-600px"
-                  : s.screen_container
-                : "relative top-0 h-screen"
-            }
-            src={"http://localhost/api/uploadfile/" + bloc.screen_url}
-            width={!full ? "43vw" : "100vw"}
-          />
           <div
             className={s.encart}
             style={{
-              position: "absolute",
+              position: "relative",
               zIndex: "2",
               display: "flex",
               flexDirection: "column",
@@ -77,9 +73,9 @@ function ScreenVizualisation({
               height: full
                 ? isResponsive
                   ? "600px"
-                  : "calc(100vh - 150px)"
+                  : "calc(100vh - 250px)"
                 : "calc(100vh - 50px)",
-              paddingBottom: isResponsive ? "100px" : "0px",
+              paddingBottom: isResponsive ? "100px" : "",
             }}
           >
             <h2

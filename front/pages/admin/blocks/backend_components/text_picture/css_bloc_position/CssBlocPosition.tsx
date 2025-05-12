@@ -77,7 +77,6 @@ function CssTextPicturePosition({
             </div>
             <div>
               <div
-                className="cursor-pointer"
                 onClick={() => {
                   updateBloc(true, "bloc_column", undefined, undefined, bloc);
                 }}

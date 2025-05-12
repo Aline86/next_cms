@@ -7,7 +7,6 @@ import Page from "../../../../../../models/Page";
 import InputTypes from "../../../../../../lib/InputTypes";
 
 interface DropdownInfo {
-  page_id: number;
   bloc: PictureGroup;
   data: PictureGroupData;
   index: number;
@@ -20,24 +19,16 @@ interface DropdownInfo {
   ) => Promise<void>;
 }
 
-function DropdownData({
-  page_id,
-  bloc,
-  data,
-  index,
-  updateComponent,
-}: DropdownInfo) {
+function DropdownData({ bloc, data, index, updateComponent }: DropdownInfo) {
   const [pages, setPages] = useState<Page[]>();
-  const [page, setPage] = useState<Page>();
+  const [page, setPage] = useState<Page>(new Page());
   const [choice, isExternalLink] = useState<string>("");
   const [toggle, setToggle] = useState<boolean>(false);
 
   const getPages = async () => {
-    if (page !== undefined) {
-      const async_result = await page.get_sub_pages();
-      if (Array.isArray(async_result) && async_result.length >= 1) {
-        setPages(async_result);
-      }
+    const async_result = await page.get_sub_pages();
+    if (Array.isArray(async_result) && async_result.length >= 1) {
+      setPages(async_result);
     }
   };
   const checkExternal = async (url: string) => {
@@ -50,22 +41,18 @@ function DropdownData({
       isExternalLink("Page interne");
       const prefixe = Number(url.substring(0, 2));
       const pageData = await getPage(prefixe);
-      if (pageData !== undefined) {
-        setPage(pageData);
-      }
+      setPage(pageData);
     }
   };
   const updateLink = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setToggle(true);
     isExternalLink(e.target.value);
   };
-  const getPage = async (page_id: number) => {
-    const page_type = new Page(page_id, 0, null);
+  const getPage = async (id: number) => {
+    page.set_id(id);
+    const new_page = await page.get_bloc();
 
-    const new_page = await page_type.get_bloc();
-    if (new_page !== undefined) {
-      setPage(new_page);
-    }
+    return new_page;
   };
   useEffect(() => {
     if (data !== undefined) {
@@ -73,11 +60,8 @@ function DropdownData({
     }
 
     getPages();
-  }, [page]);
-  useEffect(() => {}, [choice]);
-  useEffect(() => {
-    getPage(page_id);
   }, []);
+  useEffect(() => {}, [choice]);
   return data !== undefined ? (
     <div className={s.container}>
       <select

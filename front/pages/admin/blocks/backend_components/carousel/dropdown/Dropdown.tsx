@@ -19,7 +19,7 @@ interface DropdownInfo {
 
 function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
   const [pages, setPages] = useState<Page[]>();
-  const [page, setPage] = useState<Page>(new Page(1, 0, null));
+  const [page, setPage] = useState<Page>(new Page());
   const [choice, isExternalLink] = useState<string>("");
   const [toggle, setToggle] = useState<boolean>(false);
 

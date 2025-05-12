@@ -26,7 +26,7 @@ function GridVizualisation({
   return (
     <div className="relative ">
       {input_bloc !== undefined && input_bloc.title !== undefined && (
-        <h2 className="text-center mb-16 mt-24 text-3xl">{input_bloc.title}</h2>
+        <h2 className="text-center mb-8 text-3xl">{input_bloc.title}</h2>
       )}
       {dataValue !== undefined && (
         <PictureGroupContainer

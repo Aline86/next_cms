@@ -107,7 +107,11 @@ function FooterVizualization({
                   >
                     <img
                       className={"rounded"}
-                      src={"http://localhost/api/uploadfile/" + value.logo_url}
+                      src={
+                        process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                        "/api/uploadfile/" +
+                        value.logo_url
+                      }
                       alt={value.title}
                       width="auto" // Adjust width as needed
                       height="50px" // Adjust height as needed
@@ -118,7 +122,11 @@ function FooterVizualization({
                     <a
                       key={key}
                       className=" mt-2"
-                      href={"http://localhost/api/uploadfile/" + value.logo_url}
+                      href={
+                        process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                        "/api/uploadfile/" +
+                        value.logo_url
+                      }
                       title={value.title}
                       target="_blank"
                       style={{

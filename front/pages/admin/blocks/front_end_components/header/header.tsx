@@ -66,7 +66,9 @@ function HeaderVizualization({
         background:
           input_bloc.image_url !== ""
             ? `url(${
-                "http://localhost/api/uploadfile/" + input_bloc?.image_url
+                process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                "/api/uploadfile/" +
+                input_bloc?.image_url
               })`
             : page_number !== undefined &&
               page_number > 1 &&
@@ -91,7 +93,11 @@ function HeaderVizualization({
           <Link href="/">
             {input_bloc?.logo_url !== "" && (
               <img
-                src={"http://localhost/api/uploadfile/" + input_bloc?.logo_url}
+                src={
+                  process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                  "/api/uploadfile/" +
+                  input_bloc?.logo_url
+                }
                 alt="logo"
               />
             )}
@@ -158,7 +164,9 @@ function HeaderVizualization({
                       {value.logo_url.length > 0 ? (
                         <Image
                           src={
-                            "http://localhost/api/uploadfile/" + value.logo_url
+                            process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+                            "/api/uploadfile/" +
+                            value.logo_url
                           }
                           alt={value.title}
                           className={

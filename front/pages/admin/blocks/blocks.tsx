@@ -82,7 +82,10 @@ function Blocs({
       }
       blocs.map(
         async (bloc_in_blocs: SnippetTypes | Header | Footer, index) => {
-          if ("bloc_number" in bloc_in_blocs) {
+          if (
+            !(bloc_in_blocs instanceof Header) &&
+            !(bloc_in_blocs instanceof Footer)
+          ) {
             bloc_in_blocs.set_bloc_number(index + 1);
             new_bloc_array[index] = await bloc_in_blocs.save_bloc();
           }
@@ -138,17 +141,14 @@ function Blocs({
         typeof bloc.set_bloc_number === "function"
       ) {
         bloc.set_bloc_number(index + 1);
-        new_bloc_array[index] = await bloc.save_bloc();
       }
+      new_bloc_array.push(bloc);
     });
     // saving the new info in database
-    Promise.all(new_bloc_array).then((data) => {
-      const typedData = data as Array<ComponentTypes>;
-      if (typedData !== undefined && Array.isArray(typedData)) {
-        setBlocs(new_bloc_array);
-        setRefresh(!refresh);
-      }
+    new_bloc_array.map(async (bloc_to_save: ComponentTypes) => {
+      await bloc_to_save.save_bloc();
     });
+    setBlocs(new_bloc_array);
   };
 
   const saveBloc = async (bloc: ComponentTypes) => {
@@ -359,12 +359,11 @@ function Blocs({
               />
             </Suspense>
           ) : bloc instanceof PictureGroup ? (
-            !Boolean(bloc.is_grid) ? (
+            !bloc.is_grid ? (
               <Suspense key={index} fallback={<div>Chargement...</div>}>
                 <BlocPictureGroupComponent
                   key={index}
                   bloc={bloc}
-                  page_id={page_id}
                   setDragBegin={setDragBegin}
                   updateDragBloc={async (event: number): Promise<void> => {
                     await updateDragBloc(event);

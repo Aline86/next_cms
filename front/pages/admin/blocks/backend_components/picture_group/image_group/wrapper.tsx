@@ -10,7 +10,7 @@ import ComponentTypes from "../../../../../../lib/types";
 
 interface CardDatas {
   bloc: PictureGroup;
-  page_id: number;
+
   data: PictureGroupData;
   index: number;
   updateComponent: (
@@ -25,7 +25,7 @@ interface CardDatas {
 
 function CardData({
   bloc,
-  page_id,
+
   data,
   index,
   updateComponent,
@@ -50,7 +50,6 @@ function CardData({
       </div>
       <div>
         <DropdownData
-          page_id={page_id}
           data={data}
           index={index}
           updateComponent={updateComponent}

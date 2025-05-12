@@ -25,7 +25,7 @@ export default function Homepage() {
   const [header, setHeader] = useState<Header>(new Header());
   const [footer, setFooter] = useState(new Footer());
 
-  const page_type = new Page(1, 0, null);
+  const page_type = new Page(1);
   const tools = new BlocTools(page_type);
 
   const [blocs, setBlocs] = useState<
@@ -70,7 +70,7 @@ export default function Homepage() {
   return (
     <Layout>
       <>
-        <div className="w-[80vw] m-auto min-h-[100vh]">
+        <div className="w-[80vw] m-auto mt-[100px] min-h-[100vh]">
           {header !== undefined && (
             <HeaderVizualization
               input_bloc={header}
@@ -94,7 +94,7 @@ export default function Homepage() {
                   )}
 
                   {value instanceof PictureGroup &&
-                    (!Boolean(value.is_grid) ? (
+                    (!value.is_grid ? (
                       <PictureGroupVizualisation
                         input_bloc={value}
                         toggle={false}

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
 import CarouselData from "../../../../../models/CarouselData";
@@ -33,8 +32,8 @@ function Card({
 
   const image =
     value !== undefined
-      ? "http //localhost/api/uploadfile/" + value.image_url
-      : "";
+      ? "http://localhost/api/uploadfile/" + value.image_url
+      : undefined;
   function updateSize() {
     setResize(window?.innerWidth);
   }
@@ -47,12 +46,12 @@ function Card({
   }, []);
   if (transitionFinished) {
     return (
-      <img
-        className="max-w-sm full_pic overflow-hidden cursor-pointer "
+      <Image
+        className="max-w-sm full_pic rounded overflow-hidden shadow-lg py-3"
         onClick={updateCard}
-        src={image}
-        width={"150px"}
-        height={"150px"}
+        src={image !== undefined ? `${image}` : ""}
+        width={150}
+        height={150}
         alt={"Image"}
         style={{
           width: `150px`,
@@ -66,14 +65,11 @@ function Card({
     );
   } else if (image !== undefined) {
     return (
-      <img
-        style={{
-          objectFit: "cover",
-        }}
-        className="max-w-sm full_pic rounded overflow-hidden cursor-pointer "
-        src={image}
-        width={"150px"}
-        height={"150px"}
+      <Image
+        className="max-w-sm full_pic rounded overflow-hidden shadow-lg cursor-pointer py-3"
+        src={image !== undefined ? `${image}` : ""}
+        width={150}
+        height={150}
         alt={"Image"}
         onClick={updateCard}
         data-value={index}

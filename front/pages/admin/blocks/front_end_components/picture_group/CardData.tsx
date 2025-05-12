@@ -35,7 +35,7 @@ function CardData({
     }
   };
   const getPage = async (id: number) => {
-    const concerned_page = new Page(id, 0, null);
+    const concerned_page = new Page(id);
     const page = await concerned_page.get_bloc();
     if (page !== undefined) {
       return page;

@@ -27,7 +27,6 @@ interface BlocData {
   index: number;
   refresh: boolean;
   isOpen: boolean;
-  page_id: number;
 }
 
 function BlocPictureGroup({
@@ -42,7 +41,6 @@ function BlocPictureGroup({
   toggle,
   index,
   isOpen,
-  page_id,
 }: BlocData) {
   return bloc !== undefined ? (
     <BlockContainer
@@ -66,7 +64,6 @@ function BlocPictureGroup({
         <CssPictureGroupPosition
           props={
             <ImageGroup
-              page_id={page_id}
               updateComponent={async (
                 event: InputTypes,
                 field: string | undefined,

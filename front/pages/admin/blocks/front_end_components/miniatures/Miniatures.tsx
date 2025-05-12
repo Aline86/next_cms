@@ -48,7 +48,7 @@ function MiniaturesVisualization({
         const res = dataValue?.splice(cardValue, dataValue.length);
 
         const col = res?.concat(dataValue);
-
+        console.log("col", col, res, dataValue);
         setData(col);
 
         setIsClic(false);
@@ -95,7 +95,7 @@ function MiniaturesVisualization({
 
     setData(data);
     if (result !== undefined) {
-      setCardWidth(165);
+      setCardWidth(166);
     }
   }, [dataToProcess, toggle]);
   useEffect(() => {
@@ -104,12 +104,8 @@ function MiniaturesVisualization({
   return (
     <div
       className={`${
-        !full
-          ? "fixed bottom-[0px] "
-          : isResponsive
-          ? responsive
-          : "h-full max-h-[600px]"
-      } m-auto mb-24`}
+        !full ? "fixed bottom-[0px] " : isResponsive ? responsive : "h-full"
+      } m-auto`}
     >
       {dataValue !== undefined &&
         input_bloc !== undefined &&
