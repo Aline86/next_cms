@@ -96,18 +96,4 @@ Actuellement, 5 blocs personnalisables sont disponibles :
 
 ## Local use :
 
-NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL = "http://localhost:80/your_repo_name/api"
-
-DB_HOST = "localhost"
-
-DB_USER = "XXXXXXX"
-
-DB_PASSWORD = "XXXXXX"
-
-DB_NAME = "XXXXXX"
-
-ALLOWED_ORIGIN = "http://localhost:3000"
-
-NEXT_SECRET="XXXXXX"
-
-NEXT_HOST="XXXXX"
+please go to docker branch of this repo
