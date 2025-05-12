@@ -23,3 +23,18 @@ You must convert this password in a hash on this website https://onlinephp.io/pa
 INSERT INTO `user` (`id`, `email`, `password`, `token`, `connection_attempts`) VALUES (NULL, 'your_email_address', 'your_password_hashed', '', 0);
 
 You will then be able to access the BO
+
+Last updates are not yet all available on this branch.
+
+.env at the root of the project should be added with following values
+
+DB_HOST = "mysql"
+DB_PORT = "3306"
+DB_USER = "root"
+DB_PASSWORD = "admin"
+DB_NAME = "static_cms"
+ALLOWED_ORIGIN ="http://localhost:3000"
+NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL="http://localhost"
+NEXT_PUBLIC_VITE_REACT_APP_FRONTEND_IMAGE_URL="http://localhost"
+NEXT_PUBLIC_SECRET="chose a set of characters of your choice and replace this value"
+NEXT_HOST="http://localhost:3000"

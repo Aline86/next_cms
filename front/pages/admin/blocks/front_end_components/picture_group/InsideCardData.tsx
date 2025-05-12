@@ -58,7 +58,7 @@ function InsideCardData({
       style={{ backgroundColor: data.background_color }}
     >
       {data.image_url != "" ? (
-        <Image src={`${img}`} alt="Image" className={size} fill={true} />
+        <img src={`${img}`} alt="Image" className={size} />
       ) : (
         ""
       )}
