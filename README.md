@@ -1,10 +1,10 @@
 # ![English](https://flagcdn.com/40x30/gb.png)
 
-This docker will allow you to visualize the full app with docker :
+This docker branch will allow you to visualize the full app with docker :
 
-please run docker-compose up --build
+please run docker-compose up --build at the root of the project
 
-You have to run script api\bdd.sql in phpmyadmin under static_cms
+You have to run script api\bdd.sql script in phpmyadmin under static_cms 
 
 To access backoffice on localhost:3000, you will need to create credentials:
 
