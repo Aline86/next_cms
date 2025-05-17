@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 import Image from "next/image";
 import PictureGroupData from "../../../../../models/PictureGroupData";
 
@@ -29,7 +27,7 @@ function rotateToMouse(e: React.MouseEvent<HTMLElement>): void {
 }
 
 interface CardDatas {
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
 
   full: boolean;
 }
@@ -87,7 +85,7 @@ function InsideCardData({
         card.style.transform = `scale3d(1, 1, 1)`;
       }}
       className={"bg_img_group " + background_picture + " card"}
-      style={{ backgroundColor: data.background_color }}
+      style={{ backgroundColor: String(data.background_color) }}
     >
       {data.image_url != "" ? (
         <Image src={`${img}`} alt="Image" className={size} fill={true} />
@@ -99,18 +97,18 @@ function InsideCardData({
         <div className={"flex w-[90%] h-full " + flex_position}>
           <p
             style={{
-              color: data.text_color,
+              color: String(data.text_color),
             }}
             className={text_size}
           >
-            {data.text}
+            {String(data.text)}
           </p>
         </div>
-        {data.is_data_button && (
+        {Boolean(data.is_data_button) === true && (
           <div
             style={{
-              border: "1px solid " + data.text_color,
-              color: data.text_color,
+              border: "1px solid " + String(data.text_color),
+              color: String(data.text_color),
             }}
             className={`buttons border border-white border-solid border-1 block w-[80%]  text-center text-gray-100 rounded ${button_height}`}
           >

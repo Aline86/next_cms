@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
 import { useEffect } from "react";
 
 import TextPicture from "../../../../../../models/TextPicture";
 
 interface ImageParams {
-  bloc: TextPicture;
+  bloc: TextPicture | Record<string, unknown>;
 }
 
 function Image({ bloc }: ImageParams) {
@@ -20,13 +21,12 @@ function Image({ bloc }: ImageParams) {
   const width =
     bloc !== undefined
       ? bloc.bloc_column
-        ? `h-[${bloc.css.width}%]`
-        : `h-[${bloc.css.width}%]`
+        ? `h-[${(bloc.css as { width: number }).width}%]`
+        : `h-[${(bloc.css as { width: number }).width}%]`
       : "";
-  useEffect(() => {}, []);
+  useEffect(() => {}, [bloc]);
   return (
-    bloc !== undefined &&
-    bloc.image.length > 0 && (
+    bloc !== undefined && (
       <div className={bloc.bloc_column ? "mb-8 max-w-xl m-auto" : ""}>
         <img
           className={`${width} ${floatClass} rounded-xl`}
@@ -39,7 +39,7 @@ function Image({ bloc }: ImageParams) {
             "/api/uploadfile/" +
             bloc.image
           }
-          alt={bloc.alt_image}
+          alt={String(bloc.alt_image)}
         />
       </div>
     )

@@ -6,7 +6,7 @@ import s from "./style.module.css";
 import { useEffect, useState } from "react";
 
 interface BlocParams {
-  bloc: ScreenHome;
+  bloc: ScreenHome | Record<string, unknown>;
 
   toggle: boolean;
   full: boolean;
@@ -52,7 +52,7 @@ function ScreenVizualisation({
         //style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         >
           <Image
-            alt={bloc.title}
+            alt={String(bloc.title)}
             style={{ objectFit: "cover" }}
             className={
               full
@@ -81,6 +81,8 @@ function ScreenVizualisation({
               height: full
                 ? isResponsive
                   ? "600px"
+                  : result?.matches
+                  ? "calc(100vh - 250px)"
                   : "calc(100vh - 150px)"
                 : "calc(100vh - 50px)",
               paddingBottom: isResponsive ? "100px" : "0px",
@@ -105,7 +107,7 @@ function ScreenVizualisation({
                 wordBreak: "break-word",
               }}
             >
-              {bloc.title}
+              {String(bloc.title)}
             </h2>
             <p
               style={{
@@ -118,7 +120,7 @@ function ScreenVizualisation({
                 wordBreak: "break-word",
               }}
             >
-              {bloc.text}
+              {String(bloc.text)}
             </p>
           </div>
 
@@ -158,7 +160,7 @@ function ScreenVizualisation({
               wordBreak: "break-word",
             }}
           >
-            {bloc.title}
+            {String(bloc.title)}
           </h2>
           <p
             style={{
@@ -170,7 +172,7 @@ function ScreenVizualisation({
               wordBreak: "break-word",
             }}
           >
-            {bloc.text}
+            {String(bloc.text)}
           </p>
         </div>
       )}

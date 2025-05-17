@@ -66,7 +66,6 @@ export class UploadService {
 
         const result = await response.json();
         return result.success;
-        console.log("Réponse du serveur:", result);
       } catch (error) {
         console.error("Erreur lors du téléchargement:", error);
       }

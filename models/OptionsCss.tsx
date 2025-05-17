@@ -19,4 +19,20 @@ export default class OptionCss {
       this.height = height;
     }
   }
+  public async classToPlainObject() {
+    const obj: Record<string, unknown> = await this.convert_to_object_answer();
+    if (obj !== undefined) {
+      return obj;
+    }
+    return this;
+  }
+  public async convert_to_object_answer() {
+    const obj: Record<string, unknown> = {};
+    for (const key in this) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        obj[key] = this[key];
+      }
+    }
+    return obj;
+  }
 }

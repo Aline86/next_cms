@@ -1,8 +1,9 @@
 // Classe adaptée à tous les types de blocs
 // Permet de gérer tous les calls api grâce à une structure d'url liée aux noms
 // d'attributs (logique qui sera suivie sur le même principe pour les méthodes api)
-// Logique basée sur le fait que les noms de colonnes en bdd sont identiques au attributs des enfants
-"use client";
+// Logique basée sur le fait que les noms de colonnes en bdd sont identiques au attributs des classes enfants
+
+import { redirect } from "next/navigation";
 
 export default abstract class Container {
   id: number;
@@ -69,14 +70,13 @@ export default abstract class Container {
 
         credentials: "include",
         body: data_to_send,
+        cache: "no-store",
       }
     )
       .then((response) => {
         if (!response.ok || response.status === 403) {
           if (typeof window !== "undefined") {
-            window?.history.pushState({}, "", "/admin/login");
-            console.error("403 error, redirecting to login page", response);
-            // location.reload();
+            redirect("/admin/login");
           }
         }
         try {
@@ -87,8 +87,7 @@ export default abstract class Container {
       })
       .catch((error: unknown) => {
         console.error(error);
-        window?.history.pushState({}, "", "/admin/login");
-        location.reload();
+        redirect("/admin/login");
       });
 
     return this;
@@ -111,7 +110,7 @@ export default abstract class Container {
             Accept: "application/json",
             // Any other headers needed for the request
           },
-          next: { revalidate: 0 },
+          cache: "no-store",
           credentials: "include",
         }
       );
@@ -150,6 +149,7 @@ export default abstract class Container {
             // Any other headers needed for the request
           },
           next: { revalidate: 0 },
+          cache: "no-store",
           credentials: "include",
         }
       );
@@ -177,6 +177,7 @@ export default abstract class Container {
    */
   public async get_bloc(): Promise<this> {
     const new_bloc = Object.assign(this, this);
+
     try {
       const response = await fetch(
         this.BASE_URL + "get_" + this._get_class_api_call_parameters(),
@@ -187,15 +188,18 @@ export default abstract class Container {
             Accept: "application/json",
             // Any other headers needed for the request
           },
+          cache: "no-store",
           credentials: "include",
         }
       );
+
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
 
       try {
         const json_object = await response.json();
+
         if (json_object.length >= 1) {
           const property_list: Record<string, unknown> = {};
           const class_properties: Array<string> = Object.keys(this);
@@ -232,18 +236,17 @@ export default abstract class Container {
           mode: "cors",
           method: "GET",
           credentials: "include",
+          cache: "no-store",
           headers: {
             Accept: "application/json",
           },
         }
       );
       if (!response.ok) {
-        window?.history.pushState({}, "", "/admin/login");
-        //location.reload();
+        redirect("/admin/login");
       }
     } catch {
-      window?.history.pushState({}, "", "/admin/login");
-      location.reload();
+      redirect("/admin/login");
     }
   }
 
@@ -289,6 +292,35 @@ export default abstract class Container {
         value
       );
     }
+  }
+
+  public async classToPlainObject() {
+    const obj: Record<string, unknown> = await this.convert_to_object_answer();
+    if (obj !== undefined) {
+      return obj;
+    }
+    return this;
+  }
+  async convert_to_object_answer() {
+    const obj: Record<string, unknown> = {};
+    for (const key in this) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        if (
+          typeof (this[key] as unknown) === "object" &&
+          this[key] !== null &&
+          "classToPlainObject" in (this[key] as object) &&
+          typeof (this[key] as { classToPlainObject?: () => unknown })
+            .classToPlainObject === "function"
+        ) {
+          obj[key] = await (
+            this[key] as { classToPlainObject: () => unknown }
+          ).classToPlainObject();
+        } else {
+          obj[key] = this[key];
+        }
+      }
+    }
+    return obj;
   }
 
   abstract _get_class_api_call_parameters(): string;

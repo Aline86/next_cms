@@ -9,7 +9,7 @@ import CarouselData from "../../../../../models/CarouselData";
 import Image from "next/image";
 
 interface CarouselDataValue {
-  carousel_cards: CarouselData[];
+  carousel_cards: CarouselData[] | undefined | Record<string, unknown>;
   transitionFinished: boolean;
   cardWidth: number;
   updateCarousel_cards: (carousel_cards: CarouselData[]) => void;
@@ -42,7 +42,7 @@ function MiniaturesContainer({
   setCardValue,
   updateCardEnd,
   clic,
-  cardValue,
+
   isResponsive,
 }: CarouselDataValue) {
   const [trigger, setTrigger] = useState(0);
@@ -50,7 +50,7 @@ function MiniaturesContainer({
   const [isLeft, setIsLeft] = useState(true);
   const [result, setResult] = useState<MediaQueryList>();
   const [card, setCard] = useState<CarouselData>();
-
+  const width = cardNumber * 2 * cardWidth;
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 700px)") as MediaQueryList);
   }, []);
@@ -59,11 +59,13 @@ function MiniaturesContainer({
     const currentCard =
       Number((e.target as HTMLElement).getAttribute("data-value")) - 1;
 
-    setCard(carousel_cards[currentCard + 1]);
+    if (Array.isArray(carousel_cards)) {
+      setCard(carousel_cards[currentCard + 1]);
+    }
 
     setCardValue(currentCard);
 
-    setMove(cardNumber - currentCard * cardWidth - 8);
+    setMove(cardNumber - currentCard * cardWidth - cardNumber);
     setIsLeft(false);
     updateTransitionState(true);
 
@@ -71,7 +73,7 @@ function MiniaturesContainer({
   }
 
   function updateTransitionLeft() {
-    if (carousel_cards !== undefined && carousel_cards.length > 0) {
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
       const popItem = carousel_cards.pop();
       if (popItem !== undefined) {
         carousel_cards.unshift(popItem);
@@ -83,7 +85,7 @@ function MiniaturesContainer({
   }
 
   function updateTransitionRight() {
-    if (carousel_cards !== undefined && carousel_cards.length > 0) {
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
       const shiftItem = carousel_cards.shift();
       if (shiftItem !== undefined) {
         carousel_cards.push(shiftItem);
@@ -95,7 +97,11 @@ function MiniaturesContainer({
   }
 
   function moveLeft() {
-    if (carousel_cards !== undefined && carousel_cards[1] !== undefined) {
+    if (
+      Array.isArray(carousel_cards) &&
+      carousel_cards !== undefined &&
+      carousel_cards[1] !== undefined
+    ) {
       setMove(-cardWidth);
       setIsClic(false);
       setIsLeft(true);
@@ -106,7 +112,11 @@ function MiniaturesContainer({
   }
 
   function moveRight() {
-    if (carousel_cards !== undefined && carousel_cards[1] !== undefined) {
+    if (
+      Array.isArray(carousel_cards) &&
+      carousel_cards !== undefined &&
+      carousel_cards[1] !== undefined
+    ) {
       setMove(cardWidth);
       setIsClic(false);
       setIsLeft(false);
@@ -117,7 +127,9 @@ function MiniaturesContainer({
   }
 
   useEffect(() => {
-    setCard(carousel_cards[1]);
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
+      setCard(carousel_cards[1]);
+    }
   }, []);
 
   useEffect(() => {
@@ -135,7 +147,7 @@ function MiniaturesContainer({
       className={
         isResponsive
           ? "w-sm m-auto"
-          : `m-auto  w-full max-w-[1050px] h-full mt-16 flex flex-col justify-end items-end`
+          : `m-auto  w-full max-w-[1200px] h-full mt-16 flex flex-col justify-end items-end`
       }
     >
       <div className="flex w-full m-auto mb-4">
@@ -186,7 +198,6 @@ function MiniaturesContainer({
         <div
           className="relative m-auto overflow-hidden items-center justify-center "
           style={{
-            minWidth: `${cardWidth}px`,
             margin: `${gap}px auto`,
 
             width: `${
@@ -203,7 +214,7 @@ function MiniaturesContainer({
           <div
             className={s.card_container}
             style={{
-              minWidth: `fit-content `,
+              minWidth: `${width}px`,
               height: "170px",
             }}
           >
@@ -214,6 +225,7 @@ function MiniaturesContainer({
               }}
             >
               {carousel_cards !== undefined &&
+                Array.isArray(carousel_cards) &&
                 carousel_cards.map((value: CarouselData, index: number) => {
                   return (
                     <Card
@@ -221,9 +233,7 @@ function MiniaturesContainer({
                       index={index}
                       value={value}
                       transitionFinished={transitionFinished}
-                      trasnsType={
-                        "transform " + 0.1 * Number(cardValue + 1) + "s ease-in"
-                      }
+                      trasnsType={"transform 0.4s ease-in"}
                       transX={move}
                       updateCard={updateCard}
                       toggle={false}

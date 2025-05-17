@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
 
@@ -14,7 +12,7 @@ import Link from "next/link";
 import LinkNetworksAndOthersHeader from "../../../../../models/LinkNetworksAndOthersHeader";
 
 interface HeaderInfo {
-  input_bloc: Header;
+  input_bloc: Record<string, unknown> | Header;
   isResponsive: boolean;
   toggle: boolean;
   full: boolean;
@@ -30,13 +28,9 @@ function HeaderVizualization({
   const [open, setOpen] = useState(false);
   const [, setResize] = useState(0);
   const [result, setResult] = useState<MediaQueryList>();
-  console.log(input_bloc?.background_color);
-  const [classes] = useState<string | undefined>(
-    (input_bloc !== undefined && isResponsive) || result?.matches
-      ? " uppercase text-2xl light top-[1rem]" + s.title_responsive
-      : " uppercase text-3xl light " + s.title
-  );
 
+  const [classes, set_classes] = useState<string | undefined>();
+  const [bg, set_bg] = useState<React.CSSProperties | undefined>();
   const [trigger_show_link, setTrigger_show_link] = useState(true);
 
   const handleShowLinks = () => {
@@ -53,28 +47,34 @@ function HeaderVizualization({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
   }, []);
-
+  useEffect(() => {
+    set_classes(
+      (input_bloc !== undefined && isResponsive) || result?.matches
+        ? " uppercase text-xl light top-[1rem]" + s.title_responsive
+        : " uppercase text-3xl light " + s.title
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result?.matches]);
   useEffect(() => {
     setTrigger_show_link(false);
   }, [isResponsive]);
 
   useEffect(() => {}, [classes, toggle]);
-  return input_bloc !== undefined && classes !== undefined ? (
-    <nav
-      id={full ? s.nav : s.nav_edition}
-      style={{
+  useEffect(() => {
+    if (input_bloc !== undefined) {
+      set_bg({
         background:
           input_bloc.image_url !== ""
             ? `url(${
                 process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                 "/api/uploadfile/" +
-                input_bloc?.image_url
+                String(input_bloc?.image_url)
               })`
             : page_number !== undefined &&
               page_number > 1 &&
               input_bloc.background_color === "#00000000"
             ? "#00000030"
-            : input_bloc.background_color,
+            : String(input_bloc.background_color),
 
         backdropFilter:
           page_number !== undefined &&
@@ -82,8 +82,14 @@ function HeaderVizualization({
           input_bloc.background_color === "#00000000"
             ? "blur(10px)"
             : "blur(0px)",
-      }}
-    >
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return input_bloc !== undefined &&
+    classes !== undefined &&
+    bg !== undefined ? (
+    <nav id={full ? s.nav : s.nav_edition} style={bg}>
       <div className={s.nav_bar}>
         <div
           className={
@@ -92,6 +98,7 @@ function HeaderVizualization({
         >
           <Link href="/">
             {input_bloc?.logo_url !== "" && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={
                   process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
@@ -107,12 +114,14 @@ function HeaderVizualization({
         page_number !== undefined &&
         page_number > 1 &&
         classes !== undefined ? (
-          <h1 className={s.title_responsive + classes}>{input_bloc?.title}</h1>
+          <h1 className={s.title_responsive + classes}>
+            {String(input_bloc?.title)}
+          </h1>
         ) : (
           input_bloc.background_color !== "#00000000" &&
           classes !== undefined && (
             <h1 className={s.title_responsive + classes}>
-              {input_bloc?.title}
+              {String(input_bloc?.title)}
             </h1>
           )
         )}
@@ -139,7 +148,11 @@ function HeaderVizualization({
             className={`${s.inside_selector} flex gap-4 items-center justify-end`}
           >
             {isResponsive &&
-              input_bloc?.link_networks_an_others_header.length > 0 && (
+              Array.isArray(
+                (input_bloc as Header)?.link_networks_an_others_header
+              ) &&
+              (input_bloc as Header).link_networks_an_others_header.length >
+                0 && (
                 <div className={s.plus} onClick={() => handleShowLinks()}>
                   <Image
                     src={reseaux}
@@ -150,8 +163,12 @@ function HeaderVizualization({
                 </div>
               )}
 
-            {input_bloc?.link_networks_an_others_header.length > 0 &&
-              input_bloc?.link_networks_an_others_header.map(
+            {Array.isArray(
+              (input_bloc as Header)?.link_networks_an_others_header
+            ) &&
+              (input_bloc as Header).link_networks_an_others_header.length >
+                0 &&
+              (input_bloc as Header).link_networks_an_others_header.map(
                 (value: LinkNetworksAndOthersHeader, key: number) => {
                   return (
                     <a

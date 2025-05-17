@@ -1,4 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
+"use client";
+
 import Image from "next/image";
 import fermer from "./../../../../assets/fermer.png";
 
@@ -6,7 +7,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import { useEffect, useState } from "react";
 
 interface CardDatas {
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
   update_clicked_pic: (state: boolean) => void;
   isResponsive: boolean;
   clicked: boolean;
@@ -27,6 +28,7 @@ function Picture({
         "/api/uploadfile/" +
         data.image_url
       : "";
+
   function updateSize() {
     setResize(window?.innerWidth);
   }
@@ -39,7 +41,7 @@ function Picture({
   }, []);
   useEffect(() => {}, [clicked_pic, clicked]);
 
-  return data !== undefined && data instanceof PictureGroupData ? (
+  return data !== undefined ? (
     <>
       <div
         style={
@@ -62,7 +64,7 @@ function Picture({
           height={800} // Original height
           className=" max-h-[90vh] block rounded-xl cursor-pointer-not-big w-full h-auto"
           src={image}
-          alt={data.title}
+          alt={String(data.title)}
         />
       </div>
       <div
@@ -108,7 +110,7 @@ function Picture({
           width={1200} // Original width of the image
           height={800}
           src={image}
-          alt={data.title}
+          alt={String(data.title)}
           className={
             "relative w-[100%] h-auto block rounded cursor-pointer-not-big z-10  w-full h-auto" +
             clicked

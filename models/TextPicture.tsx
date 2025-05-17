@@ -14,7 +14,7 @@ export default class TextPicture extends Container implements ComponentBloc {
   image: string;
   alt_image: string;
   bloc_number: number;
-  css: OptionsCss;
+  css: OptionsCss | Record<string, unknown>;
   background_color: string;
   parameters: string;
   page_id: number;
@@ -58,7 +58,6 @@ export default class TextPicture extends Container implements ComponentBloc {
     field: string | undefined,
     input?: string | undefined
   ) {
-    console.log("width", e, field, input);
     switch (field) {
       case "show_picture":
         if (
@@ -175,7 +174,6 @@ export default class TextPicture extends Container implements ComponentBloc {
               "value" in e.target &&
               e.target.value !== undefined
             ) {
-              console.log("width", e.target.value);
               this.css.width = parseInt(e.target.value);
             }
 
@@ -297,11 +295,16 @@ export default class TextPicture extends Container implements ComponentBloc {
     this.bloc_number = value;
   }
 
-  public _css(): OptionsCss {
+  public _css(): OptionsCss | Record<string, unknown> {
     return this.css;
   }
-  public set_css(value: OptionsCss) {
-    this.css = value;
+  public async set_css(value: OptionsCss) {
+    if (value instanceof OptionsCss) {
+      const data = await value.classToPlainObject();
+      this.css = data;
+    } else {
+      this.css = value;
+    }
   }
 
   public _background_color(): string {

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import { useEffect, useState } from "react";
 
 import PictureGroupContainer from "./PictureGroupContainer";
@@ -6,7 +6,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import PictureGroup from "../../../../../models/PictureGroup";
 
 interface CustomCarouselInfo {
-  input_bloc: PictureGroup;
+  input_bloc: Record<string, unknown> | PictureGroup;
   toggle: boolean;
   refresh: boolean;
   isResponsive: boolean;
@@ -20,22 +20,26 @@ function GridVizualisation({
   const [dataValue, setData] = useState<PictureGroupData[]>();
 
   useEffect(() => {
-    setData(input_bloc.picture_group_data);
+    setData(input_bloc.picture_group_data as PictureGroupData[]);
   }, [toggle, refresh, input_bloc, input_bloc.width]);
   useEffect(() => {}, [dataValue]);
   return (
     <div className="relative ">
-      {input_bloc !== undefined && input_bloc.title !== undefined && (
-        <h2 className="text-center mb-16 mt-24 text-3xl">{input_bloc.title}</h2>
-      )}
+      {input_bloc !== undefined &&
+        input_bloc.title !== undefined &&
+        input_bloc.type === "picture_group" && (
+          <h2 className="text-center mb-16 mt-24 text-3xl">
+            {String(input_bloc.title)}
+          </h2>
+        )}
       {dataValue !== undefined && (
         <PictureGroupContainer
           data={dataValue}
           toggle={toggle}
           isResponsive={isResponsive}
           width={
-            ["1", "2", "3", "4"].includes(input_bloc.width.toString())
-              ? (input_bloc.width.toString() as "1" | "2" | "3" | "4")
+            ["1", "2", "3", "4"].includes(Number(input_bloc.width).toString())
+              ? (Number(input_bloc.width).toString() as "1" | "2" | "3" | "4")
               : "1"
           }
         />

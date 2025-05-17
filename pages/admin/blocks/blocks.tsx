@@ -551,7 +551,6 @@ function Blocs({
           ): Promise<void> => {
             await updateComponent(event, field, input, index, bloc);
           }}
-          toggle={toggle}
           saveBloc={savePrerequisites}
         />
       )}

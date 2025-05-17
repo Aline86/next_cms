@@ -47,11 +47,11 @@ function CssTextPicturePosition({
                   titre
                 </div>
                 <div className="flex">
-                  <div className="border border-gray-300 p-1 text-center w-[100px] h-[50px]">
-                    texte
-                  </div>
                   <div className=" border border-gray-300 p-1 text-center w-[100px] h-[50px]">
                     image
+                  </div>
+                  <div className="border border-gray-300 p-1 text-center w-[100px] h-[50px]">
+                    texte
                   </div>
                 </div>
               </div>
@@ -66,11 +66,11 @@ function CssTextPicturePosition({
                   titre
                 </div>
                 <div className="flex">
-                  <div className="border border-gray-300 p-1 text-center w-[100px] h-[50px]">
-                    image
-                  </div>
                   <div className=" border border-gray-300 p-1 text-center w-[100px] h-[50px]">
                     texte
+                  </div>
+                  <div className="border border-gray-300 p-1 text-center w-[100px] h-[50px]">
+                    image
                   </div>
                 </div>
               </div>
@@ -116,7 +116,7 @@ function CssTextPicturePosition({
                   <Input
                     className="mb-8 mt-8"
                     type="number"
-                    value={bloc?.css.width}
+                    value={bloc?.css.width as string | number | undefined}
                     onChange={(e) =>
                       updateBloc(e, "css", "width", undefined, bloc)
                     }

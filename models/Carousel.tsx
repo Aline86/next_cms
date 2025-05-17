@@ -1,4 +1,3 @@
-"use client";
 import Container from "../lib/Container";
 
 import ComponentBloc from "../lib/Component";
@@ -14,7 +13,7 @@ export default class Carousel extends Container implements ComponentBloc {
   height: number;
   gap: number;
   bloc_number: number;
-  carousel_data: Array<CarouselData>;
+  carousel_data: Array<CarouselData | Record<string, unknown>>;
   parameters: string;
   page_id: number;
   constructor(
@@ -213,12 +212,13 @@ export default class Carousel extends Container implements ComponentBloc {
 
     return this;
   }
-  public set_carousel_data(carousel_datas: Array<CarouselData>) {
+
+  public async set_carousel_data(carousel_datas: Record<string, unknown>[]) {
     this.carousel_data = [];
 
-    carousel_datas.forEach((carousel_data) => {
-      this.add_carousel_data(carousel_data);
-    });
+    for (const carousel_data of carousel_datas) {
+      await this.add_carousel_data(carousel_data);
+    }
   }
   public add_data() {
     this.carousel_data.push(
@@ -252,21 +252,21 @@ export default class Carousel extends Container implements ComponentBloc {
     this.save_bloc();
     return this;
   }
-  public add_carousel_data(carousel_data: CarouselData) {
-    this.carousel_data.push(
-      new CarouselData(
-        carousel_data.id,
-        carousel_data.card_number,
-        this.id,
-        carousel_data.href_url,
-        carousel_data.image_url,
-        carousel_data.text,
-        carousel_data.title,
-        carousel_data.type,
-        carousel_data.background_color,
-        carousel_data.text_color
-      )
+  public async add_carousel_data(carousel_data: Record<string, unknown>) {
+    const data = new CarouselData(
+      Number(carousel_data.id) as number | undefined,
+      Number(carousel_data.card_number) as number,
+      Number(this.id) as number,
+      carousel_data.href_url as string | undefined,
+      carousel_data.image_url as string | undefined,
+      carousel_data.text as string | undefined,
+      carousel_data.title as string | undefined,
+      carousel_data.type as string | undefined,
+      carousel_data.background_color as string | undefined,
+      carousel_data.text_color as string | undefined
     );
+    const plainObj = await data.classToPlainObject();
+    this.carousel_data.push(plainObj as CarouselData);
   }
   remove_data(index: number | undefined) {
     if (index !== undefined) {
@@ -316,7 +316,7 @@ export default class Carousel extends Container implements ComponentBloc {
     this.bloc_number = value;
   }
 
-  public get_carousel_data(): Array<CarouselData> {
+  public get_carousel_data(): Array<CarouselData | Record<string, unknown>> {
     return this.carousel_data;
   }
 

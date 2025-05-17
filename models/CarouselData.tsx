@@ -1,4 +1,3 @@
-"use client";
 export default class CarouselData {
   id: number;
   carousel_id: number;
@@ -34,5 +33,21 @@ export default class CarouselData {
     this.type = type;
     this.background_color = background_color;
     this.text_color = text_color;
+  }
+  public async classToPlainObject() {
+    const obj: Record<string, unknown> = await this.convert_to_object_answer();
+    if (obj !== undefined) {
+      return obj;
+    }
+    return this;
+  }
+  async convert_to_object_answer() {
+    const obj: Record<string, unknown> = {};
+    for (const key in this) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        obj[key] = this[key];
+      }
+    }
+    return obj;
   }
 }
