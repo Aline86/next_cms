@@ -52,7 +52,7 @@ type Mark = {
 
 interface BlocParams {
   index: number;
-  bloc: TextPicture;
+  bloc: TextPicture | Record<string, unknown>;
   num_bloc: number;
   toggle: boolean;
   full: boolean;
@@ -271,7 +271,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
   useEffect(() => {
     if (bloc !== undefined && !bloc.bloc_column) {
       setFloat({
-        width: `${bloc.css.width * 0.5}%`,
+        width: `${(bloc.css as { width: number }).width * 0.5}%`,
 
         display: "flex",
         flexDirection: isResponsive
@@ -293,7 +293,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
   useEffect(() => {
     if (bloc !== undefined) {
       setColor({
-        backgroundColor: bloc.background_color,
+        backgroundColor: String(bloc.background_color),
         padding: result?.matches || isResponsive ? "0" : "30px",
 
         height: "fit-content",
@@ -312,21 +312,21 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
         marginBottom: bloc.bloc_column || result?.matches ? "30px" : "0px",
         color:
           bloc?.background_color !== undefined
-            ? isLightOrDark_func(bloc?.background_color)
+            ? isLightOrDark_func(String(bloc?.background_color))
               ? "white"
               : "black"
             : "black",
         width: `${
-          bloc.bloc_column
-            ? `100%`
-            : bloc.image !== undefined && bloc.image.length !== 0
-            ? `100%`
-            : `100%`
+          bloc.bloc_column ? `100%` : bloc.image !== undefined ? `100%` : `100%`
         }`,
       });
       if (bloc !== undefined && !bloc.bloc_column) {
         setFloat({
-          width: `${result?.matches ? "100%" : bloc.css.width * 0.5}%`,
+          width: `${
+            result?.matches
+              ? "100%"
+              : (bloc.css as { width: number }).width * 0.5
+          }%`,
 
           display: "flex",
           flexDirection: bloc.image_right ? "row-reverse" : "row",
@@ -335,7 +335,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
         });
       } else if (bloc !== undefined && bloc.bloc_column) {
         setFloat({
-          width: `${bloc.css.width}%`,
+          width: `${(bloc.css as { width: number }).width}%`,
 
           margin: "0 auto",
         });
@@ -374,14 +374,16 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
   return (
     <div className="flex  pb-8 mb-16 text-fiori flex-col align-center m-auto smaller max-w-[1000px] mx-auto">
       {bloc !== undefined && bloc.title !== "" && (
-        <h2 className="text-6xl text-center mb-16 mt-8">{bloc.title}</h2>
+        <h2 className="text-6xl text-center mb-16 mt-8">
+          {String(bloc.title)}
+        </h2>
       )}
 
       <div
         className="rounded h-full md:flex md:items-center md:justify-center"
         style={colorImage}
       >
-        {bloc !== undefined && bloc.image.length > 0 && (
+        {bloc !== undefined && String(bloc.image) && (
           <div className="m-auto" style={float}>
             <Image bloc={bloc} />
           </div>

@@ -1,84 +1,47 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from "react";
+// app/components/FooterVizualization.tsx (Server Component)
+"use client";
 import s from "./styles.module.css";
 import Footer from "../../../../../models/FooterData";
-
 import isLightOrDark from "../../../../../lib/snippet";
 import LinkNetworksAndOthersFooter from "../../../../../models/LinkNetworksAndOthersFooter";
+import Image from "next/image";
 
 interface FooterInfo {
-  input_bloc: Footer;
-  toggle: boolean;
+  input_bloc: Footer | Record<string, unknown> | undefined;
+
   full: boolean;
   isResponsive: boolean;
 }
-function FooterVizualization({
+
+export default function FooterVizualization({
   input_bloc,
-  toggle,
+
   full,
   isResponsive,
 }: FooterInfo) {
-  const [opened, setOpened] = useState(false);
-  const isLightOrDark_func = useCallback(isLightOrDark, []);
-  const [responsive, setIsResponsive] = useState<
-    React.CSSProperties | undefined
-  >();
-  const root_map: string =
-    input_bloc !== undefined ? input_bloc?.map_iframe_url : "";
+  const root_map: string = String(input_bloc?.map_iframe_url) || "";
 
-  const updateResponsiveFooter = () => {
-    if (input_bloc !== undefined) {
-      setIsResponsive({
-        width: isResponsive ? "380px" : full ? "100%" : "43vw",
-
-        backgroundColor: input_bloc.background_color,
-        color: isLightOrDark_func(input_bloc.background_color)
-          ? "white"
-          : "black",
-      });
-    }
+  const computedStyle = {
+    width: isResponsive ? "380px" : full ? "100%" : "43vw",
+    backgroundColor: String(input_bloc?.background_color ?? ""),
+    color: isLightOrDark(String(input_bloc?.background_color ?? ""))
+      ? "white"
+      : "black",
   };
 
-  useEffect(() => {
-    updateResponsiveFooter();
-  }, [toggle, input_bloc]);
-  useEffect(() => {
-    if (input_bloc !== undefined) {
-      setIsResponsive(
-        input_bloc !== undefined
-          ? {
-              width: isResponsive ? "380px" : full ? "100%" : "43vw",
-              backgroundColor: input_bloc.background_color,
-              color: isLightOrDark_func(input_bloc.background_color)
-                ? "white"
-                : "black",
-            }
-          : undefined
-      );
-    }
-  }, []);
-  useEffect(() => {}, [responsive]);
-  return input_bloc !== undefined ? (
+  return (
     <div
       className={
         isResponsive
-          ? "w-sm bottom-0  padding_footer relative overflow-x-hidden overflow-y-auto"
-          : s.container + " padding_footer  h-[75px] w-[100%]"
+          ? "w-sm bottom-0 padding_footer relative overflow-x-hidden overflow-y-auto"
+          : s.container + " padding_footer h-[75px] w-[100%]"
       }
-      style={{
-        width: isResponsive ? "380px" : full ? "100%" : "43vw",
-
-        backgroundColor: input_bloc.background_color,
-        color: isLightOrDark_func(input_bloc.background_color)
-          ? "white"
-          : "black",
-      }}
+      style={computedStyle}
     >
       <div
         className={
           isResponsive
-            ? " flex flex-col align-center justify-center"
+            ? "flex flex-col align-center justify-center"
             : s.facebook_container
         }
       >
@@ -87,13 +50,10 @@ function FooterVizualization({
             isResponsive ? "pt-4 flex justify-center w-full mb-4" : s.end
           }
         >
-          {input_bloc?.links_network_an_others_footer !== undefined &&
-            input_bloc.links_network_an_others_footer.length > 0 &&
+          {Array.isArray(input_bloc?.links_network_an_others_footer) &&
             input_bloc.links_network_an_others_footer.map(
-              (value: LinkNetworksAndOthersFooter, key: number) => {
-                return value !== undefined &&
-                  value.logo_url.length > 0 &&
-                  value.name.length === 0 ? (
+              (value: LinkNetworksAndOthersFooter, key: number) =>
+                value?.logo_url?.length > 0 && value?.name?.length === 0 ? (
                   <a
                     key={key}
                     className={
@@ -105,23 +65,23 @@ function FooterVizualization({
                     title={value.title}
                     target="_blank"
                   >
-                    <img
-                      className={"rounded"}
+                    <Image
+                      className="rounded"
                       src={
                         process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                         "/api/uploadfile/" +
                         value.logo_url
                       }
                       alt={value.title}
-                      width="auto" // Adjust width as needed
-                      height="50px" // Adjust height as needed
+                      width={50}
+                      height={50}
                     />
                   </a>
                 ) : (
-                  value !== undefined && input_bloc !== undefined && (
+                  value && (
                     <a
                       key={key}
-                      className=" mt-2"
+                      className="mt-2"
                       href={
                         process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                         "/api/uploadfile/" +
@@ -131,31 +91,67 @@ function FooterVizualization({
                       target="_blank"
                       style={{
                         position: "relative",
-
                         cursor: "pointer",
-                        color: `${isLightOrDark(input_bloc.background_color)}`,
+                        color: isLightOrDark(
+                          String(input_bloc.background_color)
+                        )
+                          ? "white"
+                          : "black",
                         textDecoration: "underline",
                       }}
                     >
                       {value.name}
                     </a>
                   )
-                );
-              }
+                )
             )}
         </div>
       </div>
-      <div className="flex flex-col align-center  justify-center text-sm">
+
+      <div className="flex flex-col align-center justify-center text-sm">
         <h3 className="block text-center font-bold text-lg">
-          {input_bloc.address.title}
+          {String(
+            input_bloc &&
+              typeof input_bloc === "object" &&
+              "address" in input_bloc &&
+              input_bloc.address &&
+              typeof input_bloc.address === "object" &&
+              "title" in input_bloc.address
+              ? (input_bloc.address as { title?: string }).title ?? ""
+              : ""
+          )}
         </h3>
-        <div className="block text-center">{input_bloc.address.address}</div>
-        <div className="block text-center">{input_bloc.address.town}</div>
+        <div className="block text-center">
+          {String(
+            input_bloc &&
+              typeof input_bloc === "object" &&
+              "address" in input_bloc &&
+              input_bloc.address &&
+              typeof input_bloc.address === "object" &&
+              "address" in input_bloc.address
+              ? (input_bloc.address as { address?: string }).address ?? ""
+              : ""
+          )}
+        </div>
+        <div className="block text-center">
+          {String(
+            input_bloc &&
+              typeof input_bloc === "object" &&
+              "address" in input_bloc &&
+              input_bloc.address &&
+              typeof input_bloc.address === "object" &&
+              "town" in input_bloc.address
+              ? (input_bloc.address as { town?: string }).town ?? ""
+              : ""
+          )}
+        </div>
       </div>
+
+      {/* Static map section (no toggle logic here) */}
       {root_map !== "" ? (
-        <div className={s.map} onClick={() => setOpened(!opened)}>
+        <div className={s.map}>
           <div className={s.see_map}>Voir la carte</div>
-          <div className={!opened ? `${s.none}` : `${s.full_back_drop}`}>
+          <div className={s.full_back_drop}>
             <div className={s.drop}></div>
             <div className={s.map_content} id="map_content">
               <iframe
@@ -174,9 +170,5 @@ function FooterVizualization({
         </div>
       )}
     </div>
-  ) : (
-    <footer></footer>
   );
 }
-
-export default FooterVizualization;

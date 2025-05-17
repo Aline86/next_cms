@@ -43,7 +43,6 @@ function ShrinkParams({
       }
       onDragOver={handleDragOver}
       onDrop={(e) => {
-        console.log("index", index, handleDrop);
         handleDrop(e);
       }}
       key={index}

@@ -1,10 +1,11 @@
+"use client";
 import { useEffect } from "react";
 
 import CardDataGrid from "./CardData";
 import PictureGroupData from "../../../../../models/PictureGroupData";
 
 interface CarouselData {
-  data: PictureGroupData[] | undefined;
+  data: PictureGroupData[] | undefined | Record<string, unknown>[];
   toggle: boolean;
   isResponsive: boolean;
 }
@@ -14,10 +15,9 @@ function OneTwoGrid({ data, toggle, isResponsive }: CarouselData) {
   const row = "grid grid-col gap-16 m-auto";
   return (
     <div className={row}>
-      {data !== undefined &&
+      {Array.isArray(data) &&
         data.length > 0 &&
         data.map((card, index) => {
-          // If index is 0 or every 3rd after (0, 3, 6...) => Full-width card
           if (index % 3 === 0) {
             return (
               <CardDataGrid
@@ -29,9 +29,7 @@ function OneTwoGrid({ data, toggle, isResponsive }: CarouselData) {
             );
           }
 
-          // If index is 1 or 2 after full-width card => grouped together in one row
           if (index % 3 === 1) {
-            // Check if there's a next card (to make the pair)
             return (
               <div
                 key={index}

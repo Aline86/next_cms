@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 interface CardDatas {
   toggle: boolean;
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
 
   full: boolean;
   isResponsive: boolean;
@@ -44,12 +44,12 @@ function CardData({
 
   useEffect(() => {
     if (data !== undefined) {
-      checkExternal(data.href_url);
+      checkExternal(String(data.href_url));
     }
   }, [toggle]);
 
   return external && data !== undefined ? (
-    <a target="_blank" href={data.href_url}>
+    <a target="_blank" href={String(data.href_url)}>
       <InsideCardData data={data} full={full} />
     </a>
   ) : page !== undefined ? (

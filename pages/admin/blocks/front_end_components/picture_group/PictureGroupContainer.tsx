@@ -4,7 +4,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import { useEffect } from "react";
 
 interface CarouselData {
-  data: PictureGroupData[] | undefined;
+  data: PictureGroupData[] | undefined | Record<string, unknown>[];
   toggle: boolean;
   full: boolean;
   isResponsive: boolean;
@@ -20,9 +20,7 @@ function PictureGroupContainer({
 
   col,
 }: CarouselData) {
-  useEffect(() => {
-    console.log("col", col);
-  }, [toggle, col]);
+  useEffect(() => {}, [toggle, col]);
   const size = full
     ? isResponsive
       ? "  mb-8 mt-8 h-106 w-72 object-contain rounded-t-xl bg-white shadow-lg rounded-xl duration-500 hover:scale-105 hover:shadow-xl"

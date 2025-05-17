@@ -218,7 +218,6 @@ export default function ClientView({ id }: { id: string }) {
         {footer !== undefined && (
           <FooterVizualization
             input_bloc={footer}
-            toggle={toggle}
             isResponsive={isReponsive}
             full={true}
           />

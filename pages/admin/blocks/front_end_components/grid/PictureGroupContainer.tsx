@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+"use client"; /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react";
 
 import CardDataGrid from "./CardData";
@@ -6,7 +6,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import OneTwoGrid from "./One_two_grid";
 
 interface CarouselData {
-  data: PictureGroupData[] | undefined;
+  data: PictureGroupData[] | Record<string, unknown>[] | undefined;
   toggle: boolean;
   isResponsive: boolean;
   width: "1" | "2" | "3" | "4";

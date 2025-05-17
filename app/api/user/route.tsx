@@ -1,75 +1,65 @@
-"use server";
-
 import { NextRequest, NextResponse } from "next/server";
-import { encrypt } from "../../lib/session";
 import { cookies } from "next/headers";
+import { encrypt } from "../../lib/session";
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
-  const formdata = new FormData();
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-  // Test de l'input avec la regex
-  if (emailRegex.test(email)) {
-    formdata.append("email", email);
+  if (!emailRegex.test(email) || !passwordRegex.test(password)) {
+    return NextResponse.json(
+      { message: "Invalid email or password format" },
+      { status: 400 }
+    );
   }
-  if (passwordRegex.test(password)) {
-    formdata.append("password", password);
-  }
 
-  if (formdata.get("email") && formdata.get("password")) {
-    try {
-      await fetch(
-        process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
-          "/api/user.php?method=connexion",
-        {
-          referrerPolicy: "strict-origin-when-cross-origin",
-          mode: "cors",
-          method: "POST",
-          credentials: "include",
-          body: formdata,
-        }
-      ).then(async (response) => {
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
+  const formdata = new FormData();
+  formdata.append("email", email);
+  formdata.append("password", password);
 
-        try {
-          const userId = await response.json();
-          // Extract user data from the request body (e.g., userId)
-          if (Object.keys(userId).length === 0) {
-            throw new Error("Received empty JSON response");
-          }
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL}/api/user.php?method=connexion`,
+      {
+        referrerPolicy: "strict-origin-when-cross-origin",
+        mode: "cors",
+        method: "POST",
+        credentials: "include",
+        body: formdata,
+      }
+    );
 
-          // Simulate session token creation with encryption (adjust according to your logic)
-          const expiresAt = new Date(Date.now() + 60 * 60); // 1 week expiration
-          const session = await encrypt({
-            userId: userId,
-            expiresAt: expiresAt,
-          });
-
-          // Prepare response and set cookie
-
-          (await cookies()).set("token", session, {
-            httpOnly: true, // Cookie not accessible via JavaScript
-            secure: process.env.NODE_ENV === "production", // Secure cookies in production
-            sameSite: false, // Prevent cross-site request forgery
-            path: "/", // Cookie accessible for all paths
-            maxAge: 60 * 60 * 1000,
-          });
-
-          // Redirect to /admin/pages
-        } catch (error) {
-          return NextResponse.json({ message: error }, { status: 200 });
-        }
-      });
-    } catch (error) {
-      console.error("Login failed:", error);
-      return NextResponse.json({ message: error }, { status: 200 });
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: `Backend error: ${response.status}` },
+        { status: response.status }
+      );
     }
-  }
 
-  return NextResponse.json({ message: "ok" }, { status: 200 });
+    const userId = await response.json();
+
+    if (!userId || Object.keys(userId).length === 0) {
+      return NextResponse.json(
+        { message: "Empty user data from backend" },
+        { status: 401 }
+      );
+    }
+
+    const session = await encrypt({ userId });
+
+    (await cookies()).set("token", session, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+
+    return NextResponse.json({ message: "Login successful" }, { status: 200 });
+  } catch (error) {
+    console.error("Login error:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  }
 }

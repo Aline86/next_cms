@@ -237,12 +237,14 @@ export default class PictureGroup extends Container {
 
     return this;
   }
-  public set_picture_group_data(picture_group_datas: Array<PictureGroupData>) {
+  public async set_picture_group_data(
+    picture_group_datas: Record<string, unknown>[]
+  ) {
     this.picture_group_data = [];
 
-    picture_group_datas.forEach((picture_group_data) => {
-      this.add_picture_group_data(picture_group_data);
-    });
+    for (const picture_group_data of picture_group_datas) {
+      await this.add_picture_group_data(picture_group_data);
+    }
   }
   public add_data() {
     this.card_number++;
@@ -278,22 +280,24 @@ export default class PictureGroup extends Container {
 
     return this;
   }
-  public add_picture_group_data(picture_group_data: PictureGroupData) {
-    this.picture_group_data.push(
-      new PictureGroupData(
-        Number(picture_group_data.id),
-        Number(picture_group_data.card_number),
-        this.id,
-        Boolean(Number(picture_group_data.is_data_button)),
-        picture_group_data.href_url,
-        picture_group_data.image_url,
-        picture_group_data.text,
-        picture_group_data.title,
-        picture_group_data.type,
-        picture_group_data.background_color,
-        picture_group_data.text_color
-      )
+  public async add_picture_group_data(
+    picture_group_data: Record<string, unknown>
+  ) {
+    const data = new PictureGroupData(
+      Number(picture_group_data.id),
+      Number(picture_group_data.card_number),
+      this.id,
+      Boolean(Number(picture_group_data.is_data_button)),
+      picture_group_data.href_url as string | undefined,
+      picture_group_data.image_url as string | undefined,
+      picture_group_data.text as string | undefined,
+      picture_group_data.title as string | undefined,
+      picture_group_data.type as string | undefined,
+      picture_group_data.background_color as string | undefined,
+      picture_group_data.text_color as string | undefined
     );
+    const plainObj = await data.classToPlainObject();
+    this.picture_group_data.push(plainObj as PictureGroupData);
   }
   async remove_data(index: number | undefined) {
     if (index !== undefined) {

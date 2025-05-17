@@ -1,4 +1,3 @@
-"use client";
 export default class LinkNetworksAndOthersFooter {
   id: number;
   title: string;

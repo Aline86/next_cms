@@ -90,7 +90,11 @@ function CardData({
             key={1}
             index={index}
             bloc={bloc}
-            data_img={image !== undefined ? image : ""}
+            data_img={
+              image !== undefined && image !== null && typeof image === "string"
+                ? image
+                : ""
+            }
             subfield={""}
             update={async (
               event: InputTypes,
