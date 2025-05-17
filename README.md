@@ -2,6 +2,8 @@
 
 This repository contains a CMS for building static websites.
 
+It is based on SSR rendering for the front office now.
+
 When you build a page, you see directly what you create :
 
 ![Screen bloc edition](./readme_pictures/screen_bloc_edition.png)
