@@ -7,6 +7,7 @@ import InputTypes from "../../../../../../lib/InputTypes";
 import ComponentTypes from "../../../../../../lib/types";
 
 interface ImageGroupData {
+  page_id: number;
   updateComponent: (
     event: InputTypes,
     field: string | undefined,
@@ -17,7 +18,7 @@ interface ImageGroupData {
   bloc: PictureGroup;
 }
 
-function ImageGroup({ updateComponent, bloc }: ImageGroupData) {
+function ImageGroup({ updateComponent, bloc, page_id }: ImageGroupData) {
   const show_remove =
     bloc !== undefined && bloc.picture_group_data !== undefined
       ? bloc.picture_group_data !== undefined
@@ -65,6 +66,7 @@ function ImageGroup({ updateComponent, bloc }: ImageGroupData) {
                         await updateComponent(event, field, input, index, bloc);
                       }}
                       show_remove={show_remove}
+                      page_id={page_id}
                     />
                   </div>
                 );

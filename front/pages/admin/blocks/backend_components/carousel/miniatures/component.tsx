@@ -1,5 +1,4 @@
 import Carousel from "../../../../../../models/Carousel";
-import CarouselData from "../../../../../../models/CarouselData";
 
 import CardData from "./wrapper";
 import InputTypes from "../../../../../../lib/InputTypes";
@@ -42,7 +41,7 @@ function CarouselOption3({ updateComponent, bloc }: CardDatas) {
       <div className="flex flex-wrap gap-2">
         {bloc !== undefined &&
           bloc.carousel_data !== undefined &&
-          bloc.carousel_data.map((value: CarouselData, index: number) => {
+          bloc.carousel_data.map((_, index: number) => {
             return (
               <div
                 //cards

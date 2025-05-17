@@ -20,7 +20,7 @@ export default class Header extends Container implements ComponentBloc {
     type: string = "header",
     logo_url: string = "",
     image_url: string = "",
-    background_color: string = "#ffffff"
+    background_color: string = "#eeeeeee"
   ) {
     super(id, title, type);
     this.id = id;

@@ -1,10 +1,33 @@
-/* eslint-disable @next/next/no-img-element */
-
 import Image from "next/image";
 import PictureGroupData from "../../../../../models/PictureGroupData";
 
+function rotateToMouse(e: React.MouseEvent<HTMLElement>): void {
+  const card = e.currentTarget as HTMLElement;
+  const bounds = card.getBoundingClientRect();
+
+  const mouseX: number = e.clientX;
+  const mouseY: number = e.clientY;
+  const leftX: number = mouseX - bounds.x;
+  const topY: number = mouseY - bounds.y;
+  const center = {
+    x: leftX - bounds.width / 2,
+    y: topY - bounds.height / 2,
+  };
+  const distance: number = Math.sqrt(center.x ** 2 + center.y ** 2);
+
+  card.style.transform = `
+      scale3d(1.07, 1.07, 1.07)
+      rotate3d(
+          ${center.y / 100},
+          ${-center.x / 100},
+          0,
+          ${Math.log(distance) * 4}deg
+      )
+  `;
+}
+
 interface CardDatas {
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
 
   full: boolean;
 }
@@ -16,14 +39,16 @@ function InsideCardData({
 }: CardDatas) {
   const hw = full ? "h-106 w-72" : "h-full w-36";
 
-  const left_out = "shadow-md rounded-xl duration-500 hover:scale-105";
+  const left_out = "shadow-sm rounded-xl duration-500 hover:scale-105";
 
   const size = full
-    ? hw + " object-cover rounded-t-xl bg-white shadow-md " + left_out
-    : hw + " w-36 object-cover rounded-t-xl bg-white shadow-md " + left_out;
+    ? hw + " object-cover rounded-t-xl bg-white shadow-sm " + left_out
+    : hw + " w-36 object-cover rounded-t-xl bg-white shadow-sm " + left_out;
   const img =
     data !== undefined
-      ? "http://localhost/api/uploadfile/" + data.image_url
+      ? process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+        "/api/uploadfile/" +
+        data.image_url
       : "";
   const text_color =
     data !== undefined && data.image_url !== ""
@@ -41,8 +66,8 @@ function InsideCardData({
       ? "absolute p-3 top-6 w-full h-full flex flex-col justify-spacing "
       : "absolute p-3 top-3 w-full h-full flex flex-col ";
   const button_height = full
-    ? "absolute bottom-15 left-6 h-[50px] leading-[50px]"
-    : "absolute h-[35px] absolute left-3 bottom-8";
+    ? "absolute bottom-15 left-7 h-[50px] leading-[50px]"
+    : "absolute h-[35px] absolute left-3.5 bottom-8";
   const flex_position =
     data !== undefined && data.text !== "" && !data.is_data_button && full
       ? " flex-col justify-end mb-12 ml-4 mr-4"
@@ -51,14 +76,19 @@ function InsideCardData({
       : !full
       ? ""
       : "ml-4 mr-4";
-  const background_picture = `h-full relative shadow-md  rounded-xl duration-500 hover:scale-105 border-[15px] border-white`;
+  const background_picture = `h-full relative shadow-sm  rounded-xl`;
   return data !== undefined ? (
     <div
-      className={"bg_img_group " + background_picture}
-      style={{ backgroundColor: data.background_color }}
+      onMouseMove={(e) => rotateToMouse(e)}
+      onMouseLeave={(e) => {
+        const card = e.currentTarget as HTMLElement;
+        card.style.transform = `scale3d(1, 1, 1)`;
+      }}
+      className={"bg_img_group " + background_picture + " card"}
+      style={{ backgroundColor: String(data.background_color) }}
     >
       {data.image_url != "" ? (
-        <img src={`${img}`} alt="Image" className={size} />
+        <Image src={`${img}`} alt="Image" className={size} fill={true} />
       ) : (
         ""
       )}
@@ -67,18 +97,18 @@ function InsideCardData({
         <div className={"flex w-[90%] h-full " + flex_position}>
           <p
             style={{
-              color: data.text_color,
+              color: String(data.text_color),
             }}
             className={text_size}
           >
-            {data.text}
+            {String(data.text)}
           </p>
         </div>
-        {data.is_data_button && (
+        {Boolean(data.is_data_button) === true && (
           <div
             style={{
-              border: "1px solid " + data.text_color,
-              color: data.text_color,
+              border: "1px solid " + String(data.text_color),
+              color: String(data.text_color),
             }}
             className={`buttons border border-white border-solid border-1 block w-[80%]  text-center text-gray-100 rounded ${button_height}`}
           >

@@ -16,7 +16,7 @@ export class UploadService {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL}/api/upload.php?name=${filename}`,
+          `${process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL}/api/uploadfile/index.php?name=${filename}`,
           {
             method: "POST",
             mode: "cors",
@@ -49,7 +49,7 @@ export class UploadService {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL}/api/upload.php?name=${filename}`,
+          `${process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL}/api/uploadfile/index.php?name=${filename}`,
           {
             method: "POST",
             mode: "cors",
@@ -66,7 +66,6 @@ export class UploadService {
 
         const result = await response.json();
         return result.success;
-        console.log("Réponse du serveur:", result);
       } catch (error) {
         console.error("Erreur lors du téléchargement:", error);
       }
@@ -75,7 +74,7 @@ export class UploadService {
   static deleteUpload = async (file: File, token: string | null) => {
     await fetch(
       process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
-        "/api/upload.php?name=" +
+        "/api/uploadfile/index.php?name=" +
         file +
         "&token=" +
         token,
@@ -90,7 +89,7 @@ export class UploadService {
     const signal = controller.signal;
     return await fetch(
       process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
-        "/api/upload.php?name=" +
+        "/api/uploadfile/index.php?name=" +
         imageUrl,
       {
         method: "GET",

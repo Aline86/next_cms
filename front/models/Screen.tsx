@@ -1,4 +1,3 @@
-"use client";
 import ComponentBloc from "../lib/Component";
 import Container from "../lib/Container";
 import InputTypes from "../lib/InputTypes";

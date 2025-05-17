@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import s from "./styles.module.css";
@@ -7,6 +8,7 @@ import Page from "../../../../../../models/Page";
 import InputTypes from "../../../../../../lib/InputTypes";
 
 interface DropdownInfo {
+  page_id: number;
   bloc: PictureGroup;
   data: PictureGroupData;
   index: number;
@@ -19,16 +21,24 @@ interface DropdownInfo {
   ) => Promise<void>;
 }
 
-function DropdownData({ bloc, data, index, updateComponent }: DropdownInfo) {
+function DropdownData({
+  page_id,
+  bloc,
+  data,
+  index,
+  updateComponent,
+}: DropdownInfo) {
   const [pages, setPages] = useState<Page[]>();
-  const [page, setPage] = useState<Page>(new Page());
+  const [page, setPage] = useState<Page>();
   const [choice, isExternalLink] = useState<string>("");
   const [toggle, setToggle] = useState<boolean>(false);
 
   const getPages = async () => {
-    const async_result = await page.get_sub_pages();
-    if (Array.isArray(async_result) && async_result.length >= 1) {
-      setPages(async_result);
+    if (page !== undefined) {
+      const async_result = await page.get_sub_pages();
+      if (Array.isArray(async_result) && async_result.length >= 1) {
+        setPages(async_result);
+      }
     }
   };
   const checkExternal = async (url: string) => {
@@ -41,18 +51,22 @@ function DropdownData({ bloc, data, index, updateComponent }: DropdownInfo) {
       isExternalLink("Page interne");
       const prefixe = Number(url.substring(0, 2));
       const pageData = await getPage(prefixe);
-      setPage(pageData);
+      if (pageData !== undefined) {
+        setPage(pageData);
+      }
     }
   };
   const updateLink = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setToggle(true);
     isExternalLink(e.target.value);
   };
-  const getPage = async (id: number) => {
-    page.set_id(id);
-    const new_page = await page.get_bloc();
+  const getPage = async (page_id: number) => {
+    const page_type = new Page(page_id, 0, null);
 
-    return new_page;
+    const new_page = await page_type.get_bloc();
+    if (new_page !== undefined) {
+      setPage(new_page);
+    }
   };
   useEffect(() => {
     if (data !== undefined) {
@@ -60,8 +74,11 @@ function DropdownData({ bloc, data, index, updateComponent }: DropdownInfo) {
     }
 
     getPages();
-  }, []);
+  }, [page]);
   useEffect(() => {}, [choice]);
+  useEffect(() => {
+    getPage(page_id);
+  }, []);
   return data !== undefined ? (
     <div className={s.container}>
       <select

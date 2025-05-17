@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
 
@@ -14,7 +12,7 @@ import Link from "next/link";
 import LinkNetworksAndOthersHeader from "../../../../../models/LinkNetworksAndOthersHeader";
 
 interface HeaderInfo {
-  input_bloc: Header;
+  input_bloc: Record<string, unknown> | Header;
   isResponsive: boolean;
   toggle: boolean;
   full: boolean;
@@ -30,7 +28,7 @@ function HeaderVizualization({
   const [open, setOpen] = useState(false);
   const [, setResize] = useState(0);
   const [result, setResult] = useState<MediaQueryList>();
-  console.log(input_bloc?.background_color);
+
   const [classes] = useState<string | undefined>(
     (input_bloc !== undefined && isResponsive) || result?.matches
       ? " uppercase text-2xl light top-[1rem]" + s.title_responsive
@@ -68,13 +66,13 @@ function HeaderVizualization({
             ? `url(${
                 process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                 "/api/uploadfile/" +
-                input_bloc?.image_url
+                String(input_bloc?.image_url)
               })`
             : page_number !== undefined &&
               page_number > 1 &&
               input_bloc.background_color === "#00000000"
             ? "#00000030"
-            : input_bloc.background_color,
+            : String(input_bloc.background_color),
 
         backdropFilter:
           page_number !== undefined &&
@@ -107,12 +105,14 @@ function HeaderVizualization({
         page_number !== undefined &&
         page_number > 1 &&
         classes !== undefined ? (
-          <h1 className={s.title_responsive + classes}>{input_bloc?.title}</h1>
+          <h1 className={s.title_responsive + classes}>
+            {String(input_bloc?.title)}
+          </h1>
         ) : (
           input_bloc.background_color !== "#00000000" &&
           classes !== undefined && (
             <h1 className={s.title_responsive + classes}>
-              {input_bloc?.title}
+              {String(input_bloc?.title)}
             </h1>
           )
         )}
@@ -139,7 +139,11 @@ function HeaderVizualization({
             className={`${s.inside_selector} flex gap-4 items-center justify-end`}
           >
             {isResponsive &&
-              input_bloc?.link_networks_an_others_header.length > 0 && (
+              Array.isArray(
+                (input_bloc as Header)?.link_networks_an_others_header
+              ) &&
+              (input_bloc as Header).link_networks_an_others_header.length >
+                0 && (
                 <div className={s.plus} onClick={() => handleShowLinks()}>
                   <Image
                     src={reseaux}
@@ -150,8 +154,12 @@ function HeaderVizualization({
                 </div>
               )}
 
-            {input_bloc?.link_networks_an_others_header.length > 0 &&
-              input_bloc?.link_networks_an_others_header.map(
+            {Array.isArray(
+              (input_bloc as Header)?.link_networks_an_others_header
+            ) &&
+              (input_bloc as Header).link_networks_an_others_header.length >
+                0 &&
+              (input_bloc as Header).link_networks_an_others_header.map(
                 (value: LinkNetworksAndOthersHeader, key: number) => {
                   return (
                     <a

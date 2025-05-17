@@ -9,7 +9,7 @@ import CarouselData from "../../../../../models/CarouselData";
 import Image from "next/image";
 
 interface CarouselDataValue {
-  carousel_cards: CarouselData[];
+  carousel_cards: CarouselData[] | undefined | Record<string, unknown>;
   transitionFinished: boolean;
   cardWidth: number;
   updateCarousel_cards: (carousel_cards: CarouselData[]) => void;
@@ -42,7 +42,7 @@ function MiniaturesContainer({
   setCardValue,
   updateCardEnd,
   clic,
-
+  cardValue,
   isResponsive,
 }: CarouselDataValue) {
   const [trigger, setTrigger] = useState(0);
@@ -59,11 +59,13 @@ function MiniaturesContainer({
     const currentCard =
       Number((e.target as HTMLElement).getAttribute("data-value")) - 1;
 
-    setCard(carousel_cards[currentCard + 1]);
+    if (Array.isArray(carousel_cards)) {
+      setCard(carousel_cards[currentCard + 1]);
+    }
 
     setCardValue(currentCard);
 
-    setMove(cardNumber - currentCard * cardWidth - 8);
+    setMove(cardNumber - currentCard * cardWidth - cardNumber);
     setIsLeft(false);
     updateTransitionState(true);
 
@@ -71,7 +73,7 @@ function MiniaturesContainer({
   }
 
   function updateTransitionLeft() {
-    if (carousel_cards !== undefined && carousel_cards.length > 0) {
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
       const popItem = carousel_cards.pop();
       if (popItem !== undefined) {
         carousel_cards.unshift(popItem);
@@ -83,7 +85,7 @@ function MiniaturesContainer({
   }
 
   function updateTransitionRight() {
-    if (carousel_cards !== undefined && carousel_cards.length > 0) {
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
       const shiftItem = carousel_cards.shift();
       if (shiftItem !== undefined) {
         carousel_cards.push(shiftItem);
@@ -96,20 +98,25 @@ function MiniaturesContainer({
 
   function moveLeft() {
     if (
+      Array.isArray(carousel_cards) &&
       carousel_cards !== undefined &&
-      carousel_cards[cardNumber] !== undefined
+      carousel_cards[1] !== undefined
     ) {
       setMove(-cardWidth);
       setIsClic(false);
       setIsLeft(true);
       setTrigger(trigger + 1);
       updateTransitionState(true);
-      setCard(carousel_cards[cardNumber]);
+      setCard(carousel_cards[2]);
     }
   }
 
   function moveRight() {
-    if (carousel_cards !== undefined && carousel_cards[0] !== undefined) {
+    if (
+      Array.isArray(carousel_cards) &&
+      carousel_cards !== undefined &&
+      carousel_cards[1] !== undefined
+    ) {
       setMove(cardWidth);
       setIsClic(false);
       setIsLeft(false);
@@ -120,7 +127,9 @@ function MiniaturesContainer({
   }
 
   useEffect(() => {
-    setCard(carousel_cards[2]);
+    if (Array.isArray(carousel_cards) && carousel_cards.length > 0) {
+      setCard(carousel_cards[1]);
+    }
   }, []);
 
   useEffect(() => {
@@ -135,9 +144,13 @@ function MiniaturesContainer({
 
   return carousel_cards !== undefined ? (
     <div
-      className={isResponsive ? "w-sm m-auto" : `m-auto  w-full max-w-[1400px]`}
+      className={
+        isResponsive
+          ? "w-sm m-auto"
+          : `m-auto  w-full max-w-[1050px] h-full mt-16 flex flex-col justify-end items-end`
+      }
     >
-      <div className="flex w-full m-auto  ">
+      <div className="flex w-full m-auto mb-4">
         {card !== undefined && (
           <BigCard
             key={-1}
@@ -183,7 +196,7 @@ function MiniaturesContainer({
           </span>
         )}
         <div
-          className="relative m-auto overflow-hidden items-center justify-center py-5"
+          className="relative m-auto overflow-hidden items-center justify-center "
           style={{
             minWidth: `${cardWidth}px`,
             margin: `${gap}px auto`,
@@ -203,16 +216,17 @@ function MiniaturesContainer({
             className={s.card_container}
             style={{
               minWidth: `fit-content `,
-              height: "250px",
+              height: "170px",
             }}
           >
             <div
-              className="m-auto absolute flex flex justify-center items-center py-5 h-[250px] gap-4"
+              className="m-auto absolute flex flex justify-center items-center h-[170px] gap-4"
               style={{
                 marginLeft: `-${cardWidth}px`,
               }}
             >
               {carousel_cards !== undefined &&
+                Array.isArray(carousel_cards) &&
                 carousel_cards.map((value: CarouselData, index: number) => {
                   return (
                     <Card
@@ -220,7 +234,9 @@ function MiniaturesContainer({
                       index={index}
                       value={value}
                       transitionFinished={transitionFinished}
-                      trasnsType={"transform 0.3s ease"}
+                      trasnsType={
+                        "transform " + 0.1 * Number(cardValue + 1) + "s ease-in"
+                      }
                       transX={move}
                       updateCard={updateCard}
                       toggle={false}

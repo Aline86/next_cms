@@ -4,7 +4,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import Picture from "./Picture";
 
 interface CardDatas {
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
   index: number;
   isResponsive: boolean;
 }
@@ -14,10 +14,16 @@ function CardDataGrid({ data, index, isResponsive }: CardDatas) {
   const handle_pic_click = (state: boolean) => {
     set_clicked_pic(state);
   };
-  return data !== undefined &&
-    data instanceof PictureGroupData &&
-    data.image_url !== "" ? (
-    <div key={data.id} className="relative w-full overflow-hidden rounded-lg">
+
+  return data !== undefined && data.image_url !== "" ? (
+    <div
+      key={
+        typeof data === "object" && data !== null && "id" in data
+          ? String((data as { id?: string | number }).id)
+          : undefined
+      }
+      className="relative w-full overflow-hidden rounded"
+    >
       <Picture
         data={data}
         update_clicked_pic={handle_pic_click}

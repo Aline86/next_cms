@@ -1,17 +1,17 @@
-"use client";
+"use server";
 
 import React from "react";
 import Layout from "../../pages/layout";
-import { useEffect, useState } from "react";
-import ClientView from "../../pages/[slug]/ClientView";
-export const dynamic = "force-dynamic";
-export default function Page({
+
+import ClientView from "./ClientView";
+
+export default async function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = React.use(params);
-  const [id, setId] = useState();
+  const { slug } = await params;
+
   const getPageId = async () => {
     // Convert plain objects back into Page instances
     try {
@@ -34,7 +34,7 @@ export default function Page({
 
       try {
         const page = await response.json();
-        setId(page.id);
+        return page.id;
       } catch {}
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -44,14 +44,13 @@ export default function Page({
       }
     }
   };
-  useEffect(() => {
-    getPageId();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  const id = await getPageId();
+
   return (
-    id !== undefined && (
+    id !== undefined &&
+    typeof id === "number" && (
       <Layout>
-        <ClientView id={id} />
+        <ClientView params={Promise.resolve({ id: id })} />
       </Layout>
     )
   );

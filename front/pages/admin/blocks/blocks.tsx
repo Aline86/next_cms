@@ -82,10 +82,7 @@ function Blocs({
       }
       blocs.map(
         async (bloc_in_blocs: SnippetTypes | Header | Footer, index) => {
-          if (
-            !(bloc_in_blocs instanceof Header) &&
-            !(bloc_in_blocs instanceof Footer)
-          ) {
+          if ("bloc_number" in bloc_in_blocs) {
             bloc_in_blocs.set_bloc_number(index + 1);
             new_bloc_array[index] = await bloc_in_blocs.save_bloc();
           }
@@ -141,14 +138,17 @@ function Blocs({
         typeof bloc.set_bloc_number === "function"
       ) {
         bloc.set_bloc_number(index + 1);
+        new_bloc_array[index] = await bloc.save_bloc();
       }
-      new_bloc_array.push(bloc);
     });
     // saving the new info in database
-    new_bloc_array.map(async (bloc_to_save: ComponentTypes) => {
-      await bloc_to_save.save_bloc();
+    Promise.all(new_bloc_array).then((data) => {
+      const typedData = data as Array<ComponentTypes>;
+      if (typedData !== undefined && Array.isArray(typedData)) {
+        setBlocs(new_bloc_array);
+        setRefresh(!refresh);
+      }
     });
-    setBlocs(new_bloc_array);
   };
 
   const saveBloc = async (bloc: ComponentTypes) => {
@@ -364,6 +364,7 @@ function Blocs({
                 <BlocPictureGroupComponent
                   key={index}
                   bloc={bloc}
+                  page_id={page_id}
                   setDragBegin={setDragBegin}
                   updateDragBloc={async (event: number): Promise<void> => {
                     await updateDragBloc(event);
@@ -550,7 +551,6 @@ function Blocs({
           ): Promise<void> => {
             await updateComponent(event, field, input, index, bloc);
           }}
-          toggle={toggle}
           saveBloc={savePrerequisites}
         />
       )}

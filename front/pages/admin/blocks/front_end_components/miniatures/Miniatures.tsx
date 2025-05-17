@@ -6,7 +6,7 @@ import MiniaturesContainer from "./MiniaturesContainer";
 import Carousel from "../../../../../models/Carousel";
 import CarouselData from "../../../../../models/CarouselData";
 interface CustomCarouselInfo {
-  input_bloc: Carousel;
+  input_bloc: Carousel | Record<string, unknown> | undefined;
   toggle: boolean;
   refresh: boolean;
   full: boolean;
@@ -19,8 +19,12 @@ function MiniaturesVisualization({
   full,
   isResponsive,
 }: CustomCarouselInfo) {
-  const [dataValue, setData] = useState<CarouselData[]>();
-  const [dataToProcess, setDataToProcess] = useState<CarouselData[]>();
+  const [dataValue, setData] = useState<
+    CarouselData[] | Record<string, unknown>[]
+  >();
+  const [dataToProcess, setDataToProcess] = useState<
+    CarouselData[] | Record<string, unknown>[]
+  >();
   const [, setType] = useState<string>("");
   const [cardNumber, setCardNumber] = useState<number>(0);
   const [, setResize] = useState(0);
@@ -34,33 +38,30 @@ function MiniaturesVisualization({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
     if (input_bloc !== undefined) {
-      setCardNumber(input_bloc.card_number);
+      setCardNumber(Number(input_bloc.card_number));
     }
   }, [result?.matches]);
 
   const [cardValue, setCardValue] = useState(0);
 
   function updateCardEnd() {
-    document.addEventListener("transitionend", function () {
-      //  e.preventDefault();
+    if (dataValue !== undefined && dataValue.length === cardNumber * 2) {
+      const res = dataValue?.splice(cardValue, dataValue.length - 1);
 
-      if (dataValue !== undefined && dataValue.length === cardNumber * 2) {
-        const res = dataValue?.splice(cardValue, dataValue.length);
+      const col = res?.concat(dataValue);
 
-        const col = res?.concat(dataValue);
-        console.log("col", col, res, dataValue);
-        setData(col);
-
+      if (col && col.every((item) => "id" in item)) {
+        setData(col as CarouselData[]);
         setIsClic(false);
       }
-    });
+    }
   }
 
   function updateTransitionState(state: boolean) {
     setTransitionFinished(state);
   }
 
-  function updateDataValue(cards: CarouselData[]) {
+  function updateDataValue(cards: CarouselData[] | Record<string, unknown>[]) {
     setData(cards);
   }
   function updateType(input_bloc: Carousel) {
@@ -85,17 +86,34 @@ function MiniaturesVisualization({
     window?.addEventListener("resize", updateSize);
   }, [result?.matches]);
   useEffect(() => {
-    if (input_bloc !== undefined) {
-      updateType(input_bloc);
-      setDataToProcess(input_bloc.carousel_data);
+    if (
+      input_bloc !== undefined &&
+      typeof input_bloc === "object" &&
+      "carousel_type" in input_bloc
+    ) {
+      updateType(input_bloc as Carousel);
+      setDataToProcess(
+        (input_bloc as Carousel).carousel_data as
+          | CarouselData[]
+          | Record<string, unknown>[]
+      );
     }
   }, [refresh]);
   useEffect(() => {
     const data = reorder_carousel();
 
-    setData(data);
+    // Ensure data is either CarouselData[] or Record<string, unknown>[] or undefined
+    if (
+      Array.isArray(data) &&
+      (data.every((item) => "id" in item) ||
+        data.every((item) => !("id" in item)))
+    ) {
+      setData(data as CarouselData[] | Record<string, unknown>[]);
+    } else {
+      setData(undefined);
+    }
     if (result !== undefined) {
-      setCardWidth(166);
+      setCardWidth(165);
     }
   }, [dataToProcess, toggle]);
   useEffect(() => {
@@ -104,19 +122,32 @@ function MiniaturesVisualization({
   return (
     <div
       className={`${
-        !full ? "fixed bottom-[0px] " : isResponsive ? responsive : "h-full"
-      } m-auto`}
+        !full
+          ? "fixed bottom-[0px] "
+          : isResponsive
+          ? responsive
+          : "h-full max-h-[600px]"
+      } m-auto mb-24`}
     >
       {dataValue !== undefined &&
         input_bloc !== undefined &&
         cardWidth !== undefined &&
-        dataValue.length === input_bloc.card_number * 2 && (
+        typeof input_bloc === "object" &&
+        input_bloc !== null &&
+        "card_number" in input_bloc &&
+        typeof (input_bloc as Carousel).card_number === "number" &&
+        dataValue.length === (input_bloc as Carousel).card_number * 2 && (
           <MiniaturesContainer
-            width={input_bloc.width}
-            height={input_bloc.height}
-            gap={input_bloc.gap}
+            width={(input_bloc as Carousel).width}
+            height={(input_bloc as Carousel).height}
+            gap={(input_bloc as Carousel).gap}
             updateCarousel_cards={updateDataValue}
-            carousel_cards={dataValue}
+            carousel_cards={
+              Array.isArray(dataValue) &&
+              dataValue.every((item) => "id" in item)
+                ? (dataValue as CarouselData[])
+                : undefined
+            }
             transitionFinished={transitionFinished}
             updateTransitionState={updateTransitionState}
             cardWidth={cardWidth}

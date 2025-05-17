@@ -17,7 +17,6 @@ interface BlocData {
   ) => Promise<void>;
 
   saveBloc: (bloc: Footer) => Promise<void>;
-  toggle: boolean;
 }
 
 function BlocFooter({
@@ -25,7 +24,6 @@ function BlocFooter({
 
   updateComponent,
   saveBloc,
-  toggle,
 }: BlocData) {
   return bloc !== undefined ? (
     <BlockContainer
@@ -36,7 +34,6 @@ function BlocFooter({
       component_visualization={
         <FooterVizualization
           input_bloc={bloc}
-          toggle={toggle}
           isResponsive={false}
           full={false}
         />

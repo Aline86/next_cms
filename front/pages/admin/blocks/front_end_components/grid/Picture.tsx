@@ -1,4 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
+"use client";
+
 import Image from "next/image";
 import fermer from "./../../../../assets/fermer.png";
 
@@ -6,7 +7,7 @@ import PictureGroupData from "../../../../../models/PictureGroupData";
 import { useEffect, useState } from "react";
 
 interface CardDatas {
-  data: PictureGroupData;
+  data: PictureGroupData | Record<string, unknown> | undefined;
   update_clicked_pic: (state: boolean) => void;
   isResponsive: boolean;
   clicked: boolean;
@@ -23,8 +24,11 @@ function Picture({
   const [, setResize] = useState(0);
   const image =
     data !== undefined && data?.image_url !== undefined
-      ? "http://localhost/api/uploadfile/" + data.image_url
+      ? process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+        "/api/uploadfile/" +
+        data.image_url
       : "";
+
   function updateSize() {
     setResize(window?.innerWidth);
   }
@@ -37,9 +41,14 @@ function Picture({
   }, []);
   useEffect(() => {}, [clicked_pic, clicked]);
 
-  return data !== undefined && data instanceof PictureGroupData ? (
+  return data !== undefined ? (
     <>
       <div
+        style={
+          result?.matches
+            ? { transform: "scale(1.6)" }
+            : { transform: "scale(1)" }
+        }
         className={`transition-opacity duration-600 ease-in-out ${
           clicked_pic
             ? "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 block rounded-xl z-110 opacity-100 m-auto z-90 opacity-100"
@@ -50,12 +59,12 @@ function Picture({
           update_clicked_pic(false);
         }}
       >
-        <img
+        <Image
+          width={1200} // Original width of the image
+          height={800} // Original height
+          className=" max-h-[90vh] block rounded-xl cursor-pointer-not-big w-full h-auto"
           src={image}
-          alt={data.title}
-          className={
-            "h-auto max-h-[700px] block rounded-xl cursor-pointer-not-big"
-          }
+          alt={String(data.title)}
         />
       </div>
       <div
@@ -97,11 +106,13 @@ function Picture({
           }
         }}
       >
-        <img
+        <Image
+          width={1200} // Original width of the image
+          height={800}
           src={image}
-          alt={data.title}
+          alt={String(data.title)}
           className={
-            "relative w-[100%] h-auto block rounded-xl cursor-pointer-not-big z-10 " +
+            "relative w-[100%] h-auto block rounded cursor-pointer-not-big z-10  w-full h-auto" +
             clicked
               ? "pointer-events-none"
               : "cursor-pointer"
@@ -109,7 +120,7 @@ function Picture({
         />
         <div
           className={
-            "absolute inset-0 rounded-xl bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4 text-white"
+            "absolute inset-0 rounded bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4 text-white"
           }
         ></div>
       </div>

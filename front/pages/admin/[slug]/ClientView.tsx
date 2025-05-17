@@ -175,7 +175,7 @@ export default function ClientView({ id }: { id: string }) {
                         />
                       )}
                       {value instanceof PictureGroup &&
-                        (!Boolean(value.is_grid) ? (
+                        (!value.is_grid ? (
                           <PictureGroupVizualisation
                             input_bloc={value}
                             toggle={toggle}
@@ -218,7 +218,6 @@ export default function ClientView({ id }: { id: string }) {
         {footer !== undefined && (
           <FooterVizualization
             input_bloc={footer}
-            toggle={toggle}
             isResponsive={isReponsive}
             full={true}
           />

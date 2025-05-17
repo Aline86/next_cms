@@ -1,5 +1,3 @@
-"use client";
-
 import Container from "../lib/Container";
 
 import InputTypes from "../lib/InputTypes";
@@ -268,7 +266,6 @@ export default class Footer extends Container {
             }
             break;
           case "delete_picture":
-            console.log("delete_picture", e, index);
             if (index !== undefined && typeof index == "number") {
               this.links_network_an_others_footer[index].logo_url = "";
             }

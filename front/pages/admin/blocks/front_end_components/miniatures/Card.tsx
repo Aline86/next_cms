@@ -1,16 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import { useEffect, useState } from "react";
+
 import CarouselData from "../../../../../models/CarouselData";
 import Image from "next/image";
 
 interface CardData {
   value: CarouselData;
-
   transitionFinished: boolean;
   trasnsType: string;
   transX: number;
-
-  updateCard: (e: React.MouseEvent<HTMLDivElement>) => void;
+  updateCard: (e: React.MouseEvent<HTMLImageElement>) => void;
   toggle: boolean;
   full: boolean;
   index: number;
@@ -19,63 +18,43 @@ interface CardData {
 
 function Card({
   value,
-
   transitionFinished,
   trasnsType,
   transX,
-
   updateCard,
   index,
 }: CardData) {
-  const [result, setResult] = useState<MediaQueryList>();
-  const [, setResize] = useState(0);
-
   const image =
-    value !== undefined
-      ? "http://localhost/api/uploadfile/" + value.image_url
-      : undefined;
-  function updateSize() {
-    setResize(window?.innerWidth);
-  }
-  useEffect(() => {
-    window?.addEventListener("resize", updateSize);
-  }, [result?.matches]);
+    value?.image_url &&
+    process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+      "/api/uploadfile/" +
+      value.image_url;
 
-  useEffect(() => {
-    setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
-  }, []);
-  if (transitionFinished) {
-    return (
-      <Image
-        className="max-w-sm full_pic rounded overflow-hidden shadow-lg py-3"
-        onClick={updateCard}
-        src={image !== undefined ? `${image}` : ""}
-        width={150}
-        height={150}
-        alt={"Image"}
-        style={{
-          width: `150px`,
-          height: `150px`,
+  const style: React.CSSProperties = {
+    width: "150px",
+    height: "150px",
+    objectFit: "cover",
+    transform: transitionFinished
+      ? `translateX(${transX}px)`
+      : "translateX(0px)",
+    transition: transitionFinished ? trasnsType : "none",
+    cursor: "pointer",
+  };
 
-          transition: `${trasnsType}`,
-
-          transform: `translateX(${transX}px)`,
-        }}
-      />
-    );
-  } else if (image !== undefined) {
-    return (
-      <Image
-        className="max-w-sm full_pic rounded overflow-hidden shadow-lg cursor-pointer py-3"
-        src={image !== undefined ? `${image}` : ""}
-        width={150}
-        height={150}
-        alt={"Image"}
-        onClick={updateCard}
-        data-value={index}
-      />
-    );
-  }
+  return image ? (
+    <Image
+      className="rounded overflow-hidden"
+      onClick={updateCard}
+      data-value={index}
+      src={image}
+      width={150}
+      height={150}
+      alt="Image"
+      style={style}
+    />
+  ) : (
+    <img style={style} src="#" alt="" />
+  );
 }
 
 export default Card;

@@ -90,9 +90,8 @@ export default class User {
           return await response.json();
         } catch (e: unknown) {
           if (e instanceof Error) {
-            console.log("e", e.message);
           } else {
-            console.log("An unknown error occurred");
+            console.error("An unknown error occurred");
           }
         }
       });

@@ -3,6 +3,7 @@ import { useSwipeable } from "react-swipeable";
 
 import CarouselData from "../../../../../models/CarouselData";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface CardData {
   value: CarouselData;
@@ -27,9 +28,12 @@ function BigCard({
 }: CardData) {
   const [result, setResult] = useState<MediaQueryList>();
   const [, setResize] = useState(0);
+
   const image =
     value !== undefined
-      ? "http://localhost/api/uploadfile/" + value.image_url
+      ? process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+        "/api/uploadfile/" +
+        value.image_url
       : "";
 
   const swipeHandlers = useSwipeable({
@@ -47,29 +51,34 @@ function BigCard({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
   }, []);
-  useEffect(() => {}, [isResponsive]);
+  useEffect(() => {}, [isResponsive, full]);
   return value !== undefined ? (
     <div
       className={
-        isResponsive
-          ? "m-auto w-sm  rounded overflow-hidden shadow-lg p-8"
-          : "m-auto w-lg  rounded overflow-hidden shadow-lg p-8"
+        isResponsive || result?.matches
+          ? "max-h-[400px] w-full m-auto rounded-xl "
+          : "max-h-[600px] w-full m-auto rounded-xl  max-w-[800px]"
       }
-      style={{ transition: "all 0.4s ease-in-out" }}
     >
-      <div
+      <Image
         {...swipeHandlers}
-        onClick={updateCard}
-        className="w-full"
-        data-value={index}
-        style={{
-          background: `url("${image}") no-repeat center / contain`,
-
-          height: `${
-            !result?.matches && full && !isResponsive ? `400px` : `250px`
-          }`,
+        onClick={(e) => {
+          updateCard(e);
         }}
-      ></div>
+        style={{
+          transition: "all 0.5s ease",
+        }}
+        className={
+          isResponsive || result?.matches
+            ? "h-200 max-h-[200px] w-auto mx-auto rounded-xl overflow-hidden"
+            : "h-300 max-h-[400px] w-auto mx-auto rounded-xl overflow-hidden"
+        }
+        data-value={index}
+        width={isResponsive || result?.matches ? 600 : 800} // or "1000" depending on your layout
+        height={isResponsive || result?.matches ? 200 : 400}
+        alt={"Image"}
+        src={image !== undefined ? image : ""}
+      />
     </div>
   ) : (
     <></>

@@ -1,11 +1,12 @@
 "use client";
+import Image from "next/image";
 import ScreenHome from "../../../../../models/Screen";
 import s from "./style.module.css";
 
 import { useEffect, useState } from "react";
 
 interface BlocParams {
-  bloc: ScreenHome;
+  bloc: ScreenHome | Record<string, unknown>;
 
   toggle: boolean;
   full: boolean;
@@ -38,33 +39,40 @@ function ScreenVizualisation({
         full
           ? bloc.bloc_number === 1
             ? isResponsive
-              ? "600px mt-[-35px]"
-              : "h-[90vh]"
+              ? "relative 600px mt-[-35px] h-[550px]"
+              : "h-screen"
             : isResponsive
             ? "relative w-sm"
             : "relative h-screen"
-          : s.admin_screen_basis
+          : "relative h-screen"
       }
     >
       {bloc.screen_url !== "" ? (
         <div
-          className={
-            full
-              ? isResponsive
-                ? "relative h-600px"
-                : s.screen_container
-              : "relative h-screen"
-          }
-          style={{
-            background: `url(${
-              "http://localhost/api/uploadfile/" + bloc.screen_url
-            }) no-repeat center / cover`,
-          }}
+        //style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         >
+          <Image
+            alt={String(bloc.title)}
+            style={{ objectFit: "cover" }}
+            className={
+              full
+                ? isResponsive
+                  ? "relative h-600px"
+                  : s.screen_container
+                : "relative top-0 h-screen"
+            }
+            src={
+              process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+              "/api/uploadfile/" +
+              bloc.screen_url
+            }
+            fill={true}
+            sizes={!full ? "43vw" : "100vw"}
+          />
           <div
             className={s.encart}
             style={{
-              position: "relative",
+              position: "absolute",
               zIndex: "2",
               display: "flex",
               flexDirection: "column",
@@ -73,9 +81,11 @@ function ScreenVizualisation({
               height: full
                 ? isResponsive
                   ? "600px"
-                  : "calc(100vh - 250px)"
+                  : result?.matches
+                  ? "calc(100vh - 250px)"
+                  : "calc(100vh - 150px)"
                 : "calc(100vh - 50px)",
-              paddingBottom: isResponsive ? "100px" : "",
+              paddingBottom: isResponsive ? "100px" : "0px",
             }}
           >
             <h2
@@ -97,7 +107,7 @@ function ScreenVizualisation({
                 wordBreak: "break-word",
               }}
             >
-              {bloc.title}
+              {String(bloc.title)}
             </h2>
             <p
               style={{
@@ -110,7 +120,7 @@ function ScreenVizualisation({
                 wordBreak: "break-word",
               }}
             >
-              {bloc.text}
+              {String(bloc.text)}
             </p>
           </div>
 
@@ -150,7 +160,7 @@ function ScreenVizualisation({
               wordBreak: "break-word",
             }}
           >
-            {bloc.title}
+            {String(bloc.title)}
           </h2>
           <p
             style={{
@@ -162,7 +172,7 @@ function ScreenVizualisation({
               wordBreak: "break-word",
             }}
           >
-            {bloc.text}
+            {String(bloc.text)}
           </p>
         </div>
       )}
