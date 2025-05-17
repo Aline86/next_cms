@@ -371,6 +371,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
     output();
   }, [bloc, toggle]);
   useEffect(() => {}, [colorImage, float]);
+
   return (
     <div className="flex  pb-8 mb-16 text-fiori flex-col align-center m-auto smaller max-w-[1000px] mx-auto">
       {bloc !== undefined && bloc.title !== "" && (

@@ -25,11 +25,13 @@ function GridVizualisation({
   useEffect(() => {}, [dataValue]);
   return (
     <div className="relative ">
-      {input_bloc !== undefined && input_bloc.title !== undefined && (
-        <h2 className="text-center mb-16 mt-24 text-3xl">
-          {String(input_bloc.title)}
-        </h2>
-      )}
+      {input_bloc !== undefined &&
+        input_bloc.title !== undefined &&
+        input_bloc.type === "picture_group" && (
+          <h2 className="text-center mb-16 mt-24 text-3xl">
+            {String(input_bloc.title)}
+          </h2>
+        )}
       {dataValue !== undefined && (
         <PictureGroupContainer
           data={dataValue}

@@ -70,14 +70,13 @@ export default abstract class Container {
 
         credentials: "include",
         body: data_to_send,
+        cache: "no-store",
       }
     )
       .then((response) => {
         if (!response.ok || response.status === 403) {
           if (typeof window !== "undefined") {
-
             redirect("/admin/login");
-
           }
         }
         try {
@@ -111,7 +110,7 @@ export default abstract class Container {
             Accept: "application/json",
             // Any other headers needed for the request
           },
-
+          cache: "no-store",
           credentials: "include",
         }
       );
@@ -150,6 +149,7 @@ export default abstract class Container {
             // Any other headers needed for the request
           },
           next: { revalidate: 0 },
+          cache: "no-store",
           credentials: "include",
         }
       );
@@ -188,6 +188,7 @@ export default abstract class Container {
             Accept: "application/json",
             // Any other headers needed for the request
           },
+          cache: "no-store",
           credentials: "include",
         }
       );
@@ -235,6 +236,7 @@ export default abstract class Container {
           mode: "cors",
           method: "GET",
           credentials: "include",
+          cache: "no-store",
           headers: {
             Accept: "application/json",
           },

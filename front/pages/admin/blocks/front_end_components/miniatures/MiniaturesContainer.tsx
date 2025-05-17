@@ -42,7 +42,7 @@ function MiniaturesContainer({
   setCardValue,
   updateCardEnd,
   clic,
-  cardValue,
+
   isResponsive,
 }: CarouselDataValue) {
   const [trigger, setTrigger] = useState(0);
@@ -50,7 +50,7 @@ function MiniaturesContainer({
   const [isLeft, setIsLeft] = useState(true);
   const [result, setResult] = useState<MediaQueryList>();
   const [card, setCard] = useState<CarouselData>();
-
+  const width = cardNumber * 2 * cardWidth;
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 700px)") as MediaQueryList);
   }, []);
@@ -147,7 +147,7 @@ function MiniaturesContainer({
       className={
         isResponsive
           ? "w-sm m-auto"
-          : `m-auto  w-full max-w-[1050px] h-full mt-16 flex flex-col justify-end items-end`
+          : `m-auto  w-full max-w-[1200px] h-full mt-16 flex flex-col justify-end items-end`
       }
     >
       <div className="flex w-full m-auto mb-4">
@@ -198,7 +198,6 @@ function MiniaturesContainer({
         <div
           className="relative m-auto overflow-hidden items-center justify-center "
           style={{
-            minWidth: `${cardWidth}px`,
             margin: `${gap}px auto`,
 
             width: `${
@@ -215,7 +214,7 @@ function MiniaturesContainer({
           <div
             className={s.card_container}
             style={{
-              minWidth: `fit-content `,
+              minWidth: `${width}px`,
               height: "170px",
             }}
           >
@@ -234,9 +233,7 @@ function MiniaturesContainer({
                       index={index}
                       value={value}
                       transitionFinished={transitionFinished}
-                      trasnsType={
-                        "transform " + 0.1 * Number(cardValue + 1) + "s ease-in"
-                      }
+                      trasnsType={"transform 0.4s ease-in"}
                       transX={move}
                       updateCard={updateCard}
                       toggle={false}

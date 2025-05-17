@@ -54,7 +54,7 @@ export default async function ClientView({
               full={true}
               isResponsive={false}
               toggle={true}
-              page_number={1}
+              page_number={id}
             />
           )}
           {blocs !== undefined &&
@@ -81,6 +81,7 @@ export default async function ClientView({
                     />
                   ) : typeof value === "object" &&
                     value !== null &&
+                    value.type === "picture_group" &&
                     ("is_grid" in value ||
                       (value as Record<string, unknown>)) ? ( // crude check for PictureGroup or Record<string, unknown>
                     <GridVizualisation

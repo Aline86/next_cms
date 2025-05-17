@@ -1,4 +1,4 @@
-"use server";
+export const dynamic = "force-dynamic";
 
 import Page from "../models/Page";
 import Layout from "./../pages/layout";
