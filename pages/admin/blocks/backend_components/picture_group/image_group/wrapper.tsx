@@ -63,7 +63,7 @@ function CardData({
             className={s.color}
             value={data.text_color}
             onChange={(e) => {
-              updateComponent(e, "color", undefined, index, bloc);
+              updateComponent(e, "text_color", undefined, index, bloc);
             }}
           />
           <h3>Couleur de fond</h3>
@@ -72,7 +72,7 @@ function CardData({
             className={s.color}
             value={data.background_color}
             onChange={(e) => {
-              updateComponent(e, "bg_color", undefined, index, bloc);
+              updateComponent(e, "background_color", undefined, index, bloc);
             }}
           />
           <h3>Ajouter un bouton</h3>

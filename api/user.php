@@ -11,32 +11,33 @@ $password = getenv('DB_PASSWORD');
 $database_name = getenv('DB_NAME');
 $allowed_prefix = getenv('ALLOWED_ORIGIN');
 $pattern = getenv('PATTERN');
-
+$allowed_origins_env = getenv('ALLOWED_ORIGIN'); 
 // Get the Origin header from the incoming request
 $origin = '';
-if(isset($_SERVER['HTTP_HOST'])) {
-    $origin = $_SERVER['HTTP_HOST'] ;
-} 
-if(isset($_SERVER['HTTP_ORIGIN'])) {
-    $origin = $_SERVER['HTTP_ORIGIN'] ;
-}
-$allowedPattern = '/^https:\/\/(www\.)?' . preg_quote($pattern, '/') . '\.fr$/';
+$allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "localhost",
+    "http://localhost",
+       ""
+];
 
-// Check if the origin matches the allowed prefix
-if ($origin !== '' && preg_match($allowedPattern, $origin) !== false) {
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
+        http_response_code(200);
+        exit;
     }
-
-}
-else {
-
-    die();
+} else {
+    http_response_code(403);
+    echo "CORS Forbidden: $origin not allowed";
+    exit;
 }
 class Db {
     private static $instance = NULL;

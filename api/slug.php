@@ -15,25 +15,31 @@ $database_name = getenv('DB_NAME');
 $allowed_origins_env = getenv('ALLOWED_ORIGIN'); 
 $allowed_origins = array_map('trim', explode(',', $allowed_origins_env));
 
-// Get the request origin
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+$allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "localhost",
+    "http://localhost",
+       ""
+];
 
-// Validate origin against the allowed list
-if ($origin !== '' && in_array($origin, $allowed_origins)) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
-    // Handle preflight OPTIONS request
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
+        http_response_code(200);
+        exit;
     }
 } else {
     http_response_code(403);
-    die('Forbidden: Origin not allowed.');
+    echo "CORS Forbidden: $origin not allowed";
+    exit;
 }
-
 
 
 class Db {

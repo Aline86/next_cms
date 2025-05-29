@@ -1,17 +1,18 @@
 import { JSONContent } from "@tiptap/react";
 import Container from "../lib/Container";
 import OptionsCss from "./OptionsCss";
-import InputTypes from "../lib/InputTypes";
-import ComponentBloc from "../lib/Component";
 
-export default class TextPicture extends Container implements ComponentBloc {
+import InputTypes from "../lib/InputTypes";
+import { ModelUpdateData } from "./ModelUpdateData";
+
+export default class TextPicture extends Container {
   show_picture: boolean;
   show_text: boolean;
   bloc_column: boolean;
   image_right: boolean;
   text_button_more: boolean;
   text: JSONContent[];
-  image: string;
+  image_url: string;
   alt_image: string;
   bloc_number: number;
   css: OptionsCss | Record<string, unknown>;
@@ -29,7 +30,7 @@ export default class TextPicture extends Container implements ComponentBloc {
     image_right: boolean = false,
     text_button_more: boolean = false,
     text: JSONContent[] = [],
-    image: string = "",
+    image_url: string = "",
     alt_image: string = "",
 
     title: string = "",
@@ -45,7 +46,7 @@ export default class TextPicture extends Container implements ComponentBloc {
     this.image_right = image_right;
     this.text_button_more = text_button_more;
     this.text = text;
-    this.image = image;
+    this.image_url = image_url;
     this.alt_image = alt_image;
     this.bloc_number = bloc_number;
     this.css = css;
@@ -58,154 +59,34 @@ export default class TextPicture extends Container implements ComponentBloc {
     field: string | undefined,
     input?: string | undefined
   ) {
-    switch (field) {
-      case "show_picture":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target
-        ) {
-          this.set_show_picture(e.target.checked ? true : false);
-        }
-        break;
-      case "show_text":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target
-        ) {
-          this.set_show_text(e.target.checked ? true : false);
-        }
-
-        break;
-      case "bloc_column":
-        if (typeof e === "boolean") {
-          this.set_bloc_column(e);
-        }
-        break;
-      case "bloc_number":
-        if (typeof e === "number") {
-          this.set_bloc_number(e);
-        }
-
-        break;
-      case "image_right":
-        if (typeof e === "boolean") {
-          this.set_image_right(e);
-        }
-
-        break;
-      case "text":
-        if (typeof e === "object" && e !== null) {
-          if (Array.isArray(e)) {
-            this.set_text(e as JSONContent[]);
-          } else {
-            console.error("Invalid type for text field:", e);
-          }
-        }
-
-        break;
-      case "text_button_more":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target
-        ) {
-          this.set_text_button_more(e.target.checked ? true : false);
-        }
-        break;
-      case "title":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target
-        ) {
-          this.set_title(e.target.value || "");
-        }
-        break;
-      case "alt_image":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target
-        ) {
-          this.set_alt_image(e.target.value || "");
-        }
-
-        break;
-      case "color":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target
-        ) {
-          this.set_background_color(e.target.value || "");
-        }
-
-        break;
-      case "image":
-        if (typeof e === "string") {
-          this.set_image(e);
-        }
-        break;
-      case "delete_picture":
-        this.image = "";
-        break;
-      case "css":
-        switch (input) {
-          case "width":
-            if (
-              typeof e === "object" &&
-              e !== null &&
-              "target" in e &&
-              e.target !== null &&
-              "value" in e.target &&
-              e.target.value !== undefined
-            ) {
-              this.css.width = parseInt(e.target.value);
-            }
-
-            break;
-          case "height":
-            if (
-              typeof e === "object" &&
-              e !== null &&
-              "target" in e &&
-              e.target !== null &&
-              "value" in e.target &&
-              e.target.value !== undefined
-            ) {
-              this.css.height = parseInt(e.target.value);
-            }
-            break;
-          case "position":
-            if (
-              typeof e === "object" &&
-              e !== null &&
-              "target" in e &&
-              e.target !== null &&
-              "alt" in e.target
-            ) {
-              this.css.position = e.target.alt;
-            }
-            break;
-        }
-        break;
+    let value;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as Event).target !== undefined
+    ) {
+      value = ((e as Event).target as HTMLInputElement).value;
+    } else if (e !== undefined) {
+      value = e;
     }
 
-    return this;
+    if (
+      (value !== undefined && typeof value !== "object") ||
+      Array.isArray(value)
+    ) {
+      const command = new ModelUpdateData(
+        this,
+        field as keyof this,
+        undefined,
+        value,
+        input
+      );
+      const updated = command.execute();
+      Object.assign(this, updated);
+
+      return this;
+    }
   }
 
   public async remove() {
@@ -274,11 +155,11 @@ export default class TextPicture extends Container implements ComponentBloc {
     this.text = value;
   }
 
-  public _image(): string {
-    return this.image;
+  public _image_url(): string {
+    return this.image_url;
   }
-  public set_image(value: string) {
-    this.image = value;
+  public set_image_url(value: string) {
+    this.image_url = value;
   }
 
   public _alt_image(): string {

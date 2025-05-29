@@ -1,11 +1,10 @@
 import Container from "../lib/Container";
+import InputTypes from "../lib/InputTypes";
 
-import ComponentBloc from "../lib/Component";
-
-import ComponentTypes from "../lib/InputTypes";
 import CarouselData from "./CarouselData";
+import { ModelUpdateData } from "./ModelUpdateData";
 
-export default class Carousel extends Container implements ComponentBloc {
+export default class Carousel extends Container {
   carousel_type: string;
 
   card_number: number;
@@ -67,147 +66,38 @@ export default class Carousel extends Container implements ComponentBloc {
     return new_bloc;
   }
   public async update(
-    e: ComponentTypes,
-    field: string | undefined,
-    input?: string | undefined,
-    index?: string | number | undefined
+    e: InputTypes,
+    field: string,
+    input?: undefined,
+    index?: number | undefined
   ) {
-    switch (field) {
-      case "href_url":
-        if (index !== undefined) {
-          if (
-            index !== undefined &&
-            typeof index === "number" &&
-            typeof e === "object" &&
-            e !== null &&
-            e !== undefined &&
-            "target" in e &&
-            e.target !== null &&
-            "checked" in e.target &&
-            e.target.value !== undefined
-          ) {
-            if (typeof index === "number") {
-              this.carousel_data[index].href_url = e.target.value;
-            }
-          }
-        }
+    let value;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as { target?: unknown }).target !== undefined &&
+      typeof (e as { target: HTMLInputElement }).target.value !== "undefined"
+    ) {
+      value = (e as { target: { value: string } }).target.value;
+    } else if (e !== undefined && typeof e === "string") {
+      value = e;
+    }
 
-        break;
-      case "text":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target &&
-          e.target.value !== undefined
-        ) {
-          if (typeof index === "number") {
-            this.carousel_data[index].text = e.target.value;
-          }
-        }
+    if (value !== undefined) {
+      const command = new ModelUpdateData(
+        this,
+        index !== undefined
+          ? ("carousel_data" as keyof this)
+          : (field as keyof this),
+        index !== undefined ? index : undefined,
+        value,
+        field
+      );
+      const updated = command.execute();
+      Object.assign(this, updated);
 
-        break;
-      case "height":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target &&
-          e.target.value !== undefined
-        ) {
-          let height = parseInt(e.target.value);
-          if (
-            typeof e === "object" &&
-            e !== null &&
-            "target" in e &&
-            "value" in e.target
-          ) {
-            if (parseInt(e.target.value) < 15) {
-              height = 15;
-            } else if (parseInt(e.target.value) > 100) {
-              height = 100;
-            }
-          }
-          this.set_height(height);
-        }
-        break;
-      case "width":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target &&
-          e.target.value !== undefined
-        ) {
-          let width = parseInt(e.target.value);
-          if (parseInt(e.target.value) < 15) {
-            width = 15;
-          } else if (parseInt(e.target.value) > 100) {
-            width = 100;
-          }
-
-          this.set_width(width);
-        }
-        break;
-      case "image_url":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "string"
-        ) {
-          this.carousel_data[index].image_url = e;
-        }
-        break;
-      case "color":
-        if (
-          index !== undefined &&
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.carousel_data[index].background_color = e.target.value;
-        }
-        break;
-      case "bloc_number":
-        if (typeof e === "number") {
-          this.set_bloc_number(e);
-        }
-        break;
-      case "delete_picture":
-        if (index !== undefined) {
-          //UploadService.deleteUpload(e, this.token);
-          if (typeof index === "number") {
-            this.carousel_data[index].image_url = "";
-          }
-        }
-        break;
-      case "ajout":
-        this.add_data();
-        this.card_number++;
-        break;
-      case "remove":
-        if (
-          typeof index === "number" &&
-          this.carousel_data[index] !== undefined
-        ) {
-          this.remove_data(index);
-        }
-
-        break;
+      return this;
     }
 
     return this;

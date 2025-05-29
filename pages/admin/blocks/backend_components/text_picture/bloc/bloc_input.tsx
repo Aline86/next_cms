@@ -47,11 +47,13 @@ function BlocInput({
             <h3>Insérer une image</h3>
 
             <DragAndDrop
-              field="image"
+              field="image_url"
               key={1}
               index={undefined}
               bloc={input_bloc}
-              data_img={input_bloc?.image !== undefined ? input_bloc.image : ""}
+              data_img={
+                input_bloc?.image_url !== undefined ? input_bloc.image_url : ""
+              }
               update={async (
                 event: InputTypes,
                 field: string | undefined,

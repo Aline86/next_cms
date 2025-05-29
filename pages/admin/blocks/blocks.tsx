@@ -233,11 +233,12 @@ function Blocs({
         }
       }
     } else {
+      const index_pos = parseInt(index !== undefined ? String(index) : "-1");
       const result = await component?.update(
         event,
         field !== undefined ? field : "",
         undefined,
-        index
+        index_pos
       );
 
       if (

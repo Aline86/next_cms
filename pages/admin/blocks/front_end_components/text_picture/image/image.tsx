@@ -37,7 +37,7 @@ function Image({ bloc }: ImageParams) {
           src={
             process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
             "/api/uploadfile/" +
-            bloc.image
+            bloc.image_url
           }
           alt={String(bloc.alt_image)}
         />

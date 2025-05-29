@@ -42,8 +42,10 @@ function InsideCardData({
   const left_out = "shadow-sm rounded-xl duration-500 hover:scale-105";
 
   const size = full
-    ? hw + " object-cover rounded-t-xl bg-white shadow-sm " + left_out
-    : hw + " w-36 object-cover rounded-t-xl bg-white shadow-sm " + left_out;
+    ? hw + " object-cover rounded-t-xl bg-white shadow-sm z-90 " + left_out
+    : hw +
+      " w-36 object-cover rounded-t-xl bg-white shadow-sm  z-90 " +
+      left_out;
   const img =
     data !== undefined
       ? process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
@@ -53,21 +55,21 @@ function InsideCardData({
   const text_color =
     data !== undefined && data.image_url !== ""
       ? full
-        ? "text-gray-100 text-xl"
-        : "text-gray-100 text-sm"
+        ? "text-gray-100 text-xl "
+        : "text-gray-100 text-sm "
       : " text-gray-500";
   const text_size = full
-    ? "w-full  text-2xl " + text_color
+    ? "w-full text-fit text-2xl " + text_color
     : data !== undefined && data.text !== "" && !data.is_data_button
-    ? "absolute bottom-8 text-sm" + text_color
-    : "absolute  text-sm" + text_color;
+    ? "absolute text-fit bottom-8 text-sm " + text_color
+    : "absolute text-fit text-sm " + text_color;
   const text_height =
     full && data !== undefined && data.text !== ""
-      ? "absolute p-3 top-6 w-full h-full flex flex-col justify-spacing "
-      : "absolute p-3 top-3 w-full h-full flex flex-col ";
+      ? "relative top-6 w-full h-full flex z-100 flex-col justify-spacing "
+      : "relative p-1 top-3 w-full h-full z-100 flex flex-col ";
   const button_height = full
     ? "absolute bottom-15 left-7 h-[50px] leading-[50px]"
-    : "absolute h-[35px] absolute left-3.5 bottom-8";
+    : "absolute h-[35px] absolute left-3.5 bottom-8 ";
   const flex_position =
     data !== undefined && data.text !== "" && !data.is_data_button && full
       ? " flex-col justify-end mb-12 ml-4 mr-4"
@@ -94,21 +96,26 @@ function InsideCardData({
       )}
 
       <div className={text_height}>
-        <div className={"flex w-[90%] h-full " + flex_position}>
-          <p
-            style={{
-              color: String(data.text_color),
-            }}
-            className={text_size}
-          >
-            {String(data.text)}
-          </p>
-        </div>
+        {data.text != "" && (
+          <div className={"flex w-[90%] h-full " + flex_position}>
+            <p
+              style={{
+                color: String(data.text_color),
+                wordBreak: "break-word",
+              }}
+              className={text_size}
+            >
+              {String(data.text)}
+            </p>
+          </div>
+        )}
         {Boolean(data.is_data_button) === true && (
           <div
             style={{
               border: "1px solid " + String(data.text_color),
               color: String(data.text_color),
+              backgroundColor: "#00000030",
+              wordBreak: "break-word",
             }}
             className={`buttons border border-white border-solid border-1 block w-[80%]  text-center text-gray-100 rounded ${button_height}`}
           >

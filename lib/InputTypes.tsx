@@ -3,6 +3,7 @@ import { JSONContent } from "@tiptap/react";
 import { ChangeEvent } from "react";
 
 type InputTypes =
+  | Event
   | MouseEvent
   | React.MouseEvent<HTMLLabelElement>
   | React.MouseEvent<HTMLButtonElement>

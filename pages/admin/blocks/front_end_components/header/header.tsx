@@ -28,7 +28,6 @@ function HeaderVizualization({
   const [open, setOpen] = useState(false);
   const [, setResize] = useState(0);
   const [result, setResult] = useState<MediaQueryList>();
-
   const [classes, set_classes] = useState<string | undefined>();
   const [bg, set_bg] = useState<React.CSSProperties | undefined>();
   const [trigger_show_link, setTrigger_show_link] = useState(true);
@@ -59,7 +58,6 @@ function HeaderVizualization({
     setTrigger_show_link(false);
   }, [isResponsive]);
 
-  useEffect(() => {}, [classes, toggle]);
   useEffect(() => {
     if (input_bloc !== undefined) {
       set_bg({
@@ -85,7 +83,7 @@ function HeaderVizualization({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [toggle]);
   return input_bloc !== undefined &&
     classes !== undefined &&
     bg !== undefined ? (

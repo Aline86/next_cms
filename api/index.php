@@ -29,26 +29,31 @@ function is_json($string) {
 $origin = '';
 
 $allowed_origins = array_map('trim', explode(',', $allowed_origins_env));
+$allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "localhost",
+    "http://localhost",
+    ""
+];
 
-// Get the request origin
-$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-// Validate origin against the allowed list
-if ($origin !== '' && in_array($origin, $allowed_origins)) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
-    // Handle preflight OPTIONS request
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
+        http_response_code(200);
+        exit;
     }
 } else {
     http_response_code(403);
-    die('Forbidden: Origin not allowed.');
+    echo "CORS Forbidden: $origin not allowed";
+    exit;
 }
-
 function getAuthorizationHeader(){
     $headers = null;
     if (isset($_SERVER['HTTP_X_OVHREQUEST_ID'])) {
@@ -263,7 +268,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
             
                 $method_name_to_call = $method_to_call . $type;
                 $method_params['id'] = $id;
-            
+                header('Content-Type: application/json');
                 echo html_entity_decode(htmlspecialchars(json_encode($model->$method_name_to_call($method_params))));
                 exit();
             }
@@ -297,7 +302,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
                 
                     $method_name_to_call = $method_to_call . $type;
                     $method_params['id'] = $id;
-                    
+                    header('Content-Type: application/json');
                     echo html_entity_decode(htmlspecialchars(json_encode($model->$method_name_to_call($method_params))));
                     exit();
                 }

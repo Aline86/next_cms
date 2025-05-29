@@ -60,7 +60,7 @@ function CssPictureGroupPosition({
             className="bg-slate-100 mt-8 "
             value={bloc.title}
             onChange={(e) => {
-              updateComponent(e, "titre", "", undefined, bloc as PictureGroup);
+              updateComponent(e, "title", "", undefined, bloc as PictureGroup);
             }}
           />
         </div>

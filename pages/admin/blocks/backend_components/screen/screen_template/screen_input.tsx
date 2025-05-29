@@ -28,12 +28,12 @@ function ScreenInput({
       <div className={s.titre} style={{ display: `block`, marginTop: "15px" }}>
         <div className="mt-4 block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm light:bg-gray-800 light:border-gray-700 ">
           <DragAndDrop
-            field={"screen_url"}
+            field={"image_url"}
             key={1}
             index={undefined}
             bloc={input_bloc}
             data_img={
-              input_bloc?.screen_url !== undefined ? input_bloc.screen_url : ""
+              input_bloc?.image_url !== undefined ? input_bloc.image_url : ""
             }
             update={async (
               event: InputTypes,

@@ -10,39 +10,38 @@ $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
 $password = getenv('DB_PASSWORD');
 $database_name = getenv('DB_NAME');
-$allowed_prefix = getenv('ALLOWED_ORIGIN');
+$allowed_origins_env = getenv('ALLOWED_ORIGIN'); 
 $pattern = getenv('PATTERN');
 
 function is_json($string) {
     json_decode($string);
     return json_last_error() === JSON_ERROR_NONE;
 }
+$allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "localhost",
+    "http://localhost",
+       ""
+];
 
-// Get the Origin header from the incoming request
-$origin = '';
-if (isset($_SERVER['HTTP_HOST'])) {
-    $origin = $_SERVER['HTTP_HOST'];
-}
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    $origin = $_SERVER['HTTP_ORIGIN'];
-}
-$allowedPattern = '/^https:\/\/(www\.)?' . preg_quote($pattern, '/') . '\.fr$/';
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-// Check if the origin matches the allowed prefix
-if ($origin !== '' && preg_match($allowedPattern, $origin) !== false) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Access-Control-Allow-Methods: *');
-    header('Access-Control-Allow-Credentials: true');
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        exit(0);
+        http_response_code(200);
+        exit;
     }
 } else {
     http_response_code(403);
-    echo json_encode(['error' => 'Forbidden: Origin not allowed']);
-    exit();
+    echo "CORS Forbidden: $origin not allowed";
+    exit;
 }
-
 class Db {
     private static $instance = NULL;
     private function __construct() {}
@@ -217,12 +216,14 @@ if (isset($_COOKIE['PHPSESSID'])) {
                     $extensions_array = ["jpg", "png", "jpeg"];
                     // Allow certain file formats
                     if (!in_array($imageFileType, $extensions_array)) {
+                         header('Content-Type: application/json');
                         echo json_encode(['error' => "Sorry, only JPG, JPEG, PNG & GIF files are allowed."]);
                         $uploadOk = 0;
                     }
 
                     // Check if $uploadOk is set to 0 by an error
                     if ($uploadOk == 0) {
+                         header('Content-Type: application/json');
                         echo json_encode(['error' => $_GET["name"] . ' nok']);
                     } else {
                         // Example usage
@@ -236,29 +237,35 @@ if (isset($_COOKIE['PHPSESSID'])) {
                         resizeCenterCompressImage($sourceImagePath, $targetWidth, $targetHeight, $outputImagePath, $quality);*/
 
                         if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+                            header('Content-Type: application/json');
                             echo json_encode(['success' => $_GET["name"]]);
                             exit();
                         } else {
+                            header('Content-Type: application/json');
                             echo json_encode(['error' => "Sorry, there was an error uploading your file."]);
                             exit();
                         }
                     }
                 } else {
+                    header('Content-Type: application/json');
                     echo json_encode(['error' => "File is not an image."]);
                     exit();
                 }
             }
         } else {
+             header('Content-Type: application/json');
             echo json_encode(['error' => "Invalid file type."]);
             exit();
         }
     } else {
         http_response_code(403);
+         header('Content-Type: application/json');
         echo json_encode(['error' => 'Forbidden: Invalid token']);
         exit();
     }
 } else {
     http_response_code(403);
+     header('Content-Type: application/json');
     echo json_encode(['error' => 'Forbidden: No session cookie']);
     exit();
 }

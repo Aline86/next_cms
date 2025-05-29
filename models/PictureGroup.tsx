@@ -1,5 +1,7 @@
 import Container from "../lib/Container";
 import InputTypes from "../lib/InputTypes";
+import { ModelUpdateData } from "./ModelUpdateData";
+
 import PictureGroupData from "./PictureGroupData";
 
 export default class PictureGroup extends Container {
@@ -68,174 +70,41 @@ export default class PictureGroup extends Container {
     e: InputTypes,
     field: string,
     input?: undefined,
-    index?: string | number | undefined
+    index?: number | undefined
   ) {
-    switch (field) {
-      case "href_url":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target
-        ) {
-          this.picture_group_data[index].href_url = e.target.value || "";
-        }
-
-        break;
-      case "text":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.picture_group_data[index].text = e.target.value;
-        }
-        break;
-      case "titre":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.set_title(e.target.value);
-        }
-        break;
-      case "height":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          let height = parseInt(e.target.value);
-
-          if (parseInt(e.target.value) < 15) {
-            height = 15;
-          } else if (parseInt(e.target.value) > 100) {
-            height = 100;
-          }
-          this.set_height(height);
-        }
-        break;
-      case "width":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          const width = parseInt(e.target.value);
-
-          this.set_width(width);
-        }
-        break;
-      case "is_data_button":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "checked" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.picture_group_data[index].is_data_button = e.target.checked
-            ? true
-            : false;
-        }
-        break;
-      case "image_url":
-        if (
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "string"
-        ) {
-          this.picture_group_data[index].image_url = e;
-        }
-        break;
-      case "color":
-        if (
-          index !== undefined &&
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.picture_group_data[index].text_color = e.target.value;
-        }
-
-        break;
-      case "bg_color":
-        if (
-          index !== undefined &&
-          index !== undefined &&
-          typeof index === "number" &&
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.picture_group_data[index].background_color = e.target.value;
-        }
-        break;
-      case "bloc_number":
-        if (index !== undefined && typeof e === "number") {
-          this.set_bloc_number(e);
-        }
-        break;
-      case "delete_picture":
-        if (
-          index !== undefined &&
-          index !== undefined &&
-          typeof index === "number"
-        ) {
-          //UploadService.deleteUpload(e, this.token);
-          this.picture_group_data[index].image_url = "";
-        }
-        break;
-      case "ajout":
-        this.add_data();
-
-        break;
-      case "remove":
-        if (index !== undefined && typeof index === "number") {
-          // this.picture_group_data.splice(index, 1);
-          await this.remove_data(index);
-        }
-        break;
+    let value;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as { target: unknown }).target !== undefined
+    ) {
+      value = (
+        (e as { target: { value?: unknown } }).target as HTMLInputElement
+      ).value;
+    } else if (
+      e !== undefined &&
+      typeof e === "string" &&
+      index !== undefined
+    ) {
+      value = e;
+    } else {
     }
+    if (value !== undefined) {
+      const command = new ModelUpdateData(
+        this,
+        index !== undefined
+          ? ("picture_group_data" as keyof this)
+          : (field as keyof this),
+        index !== undefined ? index : undefined,
+        value,
+        field
+      );
+      const updated = command.execute();
+      Object.assign(this, updated);
 
-    return this;
+      return this;
+    }
   }
   public async set_picture_group_data(
     picture_group_datas: Record<string, unknown>[]

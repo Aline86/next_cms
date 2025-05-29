@@ -1,18 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import remove from "./../pages/assets/remove.png";
-
 import Image from "next/image";
-
 import ComponentTypes from "./types";
-
-import TextPicture from "../models/TextPicture";
 import { MoonLoader } from "react-spinners";
-import PictureGroup from "../models/PictureGroup";
 import Header from "../models/Header";
 import Footer from "../models/FooterData";
-import ScreenHome from "../models/Screen";
-import Carousel from "../models/Carousel";
 import InputTypes from "./InputTypes";
 import DropZone from "../models/DropZone";
 
@@ -27,14 +20,7 @@ export default function DragAndDrop({
   field: string;
   subfield: string | undefined;
 
-  bloc:
-    | PictureGroup
-    | Header
-    | TextPicture
-    | ScreenHome
-    | Carousel
-    | Footer
-    | undefined;
+  bloc: ComponentTypes | undefined;
 
   update: (
     e: InputTypes,
@@ -113,7 +99,7 @@ export default function DragAndDrop({
     } else if (bloc instanceof Footer) {
       await update(e, "social_network", "delete_picture", index, bloc);
     } else {
-      await update(e, "delete_picture", "", index, bloc);
+      await update("", "image_url", "", index, bloc);
     }
 
     setFiles("");

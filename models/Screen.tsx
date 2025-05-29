@@ -1,14 +1,14 @@
-import ComponentBloc from "../lib/Component";
 import Container from "../lib/Container";
 import InputTypes from "../lib/InputTypes";
+import { ModelUpdateData } from "./ModelUpdateData";
 
-export default class ScreenHome extends Container implements ComponentBloc {
+export default class ScreenHome extends Container {
   text: string;
   bloc_number: number;
   overlay: boolean;
   parameters: string;
   page_id: number;
-  screen_url;
+  image_url;
   constructor(
     page_id: number,
     bloc_number: number,
@@ -17,67 +17,46 @@ export default class ScreenHome extends Container implements ComponentBloc {
     text: string = "",
     title: string = "",
     type: string = "screen",
-    screen_url: string = ""
+    image_url: string = ""
   ) {
     super(id, title, type);
     this.bloc_number = bloc_number;
     this.page_id = page_id;
     this.overlay = overlay;
     this.text = text;
-    this.screen_url = screen_url;
+    this.image_url = image_url;
     this.parameters = this.type + "&id=" + this.id + "&type=" + this.type;
   }
 
   public async update(e: InputTypes, field: string | undefined) {
-    switch (field) {
-      case "bloc_number":
-        if (typeof e === "number") {
-          this.set_bloc_number(e);
-        }
-
-        break;
-      case "title":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.set_title(e.target.value);
-        }
-
-        break;
-      case "text":
-        if (
-          typeof e === "object" &&
-          e !== null &&
-          e !== undefined &&
-          "target" in e &&
-          e.target !== null &&
-          "value" in e.target &&
-          e.target.value !== undefined
-        ) {
-          this.set_text(e.target.value);
-        }
-
-        break;
-      case "screen_url":
-        if (typeof e === "string") {
-          this.set_screen_url(e);
-        }
-        break;
-      case "delete_picture":
-        this.screen_url = "";
-
-        break;
-      default:
-        return this;
+    let value;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as Event).target !== undefined
+    ) {
+      value = ((e as Event).target as HTMLInputElement).value;
+    } else if (e !== undefined) {
+      value = e;
     }
 
-    return this;
+    if (
+      (value !== undefined && typeof value !== "object") ||
+      Array.isArray(value)
+    ) {
+      const command = new ModelUpdateData(
+        this,
+        field as keyof this,
+        undefined,
+        value,
+        undefined
+      );
+      const updated = command.execute();
+      Object.assign(this, updated);
+
+      return this;
+    }
   }
 
   public async remove() {
@@ -103,11 +82,11 @@ export default class ScreenHome extends Container implements ComponentBloc {
   public set_parameters(value: string) {
     this.parameters = value;
   }
-  public get_screen_url(): string {
+  public get_image_url(): string {
     return this.parameters;
   }
-  public set_screen_url(value: string) {
-    this.screen_url = value;
+  public set_image_url(value: string) {
+    this.image_url = value;
   }
 
   public _text(): string {

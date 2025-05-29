@@ -32,7 +32,7 @@ function ScreenVizualisation({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
   }, []);
-  useEffect(() => {}, [bloc, isResponsive, toggle, bloc.screen_url]);
+  useEffect(() => {}, [bloc, isResponsive, toggle, bloc.image_url]);
   return bloc !== undefined ? (
     <div
       className={
@@ -47,7 +47,7 @@ function ScreenVizualisation({
           : "relative h-screen"
       }
     >
-      {bloc.screen_url !== "" ? (
+      {bloc.image_url !== "" ? (
         <div
         //style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
         >
@@ -64,7 +64,7 @@ function ScreenVizualisation({
             src={
               process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
               "/api/uploadfile/" +
-              bloc.screen_url
+              bloc.image_url
             }
             fill={true}
             sizes={!full ? "43vw" : "100vw"}
@@ -99,7 +99,7 @@ function ScreenVizualisation({
                   isResponsive || result?.matches
                     ? "25px"
                     : full
-                    ? "5em"
+                    ? "4em"
                     : "3em",
                 opacity: 0.8,
                 marginLeft: isResponsive || result?.matches ? "25px" : "5vw",
