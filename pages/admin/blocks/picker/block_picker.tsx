@@ -14,20 +14,23 @@ import PictureGroup from "../../../../models/PictureGroup";
 import TextPicture from "../../../../models/TextPicture";
 import ScreenHome from "../../../../models/Screen";
 import Carousel from "../../../../models/Carousel";
-import SnippetTypes from "../../../../lib/snippet_types";
+
 import Footer from "../../../../models/FooterData";
 import Header from "../../../../models/Header";
+import Button from "../../../../models/Button";
+import Video from "../../../../models/Video";
+import ComponentTypes from "../../../../lib/types";
 
 interface BlocData {
   getPage: (refresh: boolean) => Promise<void>;
-  blocs: Array<SnippetTypes | Header | Footer>;
+  blocs: Array<ComponentTypes | Header | Footer>;
   open: boolean;
   setOpen: (value: boolean) => void;
   page: Page;
 }
 
 function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
-  const addBlocToBDD = async (bloc: SnippetTypes) => {
+  const addBlocToBDD = async (bloc: ComponentTypes) => {
     await bloc.save_bloc();
 
     await getPage(true);
@@ -63,7 +66,7 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new ScreenHome(page.id, blocs.length + 1, -1, true)
+                  new ScreenHome(page.id, blocs.length - 1, -1, true)
                 );
 
                 setOpen(!open);
@@ -78,7 +81,7 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new PictureGroup(page.id, blocs.length + 1, -1, false)
+                  new PictureGroup(page.id, blocs.length - 1, -1, false)
                 );
 
                 setOpen(!open);
@@ -98,7 +101,47 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new PictureGroup(page.id, blocs.length + 1, -1, true)
+                  new PictureGroup(page.id, blocs.length - 1, -1, true)
+                );
+
+                setOpen(!open);
+              }}
+            />
+          </div>
+          <div className={s.container_auto}>
+            <Image
+              src={curseur}
+              alt="carousel d'images"
+              width={40}
+              height={40}
+            />
+            <input
+              type="submit"
+              value="Défilé d'images simple"
+              onClick={(e) => {
+                e.preventDefault();
+                addBlocToBDD(
+                  new Carousel(page.id, blocs.length - 1, -1, "carousel")
+                );
+
+                setOpen(!open);
+              }}
+            />
+          </div>
+          <div className={s.container_auto}>
+            <Image
+              src={curseur}
+              alt="défilé d'images automatique"
+              width={40}
+              height={40}
+            />
+            <input
+              type="submit"
+              value="Défilé d'images automatique"
+              onClick={(e) => {
+                e.preventDefault();
+                addBlocToBDD(
+                  new Carousel(page.id, blocs.length - 1, -1, "auto")
                 );
 
                 setOpen(!open);
@@ -114,12 +157,43 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
             />
             <input
               type="submit"
-              value="Défilé d'images Option 3 (miniatures)"
+              value="Défilé d'images avec miniatures"
               onClick={(e) => {
                 e.preventDefault();
                 addBlocToBDD(
-                  new Carousel(page.id, blocs.length + 1, -1, "miniatures")
+                  new Carousel(page.id, blocs.length - 1, -1, "miniatures")
                 );
+
+                setOpen(!open);
+              }}
+            />
+          </div>
+          <div className={s.container_auto}>
+            <Image src={cover} alt="Bouton" width={40} height={40} />
+            <input
+              type="submit"
+              value="Bouton"
+              onClick={(e) => {
+                e.preventDefault();
+                addBlocToBDD(new Button(page.id, blocs.length - 1, -1));
+
+                setOpen(!open);
+              }}
+            />
+          </div>
+          <div className={s.container_auto}>
+            <Image
+              src={cover}
+              alt="Image de couverture"
+              width={40}
+              height={40}
+            />
+            <input
+              type="submit"
+              value="Vidéo"
+              onClick={(e) => {
+                e.preventDefault();
+                addBlocToBDD(new Video(page.id, blocs.length - 1, -1));
 
                 setOpen(!open);
               }}
@@ -132,9 +206,7 @@ function BlocDisplay({ getPage, blocs, open, setOpen, page }: BlocData) {
               value="Texte image"
               onClick={(e) => {
                 e.preventDefault();
-                addBlocToBDD(
-                  new TextPicture(-1, blocs.length + 1, page.id, false)
-                );
+                addBlocToBDD(new TextPicture(page.id, blocs.length - 1, -1));
 
                 setOpen(!open);
               }}

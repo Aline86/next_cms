@@ -5,34 +5,21 @@ import s from "./styles.module.css";
 import PictureGroup from "../../../../../../models/PictureGroup";
 import PictureGroupData from "../../../../../../models/PictureGroupData";
 import Page from "../../../../../../models/Page";
-import InputTypes from "../../../../../../lib/InputTypes";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 interface DropdownInfo {
   page_id: number;
   bloc: PictureGroup;
   data: PictureGroupData;
   index: number;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: PictureGroup
-  ) => Promise<void>;
 }
 
-function DropdownData({
-  page_id,
-  bloc,
-  data,
-  index,
-  updateComponent,
-}: DropdownInfo) {
+function DropdownData({ page_id, bloc, data, index }: DropdownInfo) {
   const [pages, setPages] = useState<Page[]>();
   const [page, setPage] = useState<Page>();
   const [choice, isExternalLink] = useState<string>("");
   const [toggle, setToggle] = useState<boolean>(false);
-
+  const updateComponent = useBlocStore((state) => state.updateBloc);
   const getPages = async () => {
     if (page !== undefined) {
       const async_result = await page.get_sub_pages();
@@ -65,7 +52,7 @@ function DropdownData({
 
     const new_page = await page_type.get_bloc();
     if (new_page !== undefined) {
-      setPage(new_page);
+      setPage(page_type.hydrate(new_page));
     }
   };
   useEffect(() => {

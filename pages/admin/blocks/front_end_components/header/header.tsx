@@ -72,14 +72,14 @@ function HeaderVizualization({
               page_number > 1 &&
               input_bloc.background_color === "#00000000"
             ? "#00000030"
-            : String(input_bloc.background_color),
+            : String(input_bloc.background_color) + "80",
 
         backdropFilter:
           page_number !== undefined &&
           page_number > 1 &&
           input_bloc.background_color === "#00000000"
             ? "blur(10px)"
-            : "blur(0px)",
+            : "blur(10px)",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,23 +167,26 @@ function HeaderVizualization({
               (input_bloc as Header).link_networks_an_others_header.length >
                 0 &&
               (input_bloc as Header).link_networks_an_others_header.map(
-                (value: LinkNetworksAndOthersHeader, key: number) => {
+                (
+                  value: LinkNetworksAndOthersHeader | Record<string, unknown>,
+                  key: number
+                ) => {
                   return (
                     <a
                       key={key}
                       className={s.facebook}
-                      href={value.background_url}
-                      title={value.title}
+                      href={String(value.background_url)}
+                      title={String(value.title)}
                       target="_blank"
                     >
-                      {value.logo_url.length > 0 ? (
+                      {String(value.image_url) !== "" ? (
                         <Image
                           src={
                             process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                             "/api/uploadfile/" +
-                            value.logo_url
+                            String(value.image_url)
                           }
-                          alt={value.title}
+                          alt={String(value.title)}
                           className={
                             trigger_show_link ? "tr show_link" : "tr small"
                           }
@@ -191,7 +194,7 @@ function HeaderVizualization({
                           height={30}
                         />
                       ) : (
-                        value.name
+                        String(value.name)
                       )}
                     </a>
                   );

@@ -1,22 +1,14 @@
 import remove from "./../../../../../assets/remove.png";
-
 import Carousel from "../../../../../../models/Carousel";
 import Image from "next/image";
 import DragAndDrop from "../../../../../../lib/dragzone";
-import InputTypes from "../../../../../../lib/InputTypes";
-import ComponentTypes from "../../../../../../lib/types";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 interface CardDatas {
   gap: number;
 
   index: number;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
+
   show_remove: boolean;
   bloc: Carousel;
 }
@@ -25,10 +17,11 @@ function CardData({
   gap,
 
   index,
-  updateComponent,
+
   show_remove,
   bloc,
 }: CardDatas) {
+  const removeItem = useBlocStore((state) => state.removeItem);
   const image =
     bloc !== undefined && bloc.carousel_data !== undefined
       ? bloc.carousel_data[index].image_url !== ""
@@ -51,8 +44,8 @@ function CardData({
             height={30}
             src={remove}
             alt="suppression box"
-            onClick={(e) => {
-              updateComponent(e, "remove", "", index, bloc);
+            onClick={() => {
+              removeItem(bloc, index);
             }}
           />
         ) : (
@@ -96,15 +89,7 @@ function CardData({
                 : ""
             }
             subfield={""}
-            update={async (
-              event: InputTypes,
-              field: string | undefined,
-              input: string | undefined,
-              index?: string | number | undefined,
-              bloc?: ComponentTypes
-            ): Promise<void> => {
-              await updateComponent(event, field, input, index, bloc);
-            }}
+            toggle={false}
           />
         </div>
       </div>

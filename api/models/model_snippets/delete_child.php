@@ -14,5 +14,5 @@
     $q = self::$db->prepare('DELETE FROM ' . $associated_table . ' WHERE id=:id');
     $q->bindValue(':id', $id);
     $SQL_result = $q->execute();   
-    
+
     return $SQL_result;  

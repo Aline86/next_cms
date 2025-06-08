@@ -20,16 +20,16 @@ function PictureGroupVizualisation({
   full,
   isResponsive,
 }: CustomCarouselInfo) {
-  const [dataValue] = useState<
+  const [dataValue, setDataValue] = useState<
     PictureGroupData[] | Record<string, unknown>[] | undefined
   >(
     input_bloc !== undefined
       ? (input_bloc.picture_group_data as
           | PictureGroupData[]
-          | Record<string, unknown>[]
-          | undefined)
+          | Record<string, unknown>[])
       : undefined
   );
+  console.log("input_bloc", input_bloc);
   const [result, setResult] = useState<MediaQueryList>();
   const [result_2, setResult2] = useState<MediaQueryList>();
   const [col, set_col] = useState<{ "--columns": number }>();
@@ -86,7 +86,18 @@ function PictureGroupVizualisation({
     }
   }, [input_bloc?.width, isResponsive]);
 
-  useEffect(() => {}, [col]);
+  useEffect(() => {}, [col, toggle]);
+
+  useEffect(() => {
+    setDataValue(
+      input_bloc !== undefined && input_bloc.picture_group_data !== undefined
+        ? (input_bloc.picture_group_data as
+            | PictureGroupData[]
+            | Record<string, unknown>[])
+        : undefined
+    );
+  }, [toggle]);
+
   return input_bloc !== undefined ? (
     <div className=" mt-16 mb-16">
       {input_bloc.title !== "" && (

@@ -31,7 +31,18 @@ function CardData({
       isExternalLink(false);
       const prefixe = Number(url.substring(0, 2));
       const pageData = await getPage(prefixe);
-      setPage(pageData);
+      if (pageData !== undefined) {
+        // If pageData is an array, select the first item; otherwise, use as Page
+        if (Array.isArray(pageData) && pageData.length > 0) {
+          setPage(pageData[0] as Page);
+        } else if (
+          pageData &&
+          typeof pageData === "object" &&
+          !Array.isArray(pageData)
+        ) {
+          setPage(pageData as Page);
+        }
+      }
     }
   };
   const getPage = async (id: number) => {

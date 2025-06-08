@@ -1,21 +1,25 @@
-import { ChangeEvent } from "react";
 import ComponentBloc from "../lib/Component";
 import Container from "../lib/Container";
 
 import LinkNetworksAndOthersHeader from "./LinkNetworksAndOthersHeader";
 import InputTypes from "../lib/InputTypes";
+import { ModelUpdateData } from "./ModelUpdateData";
 
 export default class Header extends Container implements ComponentBloc {
   id: number;
+  bloc_number: number;
   title: string;
   type: string;
   parameters: string;
-  link_networks_an_others_header: Array<LinkNetworksAndOthersHeader>;
+  link_networks_an_others_header: Array<
+    LinkNetworksAndOthersHeader | Record<string, unknown>
+  >;
   logo_url: string;
   image_url: string;
   background_color: string;
   constructor(
     id: number = -1,
+    bloc_number: number,
     title: string = "",
     type: string = "header",
     logo_url: string = "",
@@ -24,6 +28,7 @@ export default class Header extends Container implements ComponentBloc {
   ) {
     super(id, title, type);
     this.id = id;
+    this.bloc_number = bloc_number;
     this.title = title;
     this.type = type;
     this.logo_url = logo_url;
@@ -33,7 +38,7 @@ export default class Header extends Container implements ComponentBloc {
     this.background_color = background_color;
   }
   public set_link_networks_an_others_header(
-    link_networks_an_others_header: Array<LinkNetworksAndOthersHeader>
+    link_networks_an_others_header: Record<string, unknown>[]
   ) {
     this.link_networks_an_others_header = [];
 
@@ -47,22 +52,34 @@ export default class Header extends Container implements ComponentBloc {
       );
   }
 
-  public add_link_networks_an_others_header(
-    link_networks_an_others_header: LinkNetworksAndOthersHeader = new LinkNetworksAndOthersHeader()
+  public async add_link_networks_an_others_header(
+    link_networks_an_others_header: Record<string, unknown>
   ) {
+    const data = new LinkNetworksAndOthersHeader(
+      Number(this.link_networks_an_others_header.length),
+      Number(link_networks_an_others_header.id) as number | undefined,
+      link_networks_an_others_header.title as string | undefined,
+      link_networks_an_others_header.background_url as string | undefined,
+
+      link_networks_an_others_header.name as string | undefined,
+      link_networks_an_others_header.image_url as string | undefined
+    );
+
+    const plainObj = await data.classToPlainObject();
     this.link_networks_an_others_header.push(
-      new LinkNetworksAndOthersHeader(
-        this.link_networks_an_others_header.length,
-        link_networks_an_others_header.id,
-        link_networks_an_others_header.title,
-        link_networks_an_others_header.background_url,
-        link_networks_an_others_header.name,
-        link_networks_an_others_header.logo_url
-      )
+      plainObj as LinkNetworksAndOthersHeader
     );
   }
-
-  public async remove_link(index: number) {
+  public add_data() {
+    this.link_networks_an_others_header.push(
+      new LinkNetworksAndOthersHeader(
+        Number(this.link_networks_an_others_header.length),
+        -1
+      )
+    );
+    return this;
+  }
+  public async remove_data(index: number) {
     this.set_parameters(
       "delete_child&id=" +
         this.link_networks_an_others_header[index].id +
@@ -71,8 +88,15 @@ export default class Header extends Container implements ComponentBloc {
         "&associated_table=link_networks_an_others_header"
     );
     await this.delete_bloc();
-    // index !== undefined && this.link_networks_an_others_header.splice(index, 1);
+
+    this.link_networks_an_others_header.splice(index, 1);
+    this.link_networks_an_others_header.map((_, index_) => {
+      this.link_networks_an_others_header[index_].bloc_number = index_;
+    });
+
     this.set_parameters(this.type + "&id=1&type=" + this.type);
+    // this.save_bloc();
+    return this;
   }
 
   _get_class_api_call_parameters(): string {
@@ -82,114 +106,40 @@ export default class Header extends Container implements ComponentBloc {
   public async update(
     e: InputTypes,
     field: string | undefined,
-    input?: string | undefined,
+    _?: string | undefined,
     index?: string | number | undefined
   ) {
-    switch (field) {
-      case "title":
-        if ((e as ChangeEvent<HTMLInputElement>).target) {
-          this.set_title((e as ChangeEvent<HTMLInputElement>).target.value);
-        }
-        break;
-      case "logo_url":
-        if (typeof e === "string") {
-          this.logo_url = e;
-        }
-        break;
-      case "image_url":
-        if (typeof e === "string") {
-          this.image_url = e;
-        }
-        break;
+    let value;
 
-      case "background_color":
-        if (typeof e === "string") {
-          this.set_background_color(e);
-        } else if ((e as ChangeEvent<HTMLInputElement>).target) {
-          this.set_background_color(
-            (e as ChangeEvent<HTMLInputElement>).target.value
-          );
-        }
-        break;
-      case "delete_picture":
-        if (typeof index === "number") {
-          await this.remove_link(index);
-        }
-        break;
-      case "remove":
-        if (index !== undefined) {
-          this.link_networks_an_others_header[index as number].logo_url = "";
-        } else {
-          switch (input) {
-            case "image_url":
-              this.image_url = "";
-              break;
-
-            case "logo_url":
-              this.logo_url = "";
-
-              break;
-
-            default:
-              return this;
-          }
-        }
-
-        break;
-      case "social_network":
-        switch (input) {
-          case "title":
-            if (index !== undefined) {
-              if (typeof index === "number") {
-                this.link_networks_an_others_header[index].title = (
-                  e as ChangeEvent<HTMLInputElement>
-                ).target.value;
-              }
-            }
-
-            break;
-          case "background_url":
-            if (index !== undefined) {
-              if (typeof index === "number") {
-                this.link_networks_an_others_header[index].background_url = (
-                  e as ChangeEvent<HTMLInputElement>
-                ).target.value;
-              }
-            }
-            break;
-          case "url_logo":
-            if (
-              index !== undefined &&
-              typeof index === "number" &&
-              typeof e === "string"
-            ) {
-              this.link_networks_an_others_header[index as number].logo_url = e;
-            }
-
-            break;
-
-          case "name":
-            if (index !== undefined) {
-              if (typeof index === "number") {
-                this.link_networks_an_others_header[index].name = (
-                  e as ChangeEvent<HTMLInputElement>
-                ).target.value;
-              }
-            }
-            break;
-
-          default:
-            return this;
-        }
-        break;
-      case "ajout":
-        this.add_link_networks_an_others_header();
-        break;
-
-      default:
-        return this;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as { target?: unknown }).target !== undefined &&
+      typeof (e as { target: HTMLInputElement }).target.value !== "undefined"
+    ) {
+      value = (e as { target: { value: string } }).target.value;
+    } else if (e !== undefined && typeof e === "string") {
+      value = e;
     }
 
+    if (value !== undefined) {
+      const command = new ModelUpdateData(
+        this,
+        index !== undefined
+          ? ("link_networks_an_others_header" as keyof this)
+          : (field as keyof this),
+        Number(index) !== undefined ? Number(index) : undefined,
+        value,
+        field
+      );
+
+      const updated = command.execute();
+
+      Object.assign(this, updated);
+
+      return this;
+    }
     return this;
   }
 
@@ -198,6 +148,13 @@ export default class Header extends Container implements ComponentBloc {
   }
   public set_id(value: number) {
     this.id = value;
+  }
+
+  public get_bloc_number(): number {
+    return this.bloc_number;
+  }
+  public set_bloc_number(value: number) {
+    this.bloc_number = value;
   }
 
   public get_title(): string {
@@ -221,7 +178,9 @@ export default class Header extends Container implements ComponentBloc {
     this.parameters = value;
   }
 
-  public get_link_networks_an_others_header(): Array<LinkNetworksAndOthersHeader> {
+  public get_link_networks_an_others_header(): Array<
+    LinkNetworksAndOthersHeader | Record<string, unknown>
+  > {
     return this.link_networks_an_others_header;
   }
 

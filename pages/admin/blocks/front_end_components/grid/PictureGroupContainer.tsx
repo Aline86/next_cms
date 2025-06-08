@@ -34,7 +34,7 @@ function PictureGroupContainer({
     updateWidth(width);
   }, [width]);
 
-  useEffect(() => {}, [classNames]);
+  useEffect(() => {}, [classNames, toggle]);
   return width === "1" ? (
     <div className={classNames}>
       <OneTwoGrid data={data} toggle={toggle} isResponsive={isResponsive} />
@@ -51,6 +51,7 @@ function PictureGroupContainer({
               data={card}
               index={index}
               isResponsive={isResponsive}
+              toggle={toggle}
             />
           );
         })}

@@ -1,34 +1,35 @@
-import { useEffect } from "react";
 import ShrinkParams from "./shrink_params";
 import ComponentTypes from "../../../../lib/types";
+import { SetStateAction, useState } from "react";
 
 interface BlocData {
   bloc: ComponentTypes;
+  setRefresh: React.Dispatch<SetStateAction<boolean>>;
+  refresh: boolean;
   setDragBegin?: (index: number) => void;
   updateDragBloc?: (index: number) => Promise<void>;
   handleDragOver?: React.DragEventHandler<HTMLDivElement>;
-  removeBloc?: (bloc: ComponentTypes) => Promise<void>;
+  isOpen: boolean;
   drag: boolean;
   index: number;
   component_visualization: React.ReactNode;
   css_position: React.ReactNode;
-  isOpen: boolean;
 }
 
 function BlockContainer({
   bloc,
+  setRefresh,
+  refresh,
   setDragBegin,
   updateDragBloc,
   handleDragOver,
-  removeBloc,
+  isOpen,
   drag,
   index,
   component_visualization,
   css_position,
-  isOpen,
 }: BlocData) {
-  useEffect(() => {}, [isOpen]);
-
+  const [openModal, setOpenModal] = useState(isOpen);
   return bloc !== undefined ? (
     <div
       draggable={drag}
@@ -39,6 +40,7 @@ function BlockContainer({
         updateDragBloc?.(index);
       }}
       key={index}
+      onClick={() => setOpenModal(!openModal)}
     >
       <ShrinkParams
         key={index}
@@ -58,10 +60,10 @@ function BlockContainer({
         index={index !== undefined ? index + 1 : index}
         bloc={bloc}
         handleDragOver={handleDragOver}
-        removeBloc={removeBloc}
         component_visualization={component_visualization}
         css_position={css_position}
-        isOpen={isOpen}
+        setRefresh={setRefresh}
+        refresh={refresh}
       />
     </div>
   ) : (

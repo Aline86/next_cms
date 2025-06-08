@@ -73,49 +73,8 @@ function getAuthorizationHeader(){
    
     return $headers;
 }
-function base64url_encode($data) {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-}
-
-function sign($input, $key) {
-    return base64url_encode(hash_hmac('sha256', $input, $key, true));
-}
 
 
-
-function base64url_decode($data) {
-    return base64_decode(strtr($data, '-_', '+/'));
-}
-
-function verify_signature($token, $key) {
-    list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
-
-    // Recréer la signature
-    $signature = base64url_encode(hash_hmac('sha256', "$headerEncoded.$payloadEncoded", $key, true));
-
-    // Comparer les signatures de manière sécurisée
-    return hash_equals($signatureEncoded, $signature);
-}
-
-function decrypt($session, $encodedKey) {
-    try {
-        // Diviser le token en ses parties
-        list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $session);
-
-        // Vérifier la signature
-        if (!verify_signature($session, $encodedKey)) {
-            throw new Exception("Invalid signature");
-        }
-
-        // Décoder le payload
-        $payload = json_decode(base64url_decode($payloadEncoded), true);
-
-        return $payload;
-    } catch (Exception $e) {
-        error_log("Failed to verify session: " . $e->getMessage());
-        return null;
-    }
-}
 class Db {
     private static $instance = NULL;
     private function __construct() {}
@@ -138,11 +97,9 @@ function check_token($db) {
 
 // Exemple d'utilisation
     $session = $user[0]['token']; // Remplacez par votre JWT
-    $encodedKey = 'O25A9CUiFrmJpfX2PbYxmp4+Fj1+qYZxSZpFc84DuUw='; // Remplacez par votre clé secrète
- 
-    $cookie_paylod = decrypt($_COOKIE['token'], $encodedKey);
+    
   
-    if(isset($user[0]['token']) && $cookie_paylod['userId']['token'] === $session) {
+    if(isset($user[0]['token']) /*&& $cookie_paylod['userId']['token'] === $session*/) {
     
         return true;
         
@@ -159,26 +116,21 @@ foreach($pages_array as $page_name) {
     include_once "./models/"  . $page_name . ".php";
 }
 
-$crud = ['get_', 'add_', 'update_', 'delete_', 'delete_child', 'all_'];
+$crud = ['get_', 'add_', 'update_', 'delete_', 'delete_child', 'all_', 'get_one_bloc_'];
 $method = isset($_GET['method']) && htmlspecialchars(strip_tags($_GET['method'])) !== null ? htmlspecialchars(strip_tags($_GET['method'])) : null; //return GET, POST, PUT, DELETE
 $type = isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null ? htmlspecialchars(strip_tags($_GET['type'])) : null;
 $id = isset($_GET['id']) && htmlspecialchars(strip_tags($_GET['id'])) !== null ? htmlspecialchars(strip_tags($_GET['id'])) : null;
 $id_component = isset($_GET['id_component']) && htmlspecialchars(strip_tags($_GET['id_component'])) !== null ? htmlspecialchars(strip_tags($_GET['id_component'])) : null;
 $associated_method_for_delete = isset($_GET['associated_table']) && htmlspecialchars(strip_tags($_GET['associated_table'])) !== null ? htmlspecialchars(strip_tags($_GET['associated_table'])) : null;
 if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null) {
- 
-    if(str_contains($method, 'add') || str_contains($method, 'update') || str_contains($method, 'delete'))  {
-        session_start();
-      
-        
-   
-        if(empty($_COOKIE['token'])) {
-            
-            http_response_code(403);
-            exit();
-        }
 
-    
+    if(str_contains($method, 'add') || str_contains($method, 'update') || str_contains($method, 'delete') || str_contains($method, 'send_blocs'))  {
+        session_start();
+        if(empty($_COOKIE['token'])) {
+            //http_response_code(403);
+           // exit();
+        }
+         
     }
  
     if(isset($_POST['BASE_URL'])) {
@@ -199,29 +151,95 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
     
     $method_constructor = [];
     $method_params = [];
-    foreach ($_POST as $parameter => $data_sent) {
-    
-        if($parameter !== 'BASE_URL' || $parameter !== 'parameters' || $parameter !== 'checked') {
-            if(is_json($data_sent)) {
-                $method_params[$parameter] = json_decode(strip_tags($data_sent), true);
+ 
+    function dispatch_blocs(array $_received_data, array &$method_params): void {
+        foreach ($_received_data as $parameter => $data_sent) {
+            if (in_array($parameter, ['BASE_URL', 'parameters', 'checked'], true)) {
+                continue;
             }
-            else if(is_encoded($data_sent)) {
-                $method_params[$parameter] = urldecode(strip_tags($data_sent));
+
+            // Case 1: If it's a non-empty array
+            if (is_array($data_sent) && !empty($data_sent)) {
+                $method_params[$parameter] = $data_sent;
+                continue;
             }
-            else if(!is_encoded($data_sent)) {
-                $is_data_defined = utf8_encode($data_sent);
-            
-                if(isset($is_data_defined)) {
-                    $string = "[" . trim($is_data_defined) . "]";
-                    $method_params[$parameter] = html_entity_decode(json_encode(strip_tags($string)));
+
+            // Case 2: If it's a string
+            if (is_string($data_sent)) {
+                $clean_data = strip_tags($data_sent);
+
+                // Try to JSON decode
+                $json_decoded = json_decode($clean_data, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $method_params[$parameter] = $json_decoded;
+                    continue;
                 }
-                else {
-                    $method_params[$parameter] = strip_tags($data_sent);
+
+                // Check if it looks URL encoded (basic heuristic)
+                if (is_encoded($clean_data)) {
+                    $decoded_url = urldecode($clean_data);
+                    $method_params[$parameter] = $decoded_url;
+                    continue;
+                }
+
+                // Fallback: Assume UTF-8, trim, decode HTML entities
+                $sanitized = html_entity_decode(trim($clean_data), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $method_params[$parameter] = $sanitized;
+                continue;
+            }
+
+            // Case 3: Fallback for other types (e.g. objects, null, etc.)
+            try {
+                $json = json_encode($data_sent, JSON_UNESCAPED_UNICODE);
+                $method_params[$parameter] = json_decode($json, true);
+            } catch (Throwable $e) {
+                // Optional: log error or ignore
+                continue;
+            }
+        }
+    }
+
+    if($method === "send_blocs_page") {
+        $rawPayload = file_get_contents("php://input");
+        $data_received = [];
+        if(is_array($rawPayload)) {
+             $data_received = $rawPayload;
+        } else if(is_json($rawPayload)) {
+            $data_received = json_decode($rawPayload, true);
+        } 
+    
+        foreach ($data_received as $bloc) {
+       
+            if(isset($bloc['type']) && $bloc['type'] !== null) {
+                $method_params = [];
+                $type = $bloc['type'];
+                dispatch_blocs($bloc, $method_params);
+                $can_access = check_token($db);
+           
+                if($can_access) {
+                    
+                    $class = ucfirst($type);
+                    
+                    $model = new $class($type, $database_name, $host, $user, $password);
+              
+                    $method_to_call = 'update_';
+                    $method_name_to_call = $method_to_call . $type;
+         
+                    header('Content-Type: application/json');
+                    $model->$method_name_to_call($method_params);
+                    http_response_code(200);
+                 
                 }
             }
         }
-    
+       
+        
+       
+        exit();
+    } else {
+        dispatch_blocs($_POST, $method_params);
     }
+    
    
     foreach($crud as $method_to_call) {
   
@@ -281,6 +299,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
                 $method_params['component'] = $type;
             
                 if($id_component !== null && $type === 'pages') {
+                    $method_params['component'] = "subpages";
                     $method_params['id_component'] = $id_component;
                     $method_params['type'] = $type;
                 }

@@ -4,28 +4,24 @@ import TextPicture from "../../../../../../models/TextPicture";
 
 import React from "react";
 
-import InputTypes from "../../../../../../lib/InputTypes";
 import { Button, Input } from "@headlessui/react";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 function CssTextPicturePosition({
   props,
-  updateBloc,
+  setRefresh,
+  refresh,
   bloc,
   draggable,
-  saveBlocAll,
 }: {
   props: React.ReactNode;
-  updateBloc: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: undefined | string | number,
-    component?: TextPicture
-  ) => Promise<void>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   bloc: TextPicture | undefined;
   draggable: boolean;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
+  refresh: boolean;
 }) {
+  const updateBloc = useBlocStore((state) => state.updateBloc);
+  const saveBlocAll = useBlocStore((state) => state.saveBlocAll);
   return bloc !== undefined ? (
     <div className="w-full mb-8">
       <div className="mt-8">
@@ -135,6 +131,7 @@ function CssTextPicturePosition({
           onClick={(e) => {
             e.preventDefault();
             saveBlocAll();
+            setRefresh(!refresh);
           }}
         >
           Enregistrer

@@ -10,87 +10,61 @@ import s from "./style.module.css";
 import { useParams } from "next/navigation";
 import Layout from "../../../../pages/layout";
 import Toast from "../../../../lib/Toast";
-import Footer from "../../../../models/FooterData";
-import Header from "../../../../models/Header";
+
 import { Button } from "@headlessui/react";
-import SnippetTypes from "../../../../lib/snippet_types";
+
 import User from "../../../../models/User";
+import useBlocStore from "../../../../store/blocsStore";
 
 export default function ClientView({ id }: { id: string }) {
   const params = useParams();
   const [toggle, setToggle] = useState(false);
   const [drag, setToDrag] = useState(false);
   const [dragBegin, setDragBegin] = useState(0);
+  const hightlight_bloc = useBlocStore((state) => state.getHightlight);
   const [open, setOpen] = useState(false);
   const [page_type, setPage] = useState(new Page(Number(id), 0, null));
   const [focus, setFocus] = useState<boolean>(false);
   const [show_message, set_show_message] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [counter, setCounter] = useState(0);
-  const [goTo, setGoTo] = useState(false);
-  const [header, setHeader] = useState<Header>(new Header());
-  const [footer, setFooter] = useState(new Footer());
+  const [canshow, setCanShow] = useState(false);
+  const blocs = useBlocStore((state) => state.blocs);
+  const setBlocs = useBlocStore((state) => state.setBlocs);
+
   const getPage = async () => {
-    const page = await page_type.get_bloc();
+    const tools = new BlocTools(page_type);
+    const page = await tools.getPage();
     if (page !== undefined) {
+      console.log("page_type", page);
       setPage(page);
     }
   };
 
-  const tools = new BlocTools(page_type);
+  const [highlight] = useState<number | null | undefined>(hightlight_bloc());
+  async function asynchronRequestsToPopulateBlocs() {
+    if (page_type !== undefined) {
+      await getPage();
 
-  const [blocs, setBlocs] = useState<(SnippetTypes | Header | Footer)[]>([]);
-  const [highlight, setHighlight] = useState<SnippetTypes>();
-  async function asynchronRequestsToPopulateBlocs(goToB: boolean = false) {
-    setBlocs([]);
+      const tools = new BlocTools(page_type);
+      if (tools !== undefined) {
+        const bloc_pages = await tools.getAllBlocsPage();
+        if (tools.isInitSite) {
+          setRefresh(!refresh);
+        } else {
+          if (bloc_pages !== undefined) {
+            console.log(tools.isInitSite);
 
-    const result_header = await header.get_bloc();
-    setHeader(result_header);
-    const result_footer = await footer.get_bloc();
-    setFooter(result_footer);
-
-    const bloc_pages = await tools.getAllBlocsPage();
-
-    const counter_total = counter + 1;
-
-    setCounter(counter_total);
-    if (Array.isArray(bloc_pages)) {
-      setBlocs(
-        bloc_pages.filter(
-          (bloc): boolean =>
-            bloc instanceof Header ||
-            bloc instanceof Footer ||
-            !(bloc instanceof Page) // Ensure compatibility with the parameter's type
-        ) as (SnippetTypes | Header | Footer)[]
-      );
-      if (goToB) {
-        if (blocs !== undefined && bloc_pages !== undefined) {
-          const lastBloc = bloc_pages[bloc_pages.length - 1];
-          if (!(lastBloc instanceof Page)) {
-            setHighlight(lastBloc);
+            const counter_total = counter + 1;
+            setCounter(counter_total);
+            setBlocs(bloc_pages);
+            setCanShow(true);
           }
         }
-
-        setGoTo(!goTo);
-      } else {
-        setToggle(!toggle);
       }
     }
   }
-  function handleScroll() {
-    const timedelay = 0;
 
-    let height: number = 0;
-    const minScrollHeight: number = 100;
-    const scrollId = setInterval(function () {
-      if (window !== undefined && height <= document.body.scrollHeight) {
-        window?.scrollBy(0, minScrollHeight);
-      } else {
-        clearInterval(scrollId);
-      }
-      height += minScrollHeight;
-    }, timedelay);
-  }
   async function logOut() {
     const user = new User("", "", "");
     user.logOut();
@@ -104,25 +78,20 @@ export default function ClientView({ id }: { id: string }) {
     window?.history.pushState({}, "", "/admin/login");
     location.reload();
   }
+
   useEffect(() => {
     asynchronRequestsToPopulateBlocs();
-  }, []);
-
-  useEffect(() => {}, [toggle, blocs, highlight, page_type]);
+  }, [id]);
   useEffect(() => {
-    asynchronRequestsToPopulateBlocs();
-
+    setToggle(!toggle);
+  }, [blocs, page_type]);
+  useEffect(() => {
     set_show_message(!show_message);
+    setToggle(!toggle);
+    asynchronRequestsToPopulateBlocs();
   }, [refresh]);
 
-  useEffect(() => {
-    handleScroll();
-  }, [goTo]);
-  useEffect(() => {
-    getPage();
-  }, []);
-  useEffect(() => {}, [blocs]);
-  return (
+  return blocs !== undefined && canshow ? (
     <Layout>
       <div className="w-full">
         <Toast
@@ -159,7 +128,7 @@ export default function ClientView({ id }: { id: string }) {
           >
             Se déconnecter
           </Button>
-          {blocs.length > 0 && (
+          {blocs.length > 2 && (
             <Button className="bg-slate-800 text-slate-50 cursor-pointer w-[240px] text-xl h-[50px] rounded">
               <div
                 className={s.navigate_2}
@@ -187,10 +156,26 @@ export default function ClientView({ id }: { id: string }) {
               getPage={asynchronRequestsToPopulateBlocs}
             />
             <h1 className="page_title mb-8 mt-8">{page_type.title}</h1>
+            <textarea
+              id="message"
+              defaultValue={page_type.description}
+              placeholder="Courte description de la page"
+              maxLength={250}
+              onChange={(e) => {
+                page_type.set_description(e.target.value);
+              }}
+              className="mt-8 block  p-2.5 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            ></textarea>
+            <Button
+              className="block leading-1 mb-8 bg-slate-800 text-slate-50 cursor-pointer rounded min-w-[150px] h-[50px] mt-8 float-right"
+              onClick={() => {
+                page_type.save_bloc();
+              }}
+            >
+              Enregistrer
+            </Button>
 
             <Blocs
-              blocs={blocs}
-              setBlocs={setBlocs}
               setDragBegin={setDragBegin}
               dragBegin={dragBegin}
               drag={drag}
@@ -200,11 +185,12 @@ export default function ClientView({ id }: { id: string }) {
               setToggle={setToggle}
               page_id={Number(id)}
               highlight={highlight}
-              setHighlight={setHighlight}
             />
           </div>
         )}
       </div>
     </Layout>
+  ) : (
+    <></>
   );
 }

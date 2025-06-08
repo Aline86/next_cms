@@ -2,13 +2,16 @@ import remove from "./../pages/assets/bouton-supprimer.png";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ComponentTypes from "./types";
+import useBlocStore from "../store/blocsStore";
 
 interface CardDatas {
-  removeBloc: (bloc: ComponentTypes) => void;
   bloc: ComponentTypes;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh: boolean;
 }
 
-function DeleteConfirmation({ removeBloc, bloc }: CardDatas) {
+function DeleteConfirmation({ bloc, refresh, setRefresh }: CardDatas) {
+  const removeBloc = useBlocStore((state) => state.removeBloc);
   const [open, setOpen] = useState(false);
   useEffect(() => {}, [open]);
   return (
@@ -90,7 +93,8 @@ function DeleteConfirmation({ removeBloc, bloc }: CardDatas) {
                 <button
                   onClick={() => {
                     setOpen(!open);
-                    removeBloc(bloc);
+                    removeBloc(bloc.bloc_number);
+                    setRefresh(!refresh);
                   }}
                   type="submit"
                   className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"

@@ -5,7 +5,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 import Layout from "../../../../pages/layout";
-import ClientView from "../../../../pages/admin/[slug]/ClientView";
+import ClientView from "../../../../pages/admin/resultat/[slug]/ClientView";
 export const dynamic = "force-dynamic";
 export default function Page({
   params,

@@ -3,28 +3,15 @@ import Footer from "../../../models/FooterData";
 import FooterInput from "./backend_components/footer/footer_template/footer";
 import FooterVizualization from "./front_end_components/footer/footer";
 import BlockContainer from "./wrapper/BlockContainer";
-import InputTypes from "../../../lib/InputTypes";
-import ComponentTypes from "../../../lib/types";
 
 interface BlocData {
   bloc: Footer;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
-
-  saveBloc: (bloc: Footer) => Promise<void>;
+  toggle: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh: boolean;
 }
 
-function BlocFooter({
-  bloc,
-
-  updateComponent,
-  saveBloc,
-}: BlocData) {
+function BlocFooter({ bloc, toggle, setRefresh, refresh }: BlocData) {
   return bloc !== undefined ? (
     <BlockContainer
       bloc={bloc}
@@ -36,27 +23,22 @@ function BlocFooter({
           input_bloc={bloc}
           isResponsive={false}
           full={false}
+          toggle={toggle}
         />
       }
       css_position={
         <CssFooterPosition
           props={
             <FooterInput
-              updateComponent={async (
-                event: InputTypes,
-                field: string | undefined,
-                input: string | undefined,
-                index?: string | number | undefined,
-                bloc?: ComponentTypes
-              ): Promise<void> => {
-                await updateComponent(event, field, input, index, bloc);
-              }}
               input_bloc={bloc}
-              saveBloc={saveBloc}
+              setRefresh={setRefresh}
+              refresh={refresh}
             />
           }
         />
       }
+      setRefresh={setRefresh}
+      refresh={refresh}
     />
   ) : (
     <></>

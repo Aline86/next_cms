@@ -68,7 +68,7 @@ export default class Carousel extends Container {
   public async update(
     e: InputTypes,
     field: string,
-    input?: undefined,
+    input?: string | undefined,
     index?: number | undefined
   ) {
     let value;
@@ -111,14 +111,12 @@ export default class Carousel extends Container {
     }
   }
   public add_data() {
+    this.card_number++;
     this.carousel_data.push(
-      new CarouselData(
-        -1,
-        Number(this.carousel_data[this.carousel_data.length - 1].card_number) +
-          1,
-        this.id
-      )
+      new CarouselData(-1, Number(this.carousel_data.length) + 1, this.id)
     );
+    this.save_bloc();
+    return this;
   }
 
   public async remove_link(index: number) {
@@ -139,7 +137,7 @@ export default class Carousel extends Container {
     this.card_number = this.carousel_data.length;
 
     this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
-    this.save_bloc();
+    //this.save_bloc();
     return this;
   }
   public async add_carousel_data(carousel_data: Record<string, unknown>) {
@@ -158,9 +156,9 @@ export default class Carousel extends Container {
     const plainObj = await data.classToPlainObject();
     this.carousel_data.push(plainObj as CarouselData);
   }
-  remove_data(index: number | undefined) {
+  public async remove_data(index: number | undefined) {
     if (index !== undefined) {
-      this.remove_link(index);
+      return await this.remove_link(index);
     }
   }
 

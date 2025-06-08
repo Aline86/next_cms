@@ -11,6 +11,7 @@ interface CardDatas {
   update_clicked_pic: (state: boolean) => void;
   isResponsive: boolean;
   clicked: boolean;
+  toggle: boolean;
 }
 
 function Picture({
@@ -18,6 +19,7 @@ function Picture({
   clicked,
   update_clicked_pic,
   isResponsive,
+  toggle,
 }: CardDatas) {
   const [clicked_pic, set_clicked_pic] = useState(false);
   const [result, setResult] = useState<MediaQueryList>();
@@ -39,7 +41,7 @@ function Picture({
   useEffect(() => {
     setResult(window?.matchMedia("(max-width: 800px)") as MediaQueryList);
   }, []);
-  useEffect(() => {}, [clicked_pic, clicked]);
+  useEffect(() => {}, [clicked_pic, clicked, toggle]);
 
   return data !== undefined ? (
     <>

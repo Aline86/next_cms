@@ -5,36 +5,37 @@ import Footer from "../../../../../models/FooterData";
 import isLightOrDark from "../../../../../lib/snippet";
 import LinkNetworksAndOthersFooter from "../../../../../models/LinkNetworksAndOthersFooter";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface FooterInfo {
-  input_bloc: Footer | Record<string, unknown> | undefined;
-
+  input_bloc: Footer | Record<string, unknown>;
+  toggle?: boolean;
   full: boolean;
   isResponsive: boolean;
 }
 
 export default function FooterVizualization({
   input_bloc,
-
+  toggle,
   full,
   isResponsive,
 }: FooterInfo) {
   const root_map: string = String(input_bloc?.map_iframe_url) || "";
 
   const computedStyle = {
-    width: isResponsive ? "380px" : full ? "100%" : "43vw",
+    width: isResponsive ? "380px" : full ? "" : "43vw",
     backgroundColor: String(input_bloc?.background_color ?? ""),
     color: isLightOrDark(String(input_bloc?.background_color ?? ""))
       ? "white"
       : "black",
   };
-
+  useEffect(() => {}, [toggle]);
   return (
     <div
       className={
         isResponsive
           ? "w-sm bottom-0 padding_footer relative overflow-x-hidden overflow-y-auto"
-          : s.container + " padding_footer h-[75px] w-[100%]"
+          : s.container + " padding_footer h-[75px] w-full"
       }
       style={computedStyle}
     >
@@ -53,7 +54,7 @@ export default function FooterVizualization({
           {Array.isArray(input_bloc?.links_network_an_others_footer) &&
             input_bloc.links_network_an_others_footer.map(
               (value: LinkNetworksAndOthersFooter, key: number) =>
-                value?.logo_url?.length > 0 && value?.name?.length === 0 ? (
+                value?.image_url?.length > 0 && value?.name?.length === 0 ? (
                   <a
                     key={key}
                     className={
@@ -70,7 +71,7 @@ export default function FooterVizualization({
                       src={
                         process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                         "/api/uploadfile/" +
-                        value.logo_url
+                        value.image_url
                       }
                       alt={value.title}
                       width={50}
@@ -85,7 +86,7 @@ export default function FooterVizualization({
                       href={
                         process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                         "/api/uploadfile/" +
-                        value.logo_url
+                        value.image_url
                       }
                       title={value.title}
                       target="_blank"

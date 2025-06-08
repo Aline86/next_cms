@@ -58,7 +58,6 @@ export default class PictureGroup extends Container {
     }
     return picture_group_data;
   }
-
   public async remove() {
     this.set_parameters("delete&id=" + this.id + "&type=" + this.type);
 
@@ -69,7 +68,7 @@ export default class PictureGroup extends Container {
   public async update(
     e: InputTypes,
     field: string,
-    input?: undefined,
+    input?: string | undefined,
     index?: number | undefined
   ) {
     let value;
@@ -88,7 +87,8 @@ export default class PictureGroup extends Container {
       index !== undefined
     ) {
       value = e;
-    } else {
+    } else if (typeof e !== "object") {
+      value = e;
     }
     if (value !== undefined) {
       const command = new ModelUpdateData(
@@ -117,15 +117,11 @@ export default class PictureGroup extends Container {
   }
   public add_data() {
     this.card_number++;
-
     this.picture_group_data.push(
-      new PictureGroupData(
-        -1,
-        this.picture_group_data[this.picture_group_data.length - 1]
-          .card_number + 1,
-        this.id
-      )
+      new PictureGroupData(-1, Number(this.picture_group_data.length), this.id)
     );
+    this.save_bloc();
+    return this;
   }
 
   public async remove_link(index: number) {
@@ -136,7 +132,6 @@ export default class PictureGroup extends Container {
         this.type +
         "&associated_table=picture_group_data"
     );
-    this.card_number = this.picture_group_data.length - 1;
 
     await this.delete_bloc();
 
@@ -144,10 +139,13 @@ export default class PictureGroup extends Container {
     this.picture_group_data.map((_, index_) => {
       this.picture_group_data[index_].card_number = index_;
     });
+    this.card_number = this.picture_group_data.length;
 
     this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
-
+    //const res = await this.save_bloc();
+    // if (res !== undefined) {
     return this;
+    //}
   }
   public async add_picture_group_data(
     picture_group_data: Record<string, unknown>
@@ -168,13 +166,12 @@ export default class PictureGroup extends Container {
     const plainObj = await data.classToPlainObject();
     this.picture_group_data.push(plainObj as PictureGroupData);
   }
-  async remove_data(index: number | undefined) {
+  public async remove_data(index: number | undefined) {
     if (index !== undefined) {
-      this.remove_link(index);
-
-      //this.picture_group_data.splice(index, 1);
-
-      return this;
+      const res = await this.remove_link(index);
+      if (res !== undefined) {
+        return this;
+      }
     }
   }
   public set_is_grid(is_grid: boolean) {

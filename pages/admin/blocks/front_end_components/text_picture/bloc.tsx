@@ -55,11 +55,12 @@ interface BlocParams {
   bloc: TextPicture | Record<string, unknown>;
   num_bloc: number;
   toggle: boolean;
+  refresh: boolean;
   full: boolean;
   isResponsive: boolean;
 }
 
-function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
+function Bloc({ bloc, toggle, isResponsive, refresh }: BlocParams) {
   const [result, setResult] = useState<MediaQueryList>();
   const [, setResize] = useState(0);
   const [float, setFloat] = useState<CSSProperties | undefined>();
@@ -317,7 +318,11 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
               : "black"
             : "black",
         width: `${
-          bloc.bloc_column ? `100%` : bloc.image !== undefined ? `100%` : `100%`
+          bloc.bloc_column
+            ? `100%`
+            : bloc.image_url !== undefined
+            ? `100%`
+            : `100%`
         }`,
       });
       if (bloc !== undefined && !bloc.bloc_column) {
@@ -369,7 +374,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
   }, []);
   useEffect(() => {
     output();
-  }, [bloc, toggle]);
+  }, [bloc, toggle, refresh]);
   useEffect(() => {}, [colorImage, float]);
 
   return (
@@ -384,7 +389,7 @@ function Bloc({ bloc, toggle, isResponsive }: BlocParams) {
         className="rounded h-full md:flex md:items-center md:justify-center"
         style={colorImage}
       >
-        {bloc !== undefined && String(bloc.image) && (
+        {bloc !== undefined && String(bloc.image_url) && (
           <div className="m-auto" style={float}>
             <Image bloc={bloc} />
           </div>

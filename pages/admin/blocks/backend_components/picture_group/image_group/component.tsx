@@ -3,22 +3,17 @@ import s from "./style/style.module.css";
 import CardData from "./wrapper";
 import PictureGroup from "../../../../../../models/PictureGroup";
 import PictureGroupData from "../../../../../../models/PictureGroupData";
-import InputTypes from "../../../../../../lib/InputTypes";
-import ComponentTypes from "../../../../../../lib/types";
+
+import { useEffect } from "react";
 
 interface ImageGroupData {
   page_id: number;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   bloc: PictureGroup;
+  toggle: boolean;
 }
 
-function ImageGroup({ updateComponent, bloc, page_id }: ImageGroupData) {
+function ImageGroup({ bloc, page_id, toggle, setToggle }: ImageGroupData) {
   const show_remove =
     bloc !== undefined && bloc.picture_group_data !== undefined
       ? bloc.picture_group_data !== undefined
@@ -27,6 +22,8 @@ function ImageGroup({ updateComponent, bloc, page_id }: ImageGroupData) {
           : false
         : undefined
       : undefined;
+
+  useEffect(() => {}, [toggle, bloc.picture_group_data]);
   return (
     show_remove !== undefined &&
     bloc !== undefined && (
@@ -56,17 +53,10 @@ function ImageGroup({ updateComponent, bloc, page_id }: ImageGroupData) {
                       bloc={bloc}
                       data={value}
                       index={index}
-                      updateComponent={async (
-                        event: InputTypes,
-                        field: string | undefined,
-                        input: string | undefined,
-                        index?: string | number | undefined,
-                        bloc?: ComponentTypes
-                      ): Promise<void> => {
-                        await updateComponent(event, field, input, index, bloc);
-                      }}
                       show_remove={show_remove}
                       page_id={page_id}
+                      toggle={toggle}
+                      setToggle={setToggle}
                     />
                   </div>
                 );

@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
-
 import Header from "../../../../../../models/Header";
-
 import DragAndDrop from "../../../../../../lib/dragzone";
-import InputTypes from "../../../../../../lib/InputTypes";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 interface DropdownInfo {
   input_bloc: Header | undefined;
-  updateHeader: (
-    e: InputTypes,
-    field: string | undefined,
-    input?: string | undefined,
-    index?: string | number | undefined,
-    bloc?: Header
-  ) => Promise<void>;
 }
 
-function DropdownData({ input_bloc, updateHeader }: DropdownInfo) {
+function DropdownData({ input_bloc }: DropdownInfo) {
   const [picture, isPicture] = useState<number>(
     input_bloc?.background_color === "#00000000"
       ? 2
@@ -24,7 +15,8 @@ function DropdownData({ input_bloc, updateHeader }: DropdownInfo) {
       ? 1
       : 0
   );
-  useEffect(() => {}, []);
+  const updateComponent = useBlocStore((state) => state.updateBloc);
+
   useEffect(() => {}, [picture]);
 
   return input_bloc !== undefined ? (
@@ -33,14 +25,14 @@ function DropdownData({ input_bloc, updateHeader }: DropdownInfo) {
         onChange={(e) => {
           isPicture(Number(e.target.value));
           if (Number(e.target.value) === 2) {
-            updateHeader(
+            updateComponent(
               "#00000000",
               "background_color",
               undefined,
               undefined,
               input_bloc
             );
-            updateHeader("", "image_url", undefined, undefined, input_bloc);
+            updateComponent("", "image_url", undefined, undefined, input_bloc);
           }
         }}
         className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm  light:bg-gray-800 light:border-gray-700 "
@@ -75,20 +67,7 @@ function DropdownData({ input_bloc, updateHeader }: DropdownInfo) {
                         : ""
                     }
                     subfield={undefined}
-                    update={async (
-                      event: InputTypes,
-                      field: string | undefined,
-                      input: string | undefined,
-                      index?: string | number | undefined
-                    ): Promise<void> => {
-                      await updateHeader(
-                        event,
-                        field ?? "",
-                        input,
-                        typeof index === "number" ? index : undefined,
-                        input_bloc
-                      );
-                    }}
+                    toggle={false}
                   />
                 </div>
               </div>
@@ -100,7 +79,7 @@ function DropdownData({ input_bloc, updateHeader }: DropdownInfo) {
                   className="flex mt-4 md:mt-6 cursor-pointer"
                   value={input_bloc?.background_color}
                   onChange={(e) => {
-                    updateHeader(
+                    updateComponent(
                       e,
                       "background_color",
                       undefined,

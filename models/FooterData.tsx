@@ -3,9 +3,11 @@ import Container from "../lib/Container";
 import InputTypes from "../lib/InputTypes";
 import LinkNetworksAndOthersFooter from "./LinkNetworksAndOthersFooter";
 import Address from "./AddressData";
+import { ModelUpdateData } from "./ModelUpdateData";
 
 export default class Footer extends Container {
   id: number;
+  bloc_number: number;
   title: string;
   type: string;
   parameters: string;
@@ -16,6 +18,7 @@ export default class Footer extends Container {
 
   constructor(
     id: number = -1,
+    bloc_number: number,
     title: string = "",
     type: string = "footer",
     map_iframe_url: string = "",
@@ -23,6 +26,7 @@ export default class Footer extends Container {
   ) {
     super(id, title, type);
     this.id = id;
+    this.bloc_number = bloc_number;
     this.title = title;
     this.type = type;
     this.parameters = this.type + "&id=1&type=" + this.type;
@@ -49,12 +53,29 @@ export default class Footer extends Container {
         links_network_an_others_footer.title,
         links_network_an_others_footer.background_url,
         links_network_an_others_footer.name,
-        links_network_an_others_footer.logo_url
+        links_network_an_others_footer.image_url,
+        links_network_an_others_footer.id,
+        links_network_an_others_footer.bloc_number
       )
     );
   }
 
-  public async remove_link(index: number) {
+  public add_data() {
+    this.links_network_an_others_footer.push(
+      new LinkNetworksAndOthersFooter(
+        "",
+        "",
+        "",
+        "",
+        -1,
+        this.links_network_an_others_footer.length - 1
+      )
+    );
+    this.save_bloc();
+    return this;
+  }
+
+  public async remove_data(index: number) {
     if (index !== undefined) {
       this.set_parameters(
         "delete_child&id=" +
@@ -63,9 +84,15 @@ export default class Footer extends Container {
           this.type +
           "&associated_table=links_network_an_others_footer"
       );
-      this.links_network_an_others_footer.splice(index, 1);
       await this.delete_bloc();
+
+      this.links_network_an_others_footer.splice(index, 1);
+      this.links_network_an_others_footer.map((_, index_) => {
+        this.links_network_an_others_footer[index_].bloc_number = index_;
+      });
+
       this.set_parameters(this.type + "&id=1&type=" + this.type);
+      this.save_bloc();
 
       return this;
     }
@@ -80,6 +107,13 @@ export default class Footer extends Container {
   }
   public set_id(value: number) {
     this.id = value;
+  }
+
+  public get_bloc_number(): number {
+    return this.bloc_number;
+  }
+  public set_bloc_number(value: number) {
+    this.bloc_number = value;
   }
 
   public get_title(): string {
@@ -107,14 +141,16 @@ export default class Footer extends Container {
     return this.address;
   }
   public set_address(address_array: Address[]) {
-    address_array.forEach((value) => {
-      this.address = new Address(
-        value.title,
-        value.address,
-        value.town,
-        value.id
-      );
-    });
+    if (address_array !== undefined && Array.isArray(address_array)) {
+      address_array.forEach((value) => {
+        this.address = new Address(
+          value.title,
+          value.address,
+          value.town,
+          value.id
+        );
+      });
+    }
   }
 
   public get_links_network_an_others_footer(): Array<LinkNetworksAndOthersFooter> {
@@ -141,148 +177,56 @@ export default class Footer extends Container {
     input?: string | undefined,
     index?: string | number | undefined
   ) {
-    switch (field) {
-      case "footer":
-        switch (input) {
-          case "map_iframe_url":
-            if (
-              typeof e !== "number" &&
-              typeof e === "object" &&
-              "target" in e &&
-              e.target
-            ) {
-              if ("target" in e && e.target) {
-                this.set_map_iframe_url((e.target as HTMLInputElement).value);
-              }
-            }
-            break;
-          case "background_color":
-            if (
-              typeof e !== "number" &&
-              typeof e === "object" &&
-              "target" in e &&
-              e.target
-            ) {
-              if ("target" in e && e.target) {
-                this.set_background_color((e.target as HTMLInputElement).value);
-              }
-            }
-
-            break;
-        }
-        break;
-      case "address":
-        switch (input) {
-          case "title":
-            if (
-              typeof e !== "number" &&
-              typeof e === "object" &&
-              "target" in e &&
-              e.target
-            ) {
-              this.address.title = (e.target as HTMLInputElement).value;
-            }
-            break;
-          case "address":
-            if (
-              typeof e !== "number" &&
-              typeof e === "object" &&
-              "target" in e &&
-              e.target
-            ) {
-              this.address.address = (e.target as HTMLInputElement).value;
-            }
-            break;
-          case "town":
-            if (
-              typeof e !== "number" &&
-              typeof e === "object" &&
-              "target" in e &&
-              e.target
-            ) {
-              this.address.town = (e.target as HTMLInputElement).value;
-            }
-            break;
-          default:
-            return this;
-        }
-        break;
-      case "social_network":
-        switch (input) {
-          case "title":
-            if (index !== undefined && typeof index == "number") {
-              if (
-                typeof e !== "number" &&
-                typeof e === "object" &&
-                "target" in e &&
-                e.target
-              ) {
-                this.links_network_an_others_footer[index].title = (
-                  e as React.ChangeEvent<HTMLInputElement>
-                ).target.value;
-              }
-            }
-            break;
-          case "background_url":
-            if (index !== undefined && typeof index == "number") {
-              if (
-                typeof e !== "number" &&
-                typeof e === "object" &&
-                "target" in e &&
-                e.target
-              ) {
-                this.links_network_an_others_footer[index].background_url = (
-                  ("target" in e ? e.target : null) as HTMLInputElement
-                ).value;
-              }
-            }
-            break;
-          case "name":
-            if (index !== undefined && typeof index == "number") {
-              if (
-                typeof e !== "number" &&
-                typeof e === "object" &&
-                "target" in e &&
-                e.target
-              ) {
-                this.links_network_an_others_footer[index].name = (
-                  ("target" in e ? e.target : null) as HTMLInputElement
-                ).value;
-              }
-            }
-            break;
-          case "url_logo":
-            if (
-              index !== undefined &&
-              typeof index === "number" &&
-              typeof e === "string"
-            ) {
-              this.links_network_an_others_footer[index as number].logo_url = e;
-            }
-            break;
-          case "remove":
-            if (index !== undefined && typeof index == "number") {
-              this.remove_link(index);
-            }
-            break;
-          case "delete_picture":
-            if (index !== undefined && typeof index == "number") {
-              this.links_network_an_others_footer[index].logo_url = "";
-            }
-            break;
-          default:
-            return this;
-        }
-        break;
-      case "ajout":
-        this.add_links_network_an_others_footer(
-          new LinkNetworksAndOthersFooter()
-        );
-
-        break;
-      default:
-        return this;
+    let value;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "target" in e &&
+      (e as { target?: unknown }).target !== undefined &&
+      typeof (e as { target: HTMLInputElement }).target.value !== "undefined"
+    ) {
+      value = (e as { target: { value: string } }).target.value;
+    } else if (e !== undefined && typeof e === "string") {
+      value = e;
     }
-    return this;
+
+    if (value !== undefined && input !== "address" && index !== undefined) {
+      const command = new ModelUpdateData(
+        this,
+        index !== undefined
+          ? ("links_network_an_others_footer" as keyof this)
+          : (field as keyof this),
+        index !== undefined ? Number(index) : undefined,
+        value,
+        field
+      );
+      const updated = command.execute();
+      console.log("update, footer", updated);
+      Object.assign(this, updated);
+
+      return this;
+    } else if (input === "address") {
+      const command = new ModelUpdateData(
+        this.address,
+        field as keyof Address,
+        undefined,
+        value
+      );
+      const updated = command.execute();
+
+      Object.assign(this.address, updated);
+
+      return this;
+    } else {
+      const command = new ModelUpdateData(
+        this,
+        field as keyof this,
+        undefined,
+        value
+      );
+      const updated = command.execute();
+      Object.assign(this, updated);
+      return this;
+    }
   }
 }

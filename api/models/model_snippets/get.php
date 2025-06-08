@@ -20,6 +20,7 @@
         }
     }
     $requete='SELECT DISTINCT * FROM ' . $this->type . ' WHERE id = :id';
+      
     if(count($associated_component_ids) <= 0) {
         foreach($associated_component_ids as $associated_component_name => $associated_component_id) {
             $requete .= ' AND ' . $associated_component_name . ' = :' . $associated_component_id;
@@ -43,23 +44,9 @@
     }
    
     $resultat->execute();
- 
-    $bloc = $resultat->fetchAll(PDO::FETCH_CLASS);
-
-
-    if(!is_null($this->associated_tables)) {
-        $i = 0;
-        foreach($this->associated_tables as $associated_attribute_name) {
-            $requete='SELECT * FROM ' . $associated_attribute_name . ' WHERE ' . $this->type . '_id' . ' = :id';
-            $sub_result = self::$db->prepare($requete);
-            $sub_result->bindValue(':id', $id);
-    
-            $sub_result->execute();
-          
-            while($sub = $sub_result->fetchObject()){
-                $bloc[$i]->$associated_attribute_name[] = $sub;  
-            }
-       
-        }
-    }
+    $i = 0;
+    $bloc[$this->type] = $resultat->fetchAll(PDO::FETCH_CLASS);
+   
+    $this->rec_sub_table($this->type, $id, self::$db, $bloc[$this->type][$i], $i);
+   
     return $bloc;

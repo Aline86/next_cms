@@ -1,43 +1,39 @@
 import { useEffect } from "react";
 import remove from "./../../../wrapper/assets/remove.png";
-import PictureGroup from "../../../../../../models/PictureGroup";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
 import Image from "next/image";
 import DragAndDrop from "../../../../../../lib/dragzone";
-import InputTypes from "../../../../../../lib/InputTypes";
-import ComponentTypes from "../../../../../../lib/types";
+import useBlocStore from "../../../../../../store/blocsStore";
+import PictureGroupData from "../../../../../../models/PictureGroupData";
+import PictureGroup from "../../../../../../models/PictureGroup";
 
 interface GridData {
+  bloc_data: PictureGroupData;
   bloc: PictureGroup;
-  data: PictureGroupData;
-
   index: number;
-  updatePictureGroupData: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   show_remove: boolean;
+  toggle: boolean;
 }
 
 function Grid({
+  bloc_data,
   bloc,
-
-  data,
+  toggle,
   index,
-  updatePictureGroupData,
+  setToggle,
   show_remove,
 }: GridData) {
-  useEffect(() => {}, [bloc]);
+  const removeItem = useBlocStore((state) => state.removeItem);
+
+  useEffect(() => {}, [toggle]);
   return bloc !== undefined ? (
     <div>
       {show_remove ? (
         <div
           className="flex justify-end "
-          onClick={(e) => {
-            updatePictureGroupData(e, "remove", undefined, index, bloc);
+          onClick={() => {
+            removeItem(bloc, index);
+            setToggle(!toggle);
           }}
         >
           <Image
@@ -62,17 +58,9 @@ function Grid({
             key={index}
             index={index}
             bloc={bloc}
-            data_img={data.image_url}
-            update={async (
-              event: InputTypes,
-              field: string | undefined,
-              input: string | undefined,
-              index?: string | number | undefined,
-              bloc?: ComponentTypes
-            ): Promise<void> => {
-              await updatePictureGroupData(event, field, input, index, bloc);
-            }}
+            data_img={bloc_data.image_url}
             subfield={undefined}
+            toggle={toggle}
           />
         </div>
       )}

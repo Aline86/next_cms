@@ -2,38 +2,38 @@ import s from "./style.module.css";
 
 import PictureGroup from "../../../../../../models/PictureGroup";
 
-import InputTypes from "../../../../../../lib/InputTypes";
 import { useEffect } from "react";
 import { Button, Input } from "@headlessui/react";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 function CssPictureGroupPosition({
   props,
-  updateComponent,
+  toggle,
   bloc,
   draggable,
-  saveBlocAll,
+  setRefresh,
+  refresh,
 }: {
   props: React.ReactNode;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: PictureGroup
-  ) => Promise<void>;
+  toggle: boolean;
+  refresh: boolean;
   bloc: PictureGroup;
   draggable: boolean;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  useEffect(() => {}, [bloc]);
+  const updateComponent = useBlocStore((state) => state.updateBloc);
+  const addItem = useBlocStore((state) => state.addItem);
+  const saveBlocAll = useBlocStore((state) => state.saveBlocAll);
+
+  useEffect(() => {}, [refresh, toggle]);
   return bloc !== undefined ? (
     <div className="w-full">
       <div className="flex justify-start">
         <Button
           className="bg-slate-800 text-slate-50 cursor-pointer w-[200px] text-xl h-[50px] rounded"
-          onClick={(e) => {
-            e.preventDefault();
-            updateComponent(e, "ajout", undefined, undefined, bloc);
+          onClick={() => {
+            addItem(bloc);
+            setRefresh(!refresh);
           }}
         >
           Ajouter un élément +
@@ -97,6 +97,7 @@ function CssPictureGroupPosition({
           onClick={(e) => {
             e.preventDefault();
             saveBlocAll();
+            setRefresh(!refresh);
           }}
         >
           Enregistrer

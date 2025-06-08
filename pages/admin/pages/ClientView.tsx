@@ -29,6 +29,7 @@ export default function ClientView() {
     const pages = await page_type.get_pages();
     if (pages !== undefined) {
       setPages(pages);
+      return true;
     }
   };
 
@@ -62,12 +63,12 @@ export default function ClientView() {
     if (pages !== undefined && pages.length > 0) {
       pages.splice(pages.indexOf(page), 1);
 
-      if ("remove_page" in page && typeof page.remove_page === "function") {
-        await page.remove_page();
+      if ("remove" in page && typeof page.remove === "function") {
+        await page.remove();
       }
       pages.map(async (bloc_in_blocs: Page, index) => {
         if ("bloc_number" in bloc_in_blocs) {
-          bloc_in_blocs.set_bloc_number(index + 1);
+          bloc_in_blocs.set_bloc_number(index);
           new_bloc_array[index] = await bloc_in_blocs.save_bloc();
         }
       });
@@ -142,16 +143,17 @@ export default function ClientView() {
       page_type.set_id(-1);
       const results = await page_type.save_bloc();
       if (results !== undefined) {
-        setRefresh(!refresh);
+        const res = await getPages();
+        if (res) {
+          setRefresh(!refresh);
+        }
       }
     }
   };
 
   useEffect(() => {}, [pages]);
 
-  useEffect(() => {
-    getPages();
-  }, [refresh, page]);
+  useEffect(() => {}, [refresh, page]);
 
   useEffect(() => {
     getPage();

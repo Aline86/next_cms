@@ -1,26 +1,30 @@
 import { Button } from "@headlessui/react";
 import ScreenHome from "../../../../../../models/Screen";
-import s from "./style.module.css";
+
 import React from "react";
-//    set_show_message={set_show_message}
+import useBlocStore from "../../../../../../store/blocsStore";
+
 function CssScreenPosition({
   props,
   bloc,
   draggable,
-  saveBlocAll,
+  refresh,
+  setRefresh,
 }: {
   props: React.ReactNode;
   bloc: ScreenHome;
   draggable: boolean;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
+  refresh: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const saveBlocAll = useBlocStore((state) => state.saveBlocAll);
   return bloc !== undefined ? (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-      <div className="bouton_container_bloc_css">
-        <div className={s.encart_bloc_name_title}>
+      <div className="">
+        <div className="">
           <h2>Bloc numéro : {bloc.bloc_number}</h2>
         </div>
-        <div className={s.bouton_container_parent}>
+        <div className="">
           <h3
             style={{
               textDecoration: "underline",
@@ -37,6 +41,7 @@ function CssScreenPosition({
                 e.preventDefault();
 
                 saveBlocAll();
+                setRefresh(!refresh);
               }}
             >
               Enregistrer

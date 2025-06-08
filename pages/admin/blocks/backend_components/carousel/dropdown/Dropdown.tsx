@@ -4,40 +4,49 @@ import s from "./styles.module.css";
 import Page from "../../../../../../models/Page";
 import CarouselData from "../../../../../../models/CarouselData";
 import Carousel from "../../../../../../models/Carousel";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 interface DropdownInfo {
   bloc: Carousel;
-  data: CarouselData;
+  data: CarouselData | Record<string, unknown>;
   index: number;
-  updateCarousel: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    field: string,
-    bloc: Carousel,
-    index: number
-  ) => void;
+  page_id: number;
 }
 
-function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
+function DropdownData({ bloc, data, index, page_id }: DropdownInfo) {
   const [pages, setPages] = useState<Page[]>();
-  const [page, setPage] = useState<Page>(new Page(1, 0, null));
-  const [choice, isExternalLink] = useState<string>("");
+  const [page, setPage] = useState<Page>(new Page(page_id, 0, null));
+  const [choice, isExternalLink] = useState<string | number>();
   const [toggle, setToggle] = useState<boolean>(false);
 
+  const updateComponent = useBlocStore((state) => state.updateBloc);
   const getPages = async () => {
-    const async_result = await page.get_pages();
-    if (Array.isArray(async_result) && async_result.length >= 1) {
-      setPages(async_result);
+    if (page !== undefined) {
+      const async_result = await page.get_sub_pages();
+
+      if (Array.isArray(async_result) && async_result.length >= 1) {
+        setPages(async_result);
+      }
     }
   };
   const checkExternal = async (url: string) => {
-    const prefixe = url.substring(0, 4);
-    if (prefixe === "http") {
+    const prefixe = String(url).substring(0, 4);
+    if (prefixe === "http" || prefixe === "") {
       isExternalLink("Lien url externe");
-    } else if (prefixe !== "") {
+    } else if (String(url).startsWith("mailto")) {
+      isExternalLink("Mailto");
+      setToggle(true);
+    } else if (
+      prefixe !== "" &&
+      !/.pdf/.test(String(url).substring(String(url).length - 4)) &&
+      !String(url).startsWith("mailto")
+    ) {
       isExternalLink("Page interne");
-      const prefixe = Number(url.substring(0, 2));
+      const prefixe = Number(String(url).substring(0, 2));
       const pageData = await getPage(prefixe);
-      setPage(pageData);
+      if (pageData !== undefined) {
+        setPage(pageData);
+      }
     } else {
       isExternalLink("");
     }
@@ -48,16 +57,30 @@ function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
   };
   const getPage = async (id: number) => {
     page.set_id(id);
-    const new_page = await page.get_bloc();
+    const new_page = await page.get_one_bloc();
 
-    return new_page;
+    if (new_page !== undefined && "page" in new_page) {
+      const page_data = Object.values(
+        new_page.page as Record<string, unknown>
+      )[0];
+      return page.hydrate(page_data as Record<string, unknown>);
+    }
   };
+
   useEffect(() => {
-    checkExternal(data.href_url);
-    getPages();
+    if (
+      (data !== undefined && typeof data?.href_url === "string") ||
+      typeof data?.href_url === "number"
+    ) {
+      checkExternal(String(data?.href_url));
+    } else {
+      checkExternal("");
+    }
   }, []);
-  useEffect(() => {}, [choice]);
-  return (
+  useEffect(() => {
+    getPages();
+  }, [choice, page]);
+  return data !== undefined ? (
     <div className={s.container}>
       <select
         className={s.select_box}
@@ -84,10 +107,17 @@ function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
         <div className={s.type}>
           <input
             className={s.href_url}
-            value={toggle ? "" : data.href_url}
+            value={
+              toggle
+                ? ""
+                : typeof data.href_url === "string" ||
+                  typeof data.href_url === "number"
+                ? data.href_url
+                : ""
+            }
             placeholder="Url de redirection"
             onChange={(e) => {
-              updateCarousel(e, "href_url", bloc, index);
+              updateComponent(e, "href_url", undefined, index, bloc);
               setToggle(false);
             }}
           />
@@ -97,10 +127,16 @@ function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
           <select
             className={s.select_box}
             onChange={(e) => {
-              updateCarousel(e, "href_url", bloc, index);
+              updateComponent(e, "href_url", undefined, index, bloc);
               setToggle(false);
             }}
-            value={toggle ? "" : Number(data.href_url)}
+            value={
+              toggle
+                ? ""
+                : typeof data.href_url === "number"
+                ? data.href_url
+                : String(data.href_url ?? "")
+            }
           >
             <option key={0}>Choisir une page de redirection</option>
 
@@ -118,6 +154,8 @@ function DropdownData({ bloc, data, index, updateCarousel }: DropdownInfo) {
         ""
       )}
     </div>
+  ) : (
+    <></>
   );
 }
 

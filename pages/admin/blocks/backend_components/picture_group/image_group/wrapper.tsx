@@ -5,22 +5,17 @@ import PictureGroupData from "../../../../../../models/PictureGroupData";
 import DropdownData from "../dropdown/Dropdown";
 import Image from "next/image";
 import DragAndDrop from "../../../../../../lib/dragzone";
-import InputTypes from "../../../../../../lib/InputTypes";
-import ComponentTypes from "../../../../../../lib/types";
+import { useEffect } from "react";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 interface CardDatas {
   bloc: PictureGroup;
   page_id: number;
   data: PictureGroupData;
   index: number;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   show_remove: boolean;
+  toggle: boolean;
 }
 
 function CardData({
@@ -28,9 +23,13 @@ function CardData({
   page_id,
   data,
   index,
-  updateComponent,
+  setToggle,
   show_remove,
+  toggle,
 }: CardDatas) {
+  const removeItem = useBlocStore((state) => state.removeItem);
+  const updateComponent = useBlocStore((state) => state.updateBloc);
+  useEffect(() => {}, [toggle]);
   return data !== undefined && bloc !== undefined ? (
     <div>
       <div className="flex flex-row items-center justify-end gap-[15px] relative z-[9] cursor-pointer border-0">
@@ -40,8 +39,9 @@ function CardData({
             width="35"
             height="35"
             alt="suppression box"
-            onClick={(e) => {
-              updateComponent(e, "remove", undefined, index, bloc);
+            onClick={() => {
+              removeItem(bloc, index);
+              setToggle(!toggle);
             }}
           />
         ) : (
@@ -49,19 +49,13 @@ function CardData({
         )}
       </div>
       <div>
-        <DropdownData
-          page_id={page_id}
-          data={data}
-          index={index}
-          updateComponent={updateComponent}
-          bloc={bloc}
-        />
+        <DropdownData page_id={page_id} data={data} index={index} bloc={bloc} />
         <div className={s.flex_row}>
           <h3>Couleur du texte</h3>
           <input
             type="color"
             className={s.color}
-            value={data.text_color}
+            defaultValue={data.text_color}
             onChange={(e) => {
               updateComponent(e, "text_color", undefined, index, bloc);
             }}
@@ -70,7 +64,7 @@ function CardData({
           <input
             type="color"
             className={s.color}
-            value={data.background_color}
+            defaultValue={data.background_color}
             onChange={(e) => {
               updateComponent(e, "background_color", undefined, index, bloc);
             }}
@@ -90,20 +84,12 @@ function CardData({
           index={index}
           bloc={bloc}
           data_img={data.image_url}
-          update={async (
-            event: InputTypes,
-            field: string | undefined,
-            input: string | undefined,
-            index?: string | number | undefined,
-            bloc?: ComponentTypes
-          ): Promise<void> => {
-            await updateComponent(event, field, input, index, bloc);
-          }}
           subfield={undefined}
+          toggle={toggle}
         />{" "}
         <textarea
           id="message"
-          value={data.text}
+          defaultValue={data.text}
           placeholder="texte de la carte"
           onChange={(e) => {
             updateComponent(e, "text", undefined, index, bloc);

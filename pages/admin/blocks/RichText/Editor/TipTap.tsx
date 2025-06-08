@@ -36,21 +36,9 @@ import H2 from "./../../../../assets/icons8-h2-48.png";
 import Bullet from "./../../../../assets/icons8-liste-64.png";
 
 import TextPicture from "../../../../../models/TextPicture";
-import InputTypes from "../../../../../lib/InputTypes";
+import useBlocStore from "../../../../../store/blocsStore";
 
-const Tiptap = ({
-  updateBloc,
-  bloc,
-}: {
-  updateBloc: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: undefined | string | number,
-    component?: TextPicture
-  ) => void;
-  bloc: TextPicture | undefined;
-}) => {
+const Tiptap = ({ bloc }: { bloc: TextPicture | undefined }) => {
   const [, setJson] = useState<JSONContent>();
   const init: JSONContent[string] = [];
   const contentData: JSONContent = {
@@ -62,7 +50,7 @@ const Tiptap = ({
       contentData?.content?.push(data);
     });
   }
-
+  const updateComponent = useBlocStore((state) => state.updateBloc);
   const editor = useEditor({
     editable: true,
     content: contentData,
@@ -71,7 +59,7 @@ const Tiptap = ({
       setJson(json);
 
       if (bloc !== undefined && json.content !== undefined) {
-        updateBloc(json.content, "text", undefined, undefined, bloc);
+        updateComponent(json.content, "text", undefined, undefined, bloc);
       }
       // You can now use this JSON however you like
     },
@@ -81,7 +69,7 @@ const Tiptap = ({
       setJson(jsonData);
 
       if (bloc !== undefined && jsonData.content !== undefined) {
-        updateBloc(jsonData.content, "text", undefined, undefined, bloc);
+        updateComponent(jsonData.content, "text", undefined, undefined, bloc);
       }
     },
     extensions: [

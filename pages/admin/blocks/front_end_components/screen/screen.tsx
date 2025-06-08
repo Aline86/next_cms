@@ -48,9 +48,7 @@ function ScreenVizualisation({
       }
     >
       {bloc.image_url !== "" ? (
-        <div
-        //style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-        >
+        <div>
           <Image
             alt={String(bloc.title)}
             style={{ objectFit: "cover" }}
@@ -72,7 +70,6 @@ function ScreenVizualisation({
           <div
             className={s.encart}
             style={{
-              position: "absolute",
               zIndex: "2",
               display: "flex",
               flexDirection: "column",
@@ -83,7 +80,7 @@ function ScreenVizualisation({
                   ? "600px"
                   : result?.matches
                   ? "calc(100vh - 250px)"
-                  : "calc(100vh - 150px)"
+                  : "calc(100vh - 250px)"
                 : "calc(100vh - 50px)",
               paddingBottom: isResponsive ? "100px" : "0px",
             }}
@@ -105,6 +102,7 @@ function ScreenVizualisation({
                 marginLeft: isResponsive || result?.matches ? "25px" : "5vw",
                 marginRight: "30px",
                 wordBreak: "break-word",
+                zIndex: 50,
               }}
             >
               {String(bloc.title)}
@@ -112,12 +110,13 @@ function ScreenVizualisation({
             <p
               style={{
                 fontSize: isResponsive || result?.matches ? "15px" : "25px",
-
+                position: "relative",
                 color: "white",
                 display: "inline-block",
                 marginLeft: isResponsive || result?.matches ? "25px" : "5vw",
                 marginRight: "30px",
                 wordBreak: "break-word",
+                zIndex: 50,
               }}
             >
               {String(bloc.text)}

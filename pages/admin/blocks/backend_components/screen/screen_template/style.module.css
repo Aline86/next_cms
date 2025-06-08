@@ -1,92 +1,9 @@
-.titre,
-.video {
+.titre {
   display: block;
   padding: 0;
   margin: 0;
-}
-.titre input {
-  width: 100%;
-  display: block;
-  padding: 0;
-  margin: 0;
-}
-.video input {
-  display: block;
-  padding: 0;
-  margin: 0;
-}
-.video input,
-.titre input {
-  height: 25px;
-}
-.vjs-contextmenu-ui-menu {
-  display: none !important;
-}
-.image input {
-  margin-bottom: 25px;
-}
-.textarea {
-  width: 100%;
-  height: 150px;
-}
-.text {
-  border: 1px solid gray;
-  margin-bottom: 25px;
-  padding: 0;
-  margin-bottom: 25px;
-}
-.bouton_container_2 {
-  width: fit-content;
-}
-.bouton_container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.bouton_position {
-  display: flex;
-  flex-direction: row;
-  width: 32px;
-  height: 32px;
-}
-.bouton_position img {
-  margin-right: 25px;
-  cursor: pointer;
-}
-.bouton_container input {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  height: 30px;
-  background-color: white;
-  border: 1px solid gray;
-  cursor: pointer;
-}
-
-.bouton_container input:hover {
-  background-color: lightgray;
-}
-
-.bouton_position_2 {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 30px;
-}
-.bouton_position_2 div {
-  display: block;
-  width: 100%;
-}
-.flex {
-  display: flex;
-  gap: 15px;
 }
 
 .block {
   display: block;
-}
-
-.bouton_container_parent {
-  position: relative;
-  top: 0;
 }

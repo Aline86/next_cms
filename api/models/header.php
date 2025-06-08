@@ -34,6 +34,53 @@ class Header {
         }
         return $associated_tables;
     }
+    public function get_associated_sub_table($table)
+    {
+
+        $requete = 'SELECT TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_NAME = :name AND TABLE_SCHEMA = :schema';
+        $resultat = self::$db->prepare($requete);
+        $resultat->bindValue(':name', $table);
+        $resultat->bindValue(':schema', $this->database_name);
+        $resultat->execute();
+        $tables = $resultat->fetchAll();
+
+        return $tables;
+        
+    }
+    public function rec_sub_table( $type,  $id, $db, &$bloc, $i) {
+   
+        $associated_tables = $this->get_associated_sub_table($type) ;
+        if(is_array($associated_tables) === false || count($associated_tables) <= 0) {
+            return;
+        }
+        foreach($associated_tables as $associated_attribute_name ) {
+    
+            if(is_string($associated_attribute_name['TABLE_NAME'])) {
+              
+                $name_sub_table = $associated_attribute_name['TABLE_NAME'];
+          
+             
+                $requete='SELECT * FROM ' . $name_sub_table . ' WHERE ' . $type . '_id' . ' = :id';
+                $sub_result = $db->prepare($requete);
+                $sub_result->bindValue(':id', $id);
+        
+                $sub_result->execute();
+                $subs = [];
+                while($sub = $sub_result->fetchObject()){
+                    
+                    $subs[] = $sub;
+                    $this->rec_sub_table($name_sub_table, $sub->id,  $db, $sub, $i++);
+                
+                }
+               
+                $bloc->$name_sub_table = $subs;
+              
+            }
+        
+       
+        }
+   
+    }
     public  function add_header($parameters)
     {
         include 'model_snippets/add.php';

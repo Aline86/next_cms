@@ -20,7 +20,6 @@ export class ModelUpdateData<T, K extends keyof T> implements UpdateCommand {
       data[this.index!][this.sub_attribute_name!] =
         this.value === "on" ? true : this.value;
       this.instance[this.key] = data as T[K];
-      console.log("data", data);
       return this.instance;
     }
 
@@ -29,6 +28,7 @@ export class ModelUpdateData<T, K extends keyof T> implements UpdateCommand {
       (this.instance[this.key] as Record<string, unknown>)[
         this.sub_attribute_name!
       ] = this.value === "on" ? true : this.value;
+
       return this.instance;
     }
 

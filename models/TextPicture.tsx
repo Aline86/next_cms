@@ -20,10 +20,9 @@ export default class TextPicture extends Container {
   parameters: string;
   page_id: number;
   constructor(
-    id: number = -1,
-    bloc_number: number,
     page_id: number,
-
+    bloc_number: number,
+    id: number = -1,
     show_picture: boolean = true,
     show_text: boolean = true,
     bloc_column: boolean = false,

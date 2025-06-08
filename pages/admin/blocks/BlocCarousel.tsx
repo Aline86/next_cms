@@ -1,33 +1,27 @@
-import { useEffect } from "react";
 import Carousel from "../../../models/Carousel";
 import BlockContainer from "./wrapper/BlockContainer";
 import MiniaturesVisualization from "./front_end_components/miniatures/Miniatures";
 import CssCarouselPosition from "./backend_components/carousel/css_bloc_position/CssBlocPosition";
 import CarouselOption3 from "./backend_components/carousel/miniatures/component";
-import InputTypes from "../../../lib/InputTypes";
-import ComponentTypes from "../../../lib/types";
+
+import CarouselOption1 from "./backend_components/carousel/carousel/component";
+import CarouselVisualization from "./front_end_components/carousel/Carousel";
+import CarouselOption2 from "./backend_components/carousel/auto/component";
+import CarouselAutoVisualization from "./front_end_components/auto/Carousel";
+import { useEffect } from "react";
 
 interface BlocData {
   bloc: Carousel;
   setDragBegin: React.Dispatch<React.SetStateAction<number>>;
   updateDragBloc: (index: number) => Promise<void>;
   handleDragOver: React.Dispatch<React.DragEvent<HTMLDivElement>>;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
-
-  removeBloc: (bloc: ComponentTypes) => Promise<void>;
-  saveBloc: (bloc: Carousel) => Promise<void>;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
+  openModal: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh: boolean;
   drag: boolean;
   toggle: boolean;
   page_id: number;
   index: number;
-  isOpen: boolean;
 }
 
 function BlocCarousel({
@@ -35,74 +29,69 @@ function BlocCarousel({
   setDragBegin,
   updateDragBloc,
   handleDragOver,
-  removeBloc,
-  updateComponent,
-  saveBlocAll,
+  setRefresh,
+  refresh,
   drag,
   toggle,
   index,
-  isOpen,
+  openModal,
+  page_id,
 }: BlocData) {
-  useEffect(() => {}, []);
+  useEffect(() => {}, [toggle]);
   return bloc !== undefined ? (
     <BlockContainer
       bloc={bloc}
       setDragBegin={() => setDragBegin(index)}
       updateDragBloc={updateDragBloc}
       handleDragOver={handleDragOver}
-      removeBloc={removeBloc}
       drag={drag}
       index={index}
-      isOpen={isOpen}
       component_visualization={
-        /* bloc.carousel_type !== "miniatures" ? (
-          <CarouselVisualization
+        bloc.carousel_type === "miniatures" ? (
+          <MiniaturesVisualization
             input_bloc={bloc}
             toggle={toggle}
             refresh={false}
             full={false}
             isResponsive={false}
           />
-        ) : (*/
-        <MiniaturesVisualization
-          input_bloc={bloc}
-          toggle={toggle}
-          refresh={false}
-          full={false}
-          isResponsive={false}
-        />
-        /* )*/
+        ) : bloc.carousel_type === "carousel" ? (
+          <CarouselVisualization
+            input_bloc={bloc}
+            full={false}
+            isResponsive={false}
+            toggle={toggle}
+          />
+        ) : (
+          <CarouselAutoVisualization
+            slides={bloc}
+            full={false}
+            toggle={toggle}
+          />
+        )
       }
       css_position={
         <CssCarouselPosition
           props={
-            /*  bloc.carousel_type === "auto" ? (
-              <CarouselOption2 updateCarousel={updateCarousel} bloc={bloc} />
+            bloc.carousel_type === "auto" ? (
+              <CarouselOption2 bloc={bloc} page_id={page_id} toggle={toggle} />
             ) : bloc.carousel_type === "carousel" ? (
-              <CarouselOption1 updateCarousel={updateCarousel} bloc={bloc} />
-            ) : (*/
-            bloc.carousel_type === "miniatures" && (
-              <CarouselOption3
-                updateComponent={async (
-                  event: InputTypes,
-                  field: string | undefined,
-                  input: string | undefined,
-                  index?: string | number | undefined,
-                  bloc?: ComponentTypes
-                ): Promise<void> => {
-                  await updateComponent(event, field, input, index, bloc);
-                }}
-                bloc={bloc}
-              />
-              //  )
+              <CarouselOption1 bloc={bloc} page_id={page_id} toggle={toggle} />
+            ) : (
+              bloc.carousel_type === "miniatures" && (
+                <CarouselOption3 bloc={bloc} toggle={toggle} />
+              )
             )
           }
-          updateComponent={updateComponent}
           bloc={bloc}
           draggable={drag}
-          saveBlocAll={saveBlocAll}
+          refresh={refresh}
+          setRefresh={setRefresh}
         />
       }
+      isOpen={openModal}
+      setRefresh={setRefresh}
+      refresh={refresh}
     />
   ) : (
     <></>

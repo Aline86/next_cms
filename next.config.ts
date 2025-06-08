@@ -8,11 +8,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     // domains: ["https://www.static-cms-aline86.fr"],
-    domains: [
-      process.env.NEXT_VITE_REACT_APP_BACKEND_URL !== undefined
-        ? process.env.NEXT_VITE_REACT_APP_BACKEND_URL
-        : "localhost",
-    ],
+    domains: ["localhost"],
   },
   reactStrictMode: false,
 };

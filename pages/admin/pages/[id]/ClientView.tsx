@@ -20,17 +20,14 @@ export function ButtonDemo() {
 
 export default function ClientView({ id }: { id: string }) {
   const [pages, setPages] = useState<Page[]>([]);
-  const [page, setPage] = useState<Page>();
+  const [page] = useState<Page>();
   const [toggle, setToggle] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [dragBegin, setDragBegin] = useState(0);
-  const getPages = async () => {
-    if (page !== undefined) {
-      const pages = await page.get_pages();
-      if (pages !== undefined) {
-        setPages(pages);
-        setToggle(!toggle);
-      }
+  const getPages = async (pages: Page[]) => {
+    if (pages !== undefined) {
+      setPages(pages);
+      setToggle(!toggle);
     }
   };
 
@@ -64,12 +61,12 @@ export default function ClientView({ id }: { id: string }) {
     if (pages !== undefined && pages.length > 0) {
       pages.splice(pages.indexOf(page), 1);
 
-      if ("remove_page" in page && typeof page.remove_page === "function") {
-        await page.remove_page();
+      if ("remove" in page && typeof page.remove === "function") {
+        await page.remove();
       }
       pages.map(async (bloc_in_blocs: Page, index) => {
         if ("bloc_number" in bloc_in_blocs) {
-          bloc_in_blocs.set_bloc_number(index + 1);
+          bloc_in_blocs.set_bloc_number(index);
           new_bloc_array[index] = await bloc_in_blocs.save_bloc();
         }
       });
@@ -135,12 +132,14 @@ export default function ClientView({ id }: { id: string }) {
     location.reload();
   }
   const getPage = async () => {
-    const page_type = new Page(-1, 0, Number(id));
-    page_type.set_page_id(Number(id));
+    const page_type = new Page(Number(id), 0, null);
+
     if (page_type.page_id !== undefined) {
-      const results = await page_type.get_bloc();
+      const results = await page_type.get_sub_pages();
+
       if (results !== undefined) {
-        setPage(results);
+        console.log("result", results);
+        getPages(results);
       } else {
         page_type.set_page_id(Number(id));
         const results = await page_type.save_bloc();
@@ -150,10 +149,10 @@ export default function ClientView({ id }: { id: string }) {
       }
     }
   };
-  useEffect(() => {}, [pages]);
   useEffect(() => {
-    getPages();
-  }, [refresh, page]);
+    setRefresh(!refresh);
+  }, [pages]);
+  useEffect(() => {}, [refresh, page]);
 
   useEffect(() => {
     getPage();

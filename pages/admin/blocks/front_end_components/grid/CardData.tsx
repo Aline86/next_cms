@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PictureGroupData from "../../../../../models/PictureGroupData";
 
 import Picture from "./Picture";
@@ -7,14 +7,15 @@ interface CardDatas {
   data: PictureGroupData | Record<string, unknown> | undefined;
   index: number;
   isResponsive: boolean;
+  toggle: boolean;
 }
 
-function CardDataGrid({ data, index, isResponsive }: CardDatas) {
+function CardDataGrid({ data, index, isResponsive, toggle }: CardDatas) {
   const [clicked_pic, set_clicked_pic] = useState(false);
   const handle_pic_click = (state: boolean) => {
     set_clicked_pic(state);
   };
-
+  useEffect(() => {}, [toggle]);
   return data !== undefined && data.image_url !== "" ? (
     <div
       key={
@@ -29,6 +30,7 @@ function CardDataGrid({ data, index, isResponsive }: CardDatas) {
         update_clicked_pic={handle_pic_click}
         clicked={clicked_pic}
         isResponsive={isResponsive}
+        toggle={toggle}
       />
     </div>
   ) : (

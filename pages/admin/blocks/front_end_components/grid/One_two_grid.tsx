@@ -25,6 +25,7 @@ function OneTwoGrid({ data, toggle, isResponsive }: CarouselData) {
                 data={card}
                 index={index}
                 isResponsive={isResponsive}
+                toggle={toggle}
               />
             );
           }
@@ -39,12 +40,14 @@ function OneTwoGrid({ data, toggle, isResponsive }: CarouselData) {
                   data={card}
                   index={index}
                   isResponsive={isResponsive}
+                  toggle={toggle}
                 />
                 {data[index + 1] && (
                   <CardDataGrid
                     data={data[index + 1]}
                     index={index + 1}
                     isResponsive={isResponsive}
+                    toggle={toggle}
                   />
                 )}
               </div>

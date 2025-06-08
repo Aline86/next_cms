@@ -3,30 +3,19 @@ import CssPictureGroupPosition from "./backend_components/picture_group/css_bloc
 import ImageGroup from "./backend_components/picture_group/image_group/component";
 import PictureGroupVizualisation from "./front_end_components/picture_group/PictureGroup";
 import BlockContainer from "./wrapper/BlockContainer";
-import InputTypes from "../../../lib/InputTypes";
-import ComponentTypes from "../../../lib/types";
 
 interface BlocData {
   bloc: PictureGroup;
   setDragBegin: React.Dispatch<React.SetStateAction<number>>;
   updateDragBloc: (index: number) => Promise<void>;
   handleDragOver: React.Dispatch<React.DragEvent<HTMLDivElement>>;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: PictureGroup
-  ) => Promise<void>;
-
-  removeBloc: (bloc: ComponentTypes) => Promise<void>;
-  saveBloc: (bloc: ComponentTypes) => Promise<void>;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
+  openModal: boolean;
   drag: boolean;
   toggle: boolean;
   index: number;
   refresh: boolean;
-  isOpen: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   page_id: number;
 }
 
@@ -35,13 +24,13 @@ function BlocPictureGroup({
   setDragBegin,
   updateDragBloc,
   handleDragOver,
-  removeBloc,
-  updateComponent,
-  saveBlocAll,
+  openModal,
   drag,
   toggle,
   index,
-  isOpen,
+  refresh,
+  setRefresh,
+  setToggle,
   page_id,
 }: BlocData) {
   return bloc !== undefined ? (
@@ -50,10 +39,8 @@ function BlocPictureGroup({
       setDragBegin={() => setDragBegin(index)}
       updateDragBloc={updateDragBloc}
       handleDragOver={handleDragOver}
-      removeBloc={removeBloc}
       index={index}
       drag={drag}
-      isOpen={isOpen}
       component_visualization={
         <PictureGroupVizualisation
           input_bloc={bloc}
@@ -67,34 +54,21 @@ function BlocPictureGroup({
           props={
             <ImageGroup
               page_id={page_id}
-              updateComponent={async (
-                event: InputTypes,
-                field: string | undefined,
-                input: string | undefined,
-                index?: string | number | undefined,
-                bloc?: ComponentTypes
-              ): Promise<void> => {
-                if (bloc instanceof PictureGroup) {
-                  await updateComponent(event, field, input, index, bloc);
-                }
-              }}
               bloc={bloc}
+              toggle={toggle}
+              setToggle={setToggle}
             />
           }
-          updateComponent={async (
-            event: InputTypes,
-            field: string | undefined,
-            input: string | undefined,
-            index?: string | number | undefined,
-            bloc?: PictureGroup
-          ): Promise<void> => {
-            await updateComponent(event, field, input, index, bloc);
-          }}
           bloc={bloc}
           draggable={drag}
-          saveBlocAll={saveBlocAll}
+          toggle={toggle}
+          refresh={refresh}
+          setRefresh={setRefresh}
         />
       }
+      isOpen={openModal}
+      setRefresh={setRefresh}
+      refresh={refresh}
     />
   ) : (
     <></>

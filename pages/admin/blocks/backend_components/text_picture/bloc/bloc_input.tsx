@@ -3,26 +3,19 @@ import s from "./style.module.css";
 import TextPicture from "../../../../../../models/TextPicture";
 import DragAndDrop from "../../../../../../lib/dragzone";
 import Tiptap from "../../../RichText/Editor/TipTap";
-
-import InputTypes from "../../../../../../lib/InputTypes";
 import { Input } from "@headlessui/react";
-import ComponentTypes from "../../../../../../lib/types";
+import useBlocStore from "../../../../../../store/blocsStore";
 
 function BlocInput({
   input_bloc,
-  updateBloc,
+
   draggable,
 }: {
   input_bloc: TextPicture | undefined;
   draggable: boolean;
-  updateBloc: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: undefined | string | number,
-    component?: ComponentTypes
-  ) => Promise<void>;
 }) {
+  const updateBloc = useBlocStore((state) => state.updateBloc);
+
   useEffect(() => {}, [input_bloc]);
 
   return input_bloc !== undefined ? (
@@ -36,7 +29,7 @@ function BlocInput({
           <Input
             className="mb-8 bg-slate-100 w-full"
             type="text"
-            defaultValue={input_bloc?.title}
+            value={input_bloc?.title}
             onChange={(e) => {
               updateBloc(e, "title", "", undefined, input_bloc as TextPicture);
             }}
@@ -54,16 +47,8 @@ function BlocInput({
               data_img={
                 input_bloc?.image_url !== undefined ? input_bloc.image_url : ""
               }
-              update={async (
-                event: InputTypes,
-                field: string | undefined,
-                input: string | undefined,
-                index?: string | number | undefined,
-                bloc?: ComponentTypes
-              ): Promise<void> => {
-                await updateBloc(event, field, input, index, bloc);
-              }}
               subfield={undefined}
+              toggle={false}
             />
           </div>
           <h3 className="mb-8 mt-8">Texte de la balise image :</h3>
@@ -84,28 +69,7 @@ function BlocInput({
           />
         </div>
 
-        {input_bloc !== undefined && (
-          <Tiptap
-            bloc={input_bloc}
-            updateBloc={(
-              event: InputTypes,
-              field: string | undefined,
-              input: string | undefined,
-              index?: undefined | string | number,
-              component?: TextPicture
-            ): void => {
-              if (component !== undefined) {
-                updateBloc(
-                  event,
-                  field,
-                  input ? JSON.stringify(input) : "",
-                  index,
-                  component as TextPicture
-                );
-              }
-            }}
-          />
-        )}
+        {input_bloc !== undefined && <Tiptap bloc={input_bloc} />}
       </div>
     </div>
   ) : (

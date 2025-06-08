@@ -4,6 +4,7 @@
 // Logique basée sur le fait que les noms de colonnes en bdd sont identiques au attributs des classes enfants
 
 import { redirect } from "next/navigation";
+import ComponentTypes from "./types";
 
 export default abstract class Container {
   id: number;
@@ -95,6 +96,50 @@ export default abstract class Container {
 
   /**
    *
+   * @param bloc child Class
+   * @param action add or update
+   * @returns string with promise status to say if data has been correctly sent
+   */
+  public async send_blocs(
+    blocs: Record<string, unknown>[] | ComponentTypes[]
+  ): Promise<unknown> {
+    const action = "send_blocs";
+
+    const data_to_send = JSON.stringify(blocs);
+
+    await fetch(
+      this.BASE_URL + action + "_" + this._get_class_api_call_parameters(),
+      {
+        method: "POST",
+
+        mode: "cors",
+
+        credentials: "include",
+        body: data_to_send,
+        cache: "no-store",
+      }
+    )
+      .then((response) => {
+        if (!response.ok || response.status === 403) {
+          if (typeof window !== "undefined") {
+            redirect("/admin/login");
+          }
+        }
+        try {
+        } catch {}
+      })
+      .then(() => {
+        return true;
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        redirect("/admin/login");
+      });
+
+    return this;
+  }
+  /**
+   *
    * @param id
    * @returns the full instance for each child type (the parent knows which child we are talking about)
    */
@@ -137,8 +182,8 @@ export default abstract class Container {
    * @param id
    * @returns the full instance for each child type (the parent knows which child we are talking about)
    */
-  public async get_blocs_for_component(): Promise<Array<this>> {
-    let new_bloc: Array<this> = [];
+  public async get_blocs_for_component(): Promise<Array<unknown>> {
+    let new_bloc: Array<unknown> = [];
     try {
       const response = await fetch(
         this.BASE_URL + "all_" + this._get_class_api_call_parameters(),
@@ -175,9 +220,7 @@ export default abstract class Container {
    *
    * @returns the full instance for each child type (the parent knows which child we are talking about)
    */
-  public async get_bloc(): Promise<this> {
-    const new_bloc = Object.assign(this, this);
-
+  public async get_bloc(): Promise<Array<unknown> | undefined> {
     try {
       const response = await fetch(
         this.BASE_URL + "get_" + this._get_class_api_call_parameters(),
@@ -200,23 +243,7 @@ export default abstract class Container {
       try {
         const json_object = await response.json();
 
-        if (json_object.length >= 1) {
-          const property_list: Record<string, unknown> = {};
-          const class_properties: Array<string> = Object.keys(this);
-          class_properties.forEach((key_exists: string) => {
-            if (key_exists !== "parameters" && key_exists !== "BASE_URL") {
-              property_list[key_exists] = [];
-            }
-          });
-
-          json_object.forEach((value: this) => {
-            Object.entries(value).forEach(([property, data]) => {
-              property_list[property] = data;
-            });
-          });
-
-          this._property_call(property_list);
-        }
+        return json_object;
       } catch {}
     } catch (error) {
       if (error instanceof Error) {
@@ -225,8 +252,7 @@ export default abstract class Container {
         console.error("An unknown error occurred:", error);
       }
     }
-
-    return new_bloc;
+    return undefined;
   }
   public async delete_bloc(): Promise<void | this> {
     try {
@@ -245,6 +271,30 @@ export default abstract class Container {
       if (!response.ok) {
         redirect("/admin/login");
       }
+    } catch {
+      redirect("/admin/login");
+    }
+  }
+  public async get_one_bloc(): Promise<void | this> {
+    try {
+      const response = await fetch(
+        this.BASE_URL + "get_one_bloc_" + this._get_class_api_call_parameters(),
+        {
+          mode: "cors",
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        redirect("/admin/login");
+      }
+      const json_object = await response.json();
+      console.log("json_object", json_object);
+      return json_object;
     } catch {
       redirect("/admin/login");
     }
@@ -322,6 +372,40 @@ export default abstract class Container {
     }
     return obj;
   }
+  public hydrate(
+    json_object: this[] | Record<string, unknown> | this | object
+  ) {
+    const property_list: Record<string, unknown> = {};
+    const class_properties: Array<string> = Object.keys(this);
+    class_properties.forEach((key_exists: string) => {
+      if (key_exists !== "parameters" && key_exists !== "BASE_URL") {
+        property_list[key_exists] = [];
+      }
+    });
 
+    if (Array.isArray(json_object)) {
+      json_object.forEach((value: this | Record<string, unknown>) => {
+        Object.entries(value).forEach(([property, data]) => {
+          console.log("json_object", data);
+          property_list[property] = data;
+        });
+      });
+    } else {
+      Object.entries(json_object).forEach(([property, data]) => {
+        if (Array.isArray(json_object)) {
+          json_object.forEach((value: this | Record<string, unknown>) => {
+            Object.entries(value).forEach(([property, data]) => {
+              property_list[property] = data;
+            });
+          });
+        } else {
+          property_list[property] = data;
+        }
+      });
+
+      this._property_call(property_list);
+    }
+    return this;
+  }
   abstract _get_class_api_call_parameters(): string;
 }

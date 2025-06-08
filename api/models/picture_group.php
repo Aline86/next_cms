@@ -34,6 +34,38 @@ class Picture_group {
         }
         return $associated_tables;
     }
+    public function rec_sub_table( $type,  $id, $db, &$bloc, $i) {
+   
+        $associated_tables = $this->get_associated_sub_table($type) ;
+       
+        foreach($associated_tables as $associated_attribute_name ) {
+    
+            if(is_string($associated_attribute_name['TABLE_NAME'])) {
+              
+                $name_sub_table = $associated_attribute_name['TABLE_NAME'];
+          
+             
+                $requete='SELECT * FROM ' . $name_sub_table . ' WHERE ' . $type . '_id' . ' = :id';
+                $sub_result = $db->prepare($requete);
+                $sub_result->bindValue(':id', $id);
+        
+                $sub_result->execute();
+                $subs = [];
+                while($sub = $sub_result->fetchObject()){
+                    
+                    $subs[] = $sub;
+                    $this->rec_sub_table($name_sub_table, $sub->id,  $db, $sub, $i++);
+                
+                }
+               
+                $bloc->$name_sub_table = $subs;
+              
+            }
+        
+       
+        }
+   
+    }
     public  function add_picture_group($parameters)
     {
         include 'model_snippets/add.php';

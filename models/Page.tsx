@@ -1,16 +1,19 @@
 import Container from "../lib/Container";
 import slugify from "react-slugify";
+import ComponentTypes from "../lib/types";
 
 export default class Page extends Container {
   parameters: string;
   bloc_number: number;
   slug: string;
   page_id: number | null;
+  description: string;
   constructor(
     id: number = -1,
     page_number: number = -1,
     page_id: number | null,
     title: string = "",
+    description: string = "",
     slug: string = "",
     type: string = "page"
   ) {
@@ -18,6 +21,7 @@ export default class Page extends Container {
     this.id = id;
     this.page_id = page_id;
     this.title = title;
+    this.description = description;
     this.slug = slug;
     this.type = type;
     this.bloc_number = page_number;
@@ -35,6 +39,10 @@ export default class Page extends Container {
     }
   }
 
+  async send_blocs_page(blocs: ComponentTypes[] | Record<string, unknown>[]) {
+    this.send_blocs(blocs);
+  }
+
   async get_pages() {
     const component =
       this.page_id !== null && this.page_id !== undefined
@@ -46,7 +54,14 @@ export default class Page extends Container {
     const pages = await this.get_blocs();
     pages.forEach((page) => {
       page_array.push(
-        new Page(page.id, page.bloc_number, page.page_id, page.title, page.slug)
+        new Page(
+          page.id,
+          page.bloc_number,
+          page.page_id,
+          page.title,
+          page.description,
+          page.slug
+        ).hydrate(page)
       );
     });
     this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
@@ -63,7 +78,14 @@ export default class Page extends Container {
     const pages = await this.get_blocs();
     pages.forEach((page) => {
       page_array.push(
-        new Page(page.id, page.bloc_number, page.page_id, page.title, page.slug)
+        new Page(
+          page.id,
+          page.bloc_number,
+          page.page_id,
+          page.title,
+          page.description,
+          page.slug
+        )
       );
     });
     this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
@@ -72,15 +94,17 @@ export default class Page extends Container {
   async get_blocs_for_page() {
     this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
     const page_array: Array<unknown> = [];
-    const pages = await this.get_blocs_for_component();
-    pages.forEach((component) => {
-      page_array.push(component);
-    });
+    const pages = await this.get_bloc();
+    if (pages) {
+      pages.forEach((component) => {
+        page_array.push(component);
+      });
+    }
 
     return page_array;
   }
 
-  public async remove_page() {
+  public async remove() {
     this.set_parameters(
       "delete_" + this.type + "&id=" + this.id + "&type=" + this.type
     );
@@ -113,6 +137,12 @@ export default class Page extends Container {
   }
   public set_slug(value: string) {
     this.slug = value;
+  }
+  public get_description(): string {
+    return this.description;
+  }
+  public set_description(value: string) {
+    this.description = value;
   }
   public get_page_id(): number | null {
     return this.page_id;

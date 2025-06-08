@@ -7,13 +7,13 @@ interface BlocData {
   setDragBegin?: (index: number) => Promise<void>;
   updateDragBloc?: (index: number) => Promise<void>;
   handleDragOver?: React.DragEventHandler<HTMLDivElement>;
-  removeBloc?: (bloc: ComponentTypes) => Promise<void>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  refresh: boolean;
   drag: boolean;
   index: number;
   css_position: React.ReactNode;
 
   component_visualization: React.ReactNode;
-  isOpen: boolean;
 }
 
 function ShrinkParams({
@@ -21,12 +21,12 @@ function ShrinkParams({
   setDragBegin,
   updateDragBloc,
   handleDragOver,
-  removeBloc,
+  setRefresh,
+  refresh,
   drag,
   index,
   css_position,
   component_visualization,
-  isOpen,
 }: BlocData) {
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -51,18 +51,25 @@ function ShrinkParams({
         key={index}
         index={index}
         bloc={bloc}
-        isOpen={isOpen}
         props={
           <div key={index} className="flex gap-8 mb-8">
             <div className="flex column-1 w-1/2 ml-8">{css_position}</div>
-            {removeBloc !== undefined && (
+            {bloc.type !== "header" && bloc.type !== "footer" && (
               <div>
-                <DeleteConfirmation removeBloc={removeBloc} bloc={bloc} />
+                <DeleteConfirmation
+                  bloc={bloc}
+                  setRefresh={setRefresh}
+                  refresh={refresh}
+                />
               </div>
             )}
-            <div className="w-1/2 grid ">{component_visualization}</div>
+
+            <div className="w-1/2 grid place-items-center">
+              {component_visualization}
+            </div>
           </div>
         }
+        isOpen={false}
       />
     </div>
   ) : (

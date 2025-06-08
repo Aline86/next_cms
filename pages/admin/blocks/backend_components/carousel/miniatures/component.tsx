@@ -1,28 +1,22 @@
 import Carousel from "../../../../../../models/Carousel";
-
 import CardData from "./wrapper";
-import InputTypes from "../../../../../../lib/InputTypes";
-import ComponentTypes from "../../../../../../lib/types";
+import useBlocStore from "../../../../../../store/blocsStore";
+import { useEffect } from "react";
 
 interface CardDatas {
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
   bloc: Carousel;
+  toggle: boolean;
 }
 
-function CarouselOption3({ updateComponent, bloc }: CardDatas) {
+function CarouselOption3({ bloc, toggle }: CardDatas) {
   const show_remove =
     bloc !== undefined &&
     bloc.carousel_data !== undefined &&
     bloc.carousel_data.length > 4
       ? true
       : false;
-
+  const updateComponent = useBlocStore((state) => state.updateBloc);
+  useEffect(() => {}, [toggle]);
   return (
     <div className="w-full">
       <div
@@ -52,15 +46,6 @@ function CarouselOption3({ updateComponent, bloc }: CardDatas) {
                   bloc={bloc}
                   gap={bloc.gap}
                   index={index}
-                  updateComponent={async (
-                    event: InputTypes,
-                    field: string | undefined,
-                    input: string | undefined,
-                    index?: string | number | undefined,
-                    bloc?: ComponentTypes
-                  ): Promise<void> => {
-                    await updateComponent(event, field, input, index, bloc);
-                  }}
                   show_remove={show_remove}
                 />
               </div>

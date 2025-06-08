@@ -5,58 +5,41 @@ import CssBlocPosition from "./backend_components/text_picture/css_bloc_position
 import BlocInput from "./backend_components/text_picture/bloc/bloc_input";
 import Bloc from "./front_end_components/text_picture/bloc";
 
-import InputTypes from "../../../lib/InputTypes";
-import ComponentTypes from "../../../lib/types";
-
 interface BlocData {
   bloc: TextPicture;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   setDragBegin: React.Dispatch<React.SetStateAction<number>>;
   updateDragBloc: (index: number) => Promise<void>;
   handleDragOver: React.Dispatch<React.DragEvent<HTMLDivElement>>;
-  updateComponent: (
-    event: InputTypes,
-    field: string | undefined,
-    input: string | undefined,
-    index?: string | number | undefined,
-    bloc?: ComponentTypes
-  ) => Promise<void>;
-
-  removeBloc: (bloc: ComponentTypes) => Promise<void>;
-  saveBloc: (bloc: TextPicture) => Promise<void>;
-  saveBlocAll: React.Dispatch<React.SetStateAction<void>>;
-
+  openModal: boolean;
   drag: boolean;
   toggle: boolean;
   page_id: number;
   index: number;
-  isOpen: boolean;
+  refresh: boolean;
 }
 
 function BlocTextPicture({
   bloc,
+  setRefresh,
   setDragBegin,
   updateDragBloc,
   handleDragOver,
-  removeBloc,
-  updateComponent,
-  saveBlocAll,
-
+  openModal,
   drag,
   toggle,
   index,
-  isOpen,
+  refresh,
 }: BlocData) {
-  useEffect(() => {}, [isOpen]);
+  useEffect(() => {}, []);
   return bloc !== undefined ? (
     <BlockContainer
       bloc={bloc}
       setDragBegin={() => setDragBegin(index)}
       updateDragBloc={updateDragBloc}
       handleDragOver={handleDragOver}
-      removeBloc={removeBloc}
       index={index}
       drag={drag}
-      isOpen={isOpen}
       component_visualization={
         <Bloc
           bloc={bloc}
@@ -65,39 +48,21 @@ function BlocTextPicture({
           full={false}
           index={index}
           isResponsive={false}
+          refresh={refresh}
         />
       }
       css_position={
         <CssBlocPosition
-          props={
-            <BlocInput
-              input_bloc={bloc}
-              draggable={drag}
-              updateBloc={async (
-                event: InputTypes,
-                field: string | undefined,
-                input: string | undefined,
-                index?: string | number | undefined,
-                bloc?: ComponentTypes
-              ): Promise<void> => {
-                await updateComponent(event, field, input, index, bloc);
-              }}
-            />
-          }
-          updateBloc={async (
-            event: InputTypes,
-            field: string | undefined,
-            input: string | undefined,
-            index?: string | number | undefined,
-            bloc?: TextPicture
-          ): Promise<void> => {
-            await updateComponent(event, field, input, index, bloc);
-          }}
+          props={<BlocInput input_bloc={bloc} draggable={drag} />}
           bloc={bloc}
           draggable={drag}
-          saveBlocAll={saveBlocAll}
+          refresh={refresh}
+          setRefresh={setRefresh}
         />
       }
+      isOpen={openModal}
+      setRefresh={setRefresh}
+      refresh={refresh}
     />
   ) : (
     <></>
