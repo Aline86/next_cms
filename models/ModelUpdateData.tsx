@@ -27,7 +27,7 @@ export class ModelUpdateData<T, K extends keyof T> implements UpdateCommand {
     if (this.isUpdatableObject(this.instance[this.key])) {
       (this.instance[this.key] as Record<string, unknown>)[
         this.sub_attribute_name!
-      ] = this.value === "on" ? true : this.value;
+      ] = this.value;
 
       return this.instance;
     }

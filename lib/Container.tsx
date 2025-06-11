@@ -74,13 +74,18 @@ export default abstract class Container {
         cache: "no-store",
       }
     )
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok || response.status === 403) {
           if (typeof window !== "undefined") {
             redirect("/admin/login");
           }
         }
         try {
+          const json_object = await response.json();
+          console.log("json_object", json_object);
+          if (json_object !== undefined && typeof json_object === "number") {
+            return this.set_id(json_object as number);
+          }
         } catch {}
       })
       .then(() => {
@@ -104,8 +109,10 @@ export default abstract class Container {
     blocs: Record<string, unknown>[] | ComponentTypes[]
   ): Promise<unknown> {
     const action = "send_blocs";
+    const formdata = new FormData();
 
     const data_to_send = JSON.stringify(blocs);
+    formdata.append("blocs", data_to_send);
 
     await fetch(
       this.BASE_URL + action + "_" + this._get_class_api_call_parameters(),
@@ -115,7 +122,7 @@ export default abstract class Container {
         mode: "cors",
 
         credentials: "include",
-        body: data_to_send,
+        body: formdata,
         cache: "no-store",
       }
     )
@@ -280,23 +287,24 @@ export default abstract class Container {
       const response = await fetch(
         this.BASE_URL + "get_one_bloc_" + this._get_class_api_call_parameters(),
         {
+          referrerPolicy: "strict-origin-when-cross-origin", // n
           mode: "cors",
-          method: "GET",
-          credentials: "include",
-          cache: "no-store",
           headers: {
             Accept: "application/json",
+            // Any other headers needed for the request
           },
+          cache: "no-store",
+          credentials: "include",
         }
       );
-      if (!response.ok) {
+      /*if (!response.ok) {
         redirect("/admin/login");
-      }
+      }*/
       const json_object = await response.json();
-      console.log("json_object", json_object);
+
       return json_object;
     } catch {
-      redirect("/admin/login");
+      //redirect("/admin/login");
     }
   }
 
@@ -390,7 +398,7 @@ export default abstract class Container {
           property_list[property] = data;
         });
       });
-    } else {
+    } else if (json_object !== undefined) {
       Object.entries(json_object).forEach(([property, data]) => {
         if (Array.isArray(json_object)) {
           json_object.forEach((value: this | Record<string, unknown>) => {

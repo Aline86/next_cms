@@ -116,7 +116,7 @@ const useBlocStore = create<
             // Ajouter le nouveau bloc
             updatedBlocs = [...state.modified_blocs, result];
           }
-          console.log("Updated blocs:", updatedBlocs);
+
           return { modified_blocs: updatedBlocs };
         });
         // Mettre à jour le bloc à ouvrir après refresh
@@ -155,7 +155,6 @@ const useBlocStore = create<
   removeBloc: async (id: number) => {
     const page = new PageModel(1, 1, null);
     const blocs = get().blocs;
-    const length = blocs.length;
 
     // On supprime d'abord le bloc via remove()
 
@@ -175,21 +174,15 @@ const useBlocStore = create<
     );
 
     // On réindexe les blocs
-    const new_blocs: ComponentTypes[] = [];
-    for (let index = 0; index < blocs_without_deleted_bloc.length; index++) {
-      const bloc = blocs_without_deleted_bloc[index];
-      bloc.bloc_number = index;
+    blocs_without_deleted_bloc.map((_, index) => {
+      blocs_without_deleted_bloc[index].set_bloc_number(index);
+    });
 
-      new_blocs.push(bloc);
-    }
-
-    if (new_blocs.length === length - 1) {
-      const result = await page.send_blocs(new_blocs);
-      if (result !== undefined) {
-        set(() => ({
-          blocs: new_blocs,
-        }));
-      }
+    const result = await page.send_blocs(blocs_without_deleted_bloc);
+    if (result !== undefined) {
+      set(() => ({
+        blocs: blocs_without_deleted_bloc,
+      }));
     }
   },
 

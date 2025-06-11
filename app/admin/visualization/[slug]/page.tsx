@@ -1,10 +1,11 @@
 "use client";
 
-import Layout from "../../../../pages/layout";
+import Layout from "../../../../components/layout";
 import ClientView from "./ClientView";
 import { useEffect, useState } from "react";
 import React from "react";
 export const dynamic = "force-dynamic";
+
 export default function Page({
   params,
 }: {

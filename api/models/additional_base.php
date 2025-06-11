@@ -12,7 +12,7 @@
      
     if($type === "pages" && array_key_exists('id_component', $method_params) && array_key_exists('component', $method_params) && $method_params['component'] === "subpages") {
         $data_components_to_build = new Pages($component, $database_name, $host, $user, $password);
-        $data_to_process = $data_components_to_build->get_sub_pages();
+        $data_to_process = $data_components_to_build->get_pages($method_params['id_component']);
         echo html_entity_decode(htmlspecialchars(json_encode($data_to_process)));
         exit();
     }

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import remove from "./../pages/assets/remove.png";
+import remove from "./../components/assets/remove.png";
 import Image from "next/image";
 import ComponentTypes from "./types";
 import { MoonLoader } from "react-spinners";

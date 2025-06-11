@@ -1,11 +1,10 @@
-import ComponentBloc from "../lib/Component";
 import Container from "../lib/Container";
 
 import LinkNetworksAndOthersHeader from "./LinkNetworksAndOthersHeader";
 import InputTypes from "../lib/InputTypes";
 import { ModelUpdateData } from "./ModelUpdateData";
 
-export default class Header extends Container implements ComponentBloc {
+export default class Header extends Container {
   id: number;
   bloc_number: number;
   title: string;

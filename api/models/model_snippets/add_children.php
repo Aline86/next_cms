@@ -33,9 +33,6 @@
 
     $SQL_result = $q->execute();   
     
-    
-    
     return $SQL_result;
-
 
 

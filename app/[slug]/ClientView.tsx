@@ -9,19 +9,19 @@ import ScreenHome from "../../models/Screen";
 
 import BlocTools from "../../lib/bloc_tools";
 
-import HeaderVizualization from "../../pages/admin/blocks/front_end_components/header/header";
-import ScreenVizualisation from "../../pages/admin/blocks/front_end_components/screen/screen";
-import PictureGroupVizualisation from "../../pages/admin/blocks/front_end_components/picture_group/PictureGroup";
-import GridVizualisation from "../../pages/admin/blocks/front_end_components/grid/PictureGroup";
-import Bloc from "../../pages/admin/blocks/front_end_components/text_picture/bloc";
-import MiniaturesVisualization from "../../pages/admin/blocks/front_end_components/miniatures/Miniatures";
-import FooterVizualization from "../../pages/admin/blocks/front_end_components/footer/footer";
+import HeaderVizualization from "../../components/admin/blocks/front_end_components/header/header";
+import ScreenVizualisation from "../../components/admin/blocks/front_end_components/screen/screen";
+import PictureGroupVizualisation from "../../components/admin/blocks/front_end_components/picture_group/PictureGroup";
+import GridVizualisation from "../../components/admin/blocks/front_end_components/grid/PictureGroup";
+import Bloc from "../../components/admin/blocks/front_end_components/text_picture/bloc";
+import MiniaturesVisualization from "../../components/admin/blocks/front_end_components/miniatures/Miniatures";
+import FooterVizualization from "../../components/admin/blocks/front_end_components/footer/footer";
 import Carousel from "../../models/Carousel";
 import PictureGroup from "../../models/PictureGroup";
-import CarouselVisualization from "../../pages/admin/blocks/front_end_components/carousel/Carousel";
-import CarouselAutoVisualization from "../../pages/admin/blocks/front_end_components/auto/Carousel";
-import ButtonVisualization from "../../pages/admin/blocks/front_end_components/button/Button";
-import VideoVisualization from "../../pages/admin/blocks/front_end_components/video/Video";
+import CarouselVisualization from "../../components/admin/blocks/front_end_components/carousel/Carousel";
+import CarouselAutoVisualization from "../../components/admin/blocks/front_end_components/auto/Carousel";
+import ButtonVisualization from "../../components/admin/blocks/front_end_components/button/Button";
+import VideoVisualization from "../../components/admin/blocks/front_end_components/video/Video";
 
 export default async function ClientView({
   params,
@@ -65,7 +65,7 @@ export default async function ClientView({
                       full={true}
                       isResponsive={false}
                       toggle={true}
-                      page_number={1}
+                      page_number={id}
                     />
                   )}
 

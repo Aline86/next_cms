@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
     NEXT_HOST: process.env.NEXT_HOST,
   },
   images: {
-    // domains: ["https://www.static-cms-aline86.fr"],
     domains: ["localhost"],
   },
   reactStrictMode: false,

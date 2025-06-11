@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Page from "../../../../models/Page";
 import BlocTools from "../../../../lib/bloc_tools";
 import Link from "next/link";
-import BlocDisplay from "../../../../pages/admin/blocks/picker/block_picker";
-import Blocs from "../../../../pages/admin/blocks/blocks";
+import BlocDisplay from "../../../../components/admin/blocks/picker/block_picker";
+import Blocs from "../../../../components/admin/blocks/blocks";
 import s from "./style.module.css";
 import { useParams } from "next/navigation";
-import Layout from "../../../../pages/layout";
+import Layout from "../../../../components/layout";
 import Toast from "../../../../lib/Toast";
 
 import { Button } from "@headlessui/react";
@@ -36,7 +36,6 @@ export default function ClientView({ id }: { id: string }) {
     const tools = new BlocTools(page_type);
     const page = await tools.getPage();
     if (page !== undefined) {
-      console.log("page_type", page);
       setPage(page);
     }
   };
@@ -53,8 +52,6 @@ export default function ClientView({ id }: { id: string }) {
           setRefresh(!refresh);
         } else {
           if (bloc_pages !== undefined) {
-            console.log(tools.isInitSite);
-
             const counter_total = counter + 1;
             setCounter(counter_total);
             setBlocs(bloc_pages);
@@ -82,15 +79,16 @@ export default function ClientView({ id }: { id: string }) {
   useEffect(() => {
     asynchronRequestsToPopulateBlocs();
   }, [id]);
-  useEffect(() => {
-    setToggle(!toggle);
-  }, [blocs, page_type]);
+
   useEffect(() => {
     set_show_message(!show_message);
-    setToggle(!toggle);
-    asynchronRequestsToPopulateBlocs();
   }, [refresh]);
 
+  useEffect(() => {
+    setToggle(!toggle);
+  }, [blocs]);
+
+  useEffect(() => {}, [toggle]);
   return blocs !== undefined && canshow ? (
     <Layout>
       <div className="w-full">

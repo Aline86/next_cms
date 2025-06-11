@@ -1,4 +1,4 @@
-import remove from "./../pages/assets/bouton-supprimer.png";
+import remove from "./../components/assets/bouton-supprimer.png";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ComponentTypes from "./types";
@@ -13,7 +13,8 @@ interface CardDatas {
 function DeleteConfirmation({ bloc, refresh, setRefresh }: CardDatas) {
   const removeBloc = useBlocStore((state) => state.removeBloc);
   const [open, setOpen] = useState(false);
-  useEffect(() => {}, [open]);
+
+  useEffect(() => {}, [open, refresh]);
   return (
     <>
       <div className="absolute  flex items-center justify-center rounded-4xl cursor-pointer-not-big flex">
@@ -92,8 +93,8 @@ function DeleteConfirmation({ bloc, refresh, setRefresh }: CardDatas) {
                 </button>
                 <button
                   onClick={() => {
-                    setOpen(!open);
                     removeBloc(bloc.bloc_number);
+                    setOpen(!open);
                     setRefresh(!refresh);
                   }}
                   type="submit"

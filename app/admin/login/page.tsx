@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import "./../../../pages/global.css";
+import "./../../../components/global.css";
 
 import User from "../../../models/User";
 

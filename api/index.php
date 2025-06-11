@@ -21,7 +21,11 @@ function is_encoded($string_to_test) {
     }
 }
 function is_json($string) {
-    json_decode($string);
+
+    $json = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($string));
+    json_decode( $json);
+ 
+  
     return json_last_error() === JSON_ERROR_NONE;
 }
 
@@ -200,14 +204,16 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
     }
 
     if($method === "send_blocs_page") {
-        $rawPayload = file_get_contents("php://input");
+        $rawPayload = $_POST["blocs"];
+        
         $data_received = [];
         if(is_array($rawPayload)) {
              $data_received = $rawPayload;
         } else if(is_json($rawPayload)) {
-            $data_received = json_decode($rawPayload, true);
+              
+            $data_received = json_decode(preg_replace('/\s+/', '', $rawPayload), true);
         } 
-    
+   
         foreach ($data_received as $bloc) {
        
             if(isset($bloc['type']) && $bloc['type'] !== null) {
@@ -217,7 +223,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
                 $can_access = check_token($db);
            
                 if($can_access) {
-                    
+             
                     $class = ucfirst($type);
                     
                     $model = new $class($type, $database_name, $host, $user, $password);
@@ -279,7 +285,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
         }
         if($method === $method_to_call . $type) {
           
-            if ($method_to_call === 'get_') {
+            if ($method_to_call === 'get_' || $method_to_call === 'get_one_bloc_') {
                 $class = ucfirst($type);
     
                 $model = new $class($type, $database_name, $host, $user, $password);

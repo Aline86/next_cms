@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import ClientView from "../../../../pages/admin/pages/[id]/ClientView";
+import ClientView from "../../../../components/admin/pages/[id]/ClientView";
 
 export const dynamic = "force-dynamic";
 

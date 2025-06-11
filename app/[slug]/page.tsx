@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import React, { JSX } from "react";
-import Layout from "../../pages/layout";
+import Layout from "../../components/layout";
 import PageModel from "../../models/Page";
 import ClientView from "./ClientView";
 import { Metadata } from "next";
@@ -42,25 +42,29 @@ const getPageId = async (slug: string) => {
     }
   }
 };
-
+export const dynamicParams = true;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const id = await getPageId(slug);
-  const page_type = new PageModel(id, 0, null);
+  let id = 1;
+  if (slug !== undefined && slug !== null) {
+    id = await getPageId(slug);
 
-  const new_page = await page_type.get_one_bloc();
+    const page_type = new PageModel(id, 0, null);
 
-  if (new_page !== undefined && "page" in new_page) {
-    const page_data = Object.values(
-      new_page.page as Record<string, unknown>
-    )[0];
-    const hydrated_page = page_type.hydrate(
-      page_data as Record<string, unknown>
-    );
-    return {
-      title: hydrated_page.title,
-      description: hydrated_page.description,
-    };
+    const new_page = await page_type.get_one_bloc();
+
+    if (new_page !== undefined && "page" in new_page) {
+      const page_data = Object.values(
+        new_page.page as Record<string, unknown>
+      )[0];
+      const hydrated_page = page_type.hydrate(
+        page_data as Record<string, unknown>
+      );
+      return {
+        title: hydrated_page.title,
+        description: hydrated_page.description,
+      };
+    }
   }
   return {
     title: "CMS", // Default title
