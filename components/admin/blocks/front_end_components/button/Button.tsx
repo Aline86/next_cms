@@ -72,8 +72,9 @@ function ButtonVisualization({
     if (choice_type === "pageID") {
       getPage();
     }
-  }, [choice_type, bloc, toggle]);
+  }, [choice_type, bloc, toggle, to_render_type]);
   useEffect(() => {}, [page]);
+
   return bloc !== undefined &&
     result !== undefined &&
     choice_type !== undefined ? (

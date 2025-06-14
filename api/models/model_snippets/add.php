@@ -43,6 +43,7 @@
     $query_result = $q->execute();   
     if(count($associated_table_with_data) > 0) {
         $parent_id = self::$db->lastInsertId();
+
         foreach($associated_table_with_data as $associated_table_name => $all_data_blocs) {
             if(is_array($all_data_blocs)) {
                 if(isset($all_data_blocs[0])) {
@@ -57,6 +58,19 @@
             }
             
         }
+       
+        if($id === "-1") {
+            return  $parent_id;
+            exit();
+        }
+        
+       
     }
-  
-    return $query_result;
+    
+    if($id === "-1") {
+     
+        return self::$db->lastInsertId();
+        exit();
+    }
+
+    return null;

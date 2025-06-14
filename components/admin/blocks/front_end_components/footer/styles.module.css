@@ -1,22 +1,17 @@
 .container {
   display: flex;
   justify-content: space-between;
-
   left: 0;
   right: 0;
   height: 75px;
-
   background-color: rgb(245, 245, 245);
-
   z-index: 90;
 }
 
 .facebook {
   width: fit-content;
-
   display: flex;
   flex-direction: column;
-
   justify-content: center;
 }
 .facebook_container div {

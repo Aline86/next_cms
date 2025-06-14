@@ -18,7 +18,7 @@ export default class Footer extends Container {
 
   constructor(
     id: number = -1,
-    bloc_number: number,
+    bloc_number: number = 100000000,
     title: string = "",
     type: string = "footer",
     map_iframe_url: string = "",
@@ -228,5 +228,8 @@ export default class Footer extends Container {
       Object.assign(this, updated);
       return this;
     }
+  }
+  public get_name(): string {
+    return "Pied de page du site";
   }
 }

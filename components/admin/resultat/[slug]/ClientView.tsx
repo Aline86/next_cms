@@ -1,33 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-
 import { useEffect, useState } from "react";
-import Carousel from "../../../../models/Carousel";
-import Footer from "../../../../models/FooterData";
-import Header from "../../../../models/Header";
+
 import Page from "../../../../models/Page";
-import PictureGroup from "../../../../models/PictureGroup";
-import ScreenHome from "../../../../models/Screen";
-import TextPicture from "../../../../models/TextPicture";
-import Video from "../../../../models/Video";
 import useBlocStore from "../../../../store/blocsStore";
-import CarouselAutoVisualization from "../../blocks/front_end_components/auto/Carousel";
-import ButtonVisualization from "../../blocks/front_end_components/button/Button";
-import CarouselVisualization from "../../blocks/front_end_components/carousel/Carousel";
-import FooterVizualization from "../../blocks/front_end_components/footer/footer";
-import GridVizualisation from "../../blocks/front_end_components/grid/PictureGroup";
-import HeaderVizualization from "../../blocks/front_end_components/header/header";
-import MiniaturesVisualization from "../../blocks/front_end_components/miniatures/Miniatures";
-import PictureGroupVizualisation from "../../blocks/front_end_components/picture_group/PictureGroup";
-import ScreenVizualisation from "../../blocks/front_end_components/screen/screen";
-import Bloc from "../../blocks/front_end_components/text_picture/bloc";
-import VideoVisualization from "../../blocks/front_end_components/video/Video";
 import Layout from "../../../layout";
-import ButtonData from "../../../../models/Button";
 import Link from "next/link";
 import BlocTools from "../../../../lib/bloc_tools";
+import blocksToRender from "../../../../lib/config/blocsToRender";
+import Footer from "../../../../models/FooterData";
+import FooterVizualization from "../../blocks/front_end_components/footer/footer";
 
-//export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 export default function ClientView({ id }: { id: string }) {
   const [toggle, setToggle] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -40,10 +24,10 @@ export default function ClientView({ id }: { id: string }) {
     const tools = new BlocTools(page_type);
     const page = await tools.getPage();
     if (page !== undefined) {
-      console.log("page_type", page);
       setPage(page);
     }
   };
+  type BlocksToRenderKey = keyof typeof blocksToRender;
 
   async function asynchronRequestsToPopulateBlocs() {
     if (page_type !== undefined) {
@@ -123,95 +107,25 @@ export default function ClientView({ id }: { id: string }) {
               >
                 {blocs !== undefined &&
                   blocs.length > 0 &&
-                  blocs.map((value, index) => {
+                  blocs.map((bloc, index) => {
+                    const blocType = bloc.type as BlocksToRenderKey;
+                    const FrontComponent = blocksToRender[blocType].frontend;
                     return (
-                      <div key={index} className="mb-8">
-                        {value instanceof Header && (
-                          <HeaderVizualization
-                            input_bloc={value}
+                      <div
+                        key={index}
+                        className={index < blocs.length - 1 ? "mb-8" : ""}
+                      >
+                        {bloc.type !== "footer" && (
+                          <FrontComponent
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            bloc={bloc as any}
                             full={true}
                             isResponsive={isReponsive}
                             toggle={toggle}
-                            page_number={Number(id)}
-                          />
-                        )}
-                        {value instanceof ScreenHome && (
-                          <ScreenVizualisation
-                            bloc={value}
-                            toggle={toggle}
-                            full={true}
-                            isResponsive={isReponsive}
-                          />
-                        )}
-                        {value instanceof PictureGroup &&
-                          (!value.is_grid ? (
-                            <PictureGroupVizualisation
-                              input_bloc={value}
-                              toggle={toggle}
-                              isResponsive={isReponsive}
-                              full={true}
-                            />
-                          ) : (
-                            <GridVizualisation
-                              input_bloc={value}
-                              toggle={toggle}
-                              refresh={false}
-                              isResponsive={isReponsive}
-                            />
-                          ))}
-                        {value instanceof TextPicture && (
-                          <Bloc
-                            isResponsive={isReponsive}
+                            refresh={refresh}
                             index={index}
-                            bloc={value}
+                            page_id={Number(id)}
                             num_bloc={index}
-                            toggle={toggle}
-                            full={true}
-                            refresh={false}
-                          />
-                        )}
-                        {value instanceof Carousel &&
-                          (value.carousel_type === "miniatures" ? (
-                            <MiniaturesVisualization
-                              input_bloc={value}
-                              toggle={toggle}
-                              refresh={false}
-                              full={true}
-                              isResponsive={isReponsive}
-                            />
-                          ) : value !== null &&
-                            "carousel_type" in value &&
-                            value.carousel_type === "carousel" ? (
-                            <CarouselVisualization
-                              input_bloc={value as Carousel}
-                              full={true}
-                              isResponsive={isReponsive}
-                              toggle={toggle}
-                            />
-                          ) : (
-                            value !== null &&
-                            "carousel_type" in value &&
-                            value.carousel_type === "auto" && (
-                              <CarouselAutoVisualization
-                                slides={value as Carousel}
-                                full={true}
-                                toggle={false}
-                              />
-                            )
-                          ))}
-                        {value instanceof Video && (
-                          <VideoVisualization
-                            bloc={value as Video}
-                            full={true}
-                            toggle={false}
-                          />
-                        )}
-                        {value instanceof ButtonData && (
-                          <ButtonVisualization
-                            bloc={value as ButtonData}
-                            full={true}
-                            toggle={false}
-                            isResponsive={isReponsive}
                           />
                         )}
                       </div>
@@ -220,7 +134,7 @@ export default function ClientView({ id }: { id: string }) {
               </div>
               {blocs[blocs.length - 1] instanceof Footer && (
                 <FooterVizualization
-                  input_bloc={blocs[blocs.length - 1] as Footer}
+                  bloc={blocs[blocs.length - 1] as Footer}
                   isResponsive={isReponsive}
                   full={true}
                 />

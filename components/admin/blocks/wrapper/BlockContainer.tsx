@@ -1,9 +1,10 @@
 import ShrinkParams from "./shrink_params";
 import ComponentTypes from "../../../../lib/types";
 import { SetStateAction, useEffect, useState } from "react";
+import blocksToRender from "../../../../lib/config/blocsToRender";
 
 interface BlocData {
-  bloc: ComponentTypes;
+  bloc: ComponentTypes | Record<string, unknown>;
   setRefresh: React.Dispatch<SetStateAction<boolean>>;
   refresh: boolean;
   setDragBegin?: (index: number) => void;
@@ -12,8 +13,12 @@ interface BlocData {
   isOpen: boolean;
   drag: boolean;
   index: number;
-  component_visualization: React.ReactNode;
-  css_position: React.ReactNode;
+
+  toggle: boolean;
+  isResponsive: boolean;
+  full: boolean;
+  page_id: number;
+  setToggle: React.Dispatch<SetStateAction<boolean>>;
 }
 
 function BlockContainer({
@@ -26,10 +31,17 @@ function BlockContainer({
   isOpen,
   drag,
   index,
-  component_visualization,
-  css_position,
+  toggle,
+  isResponsive,
+  full,
+  page_id,
+  setToggle,
 }: BlocData) {
   const [openModal, setOpenModal] = useState(isOpen);
+  type BlocksToRenderKey = keyof typeof blocksToRender;
+  const blocType = bloc.type as BlocksToRenderKey;
+  const FrontComponent = blocksToRender[blocType].frontend;
+  const BackComponent = blocksToRender[blocType].backend;
   useEffect(() => {}, [refresh, bloc]);
   return bloc !== undefined ? (
     <div
@@ -59,10 +71,35 @@ function BlockContainer({
         }}
         drag={drag}
         index={index !== undefined ? index + 1 : index}
-        bloc={bloc}
+        bloc={bloc as ComponentTypes}
         handleDragOver={handleDragOver}
-        component_visualization={component_visualization}
-        css_position={css_position}
+        component_visualization={
+          <FrontComponent
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            bloc={bloc as any}
+            full={full}
+            isResponsive={isResponsive}
+            toggle={toggle}
+            refresh={refresh}
+            index={index}
+            page_id={page_id}
+            num_bloc={index}
+          />
+        }
+        css_position={
+          <>
+            <BackComponent
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              bloc={bloc as any}
+              page_id={page_id}
+              toggle={toggle}
+              setToggle={setToggle}
+              isResponsive={isResponsive}
+              refresh={refresh}
+              setRefresh={setRefresh}
+            />
+          </>
+        }
         setRefresh={setRefresh}
         refresh={refresh}
       />

@@ -36,8 +36,8 @@ function ButtonCard({
           ? isResponsive
             ? "relative w-sm m-auto flex flex-col align-center justify-center m-auto mt-16 border-1 border-gray-300 p-4 rounded-sm"
             : result?.matches
-            ? "relative h-[100vh] w-[80vw] flex flex-col align-center justify-center m-auto mt-24 border-1 border-gray-300 p-4 rounded-sm"
-            : "relative min-h-[70vh]  w-[80vw] flex align-center justify-center m-auto mt-24 border-1 mb-8 border-gray-300 p-4 rounded-sm"
+            ? "relative h-[80vh] w-[80vw] flex flex-col align-center justify-center m-auto mt-24 border-1 border-gray-300 p-4 rounded-sm"
+            : "relative min-h-[70vh]  w-[80vw] flex align-center justify-center m-auto mt-24 mb-16 border-1 mb-8 border-gray-300 p-4 rounded-sm"
           : "w-[43vw] flex align-center justify-center m-auto border-1 border-gray-300 p-8 rounded-sm"
       }
     >
@@ -51,7 +51,7 @@ function ButtonCard({
         <div
           className={
             result?.matches || isResponsive
-              ? "h-[100vh] flex flex-col align-center justify-center w-full rounded-sm pb-4"
+              ? "h-[60vh] flex flex-col align-center justify-center w-full rounded-sm pb-4"
               : "h-[40vh] min-h-[250px] flex flex-col align-center justify-center w-[40%] rounded-sm"
           }
           style={{ backgroundColor: (bloc as ButtonModel).background_color }}
@@ -131,7 +131,7 @@ function ButtonCard({
                   </div>
                 )}
             </a>
-          ) : external === "PageID" && page !== undefined ? (
+          ) : external === "pageID" && page !== undefined ? (
             <Link
               href={{ pathname: `/` + page.slug }}
               className={

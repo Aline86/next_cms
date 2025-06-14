@@ -150,4 +150,7 @@ export default class Page extends Container {
   public set_page_id(value: number | null) {
     this.page_id = value;
   }
+  public get_name(): string {
+    return "Page";
+  }
 }

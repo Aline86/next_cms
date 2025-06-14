@@ -25,7 +25,9 @@ function Parallaxe({
   external,
   page,
 }: CustomCarouselInfo) {
-  useEffect(() => {}, [bloc, toggle]);
+  useEffect(() => {
+    console.log("Page changed:", page, external);
+  }, [bloc, toggle, page, external]);
   return bloc !== undefined && external !== undefined ? (
     <div
       style={{
@@ -61,29 +63,29 @@ function Parallaxe({
             href={typeof bloc.href_url === "string" ? bloc.href_url : undefined}
             target="_blank"
             className={
-              "absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
+              "absolute z-50 top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
             }
           >
             {"button_text" in bloc &&
               typeof bloc.button_text === "string" &&
               bloc.button_text.length > 0 && (
-                <div className="relative text-center w-full text-gray-200  p-1  break-words">
+                <div className="relative z-60 text-center w-full text-gray-200  p-1  break-words">
                   {String(bloc.button_text)}
                 </div>
               )}
           </a>
-        ) : external === "PageID" ? (
+        ) : external === "pageID" && page !== undefined ? (
           <Link
-            href={{ pathname: `/` + page?.slug }}
+            href={{ pathname: `/` + page.slug }}
             className={
-              "absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
+              "absolute z-50 top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
             }
             key={String(bloc.id)}
           >
             {"button_text" in bloc &&
               typeof bloc.button_text === "string" &&
               bloc.button_text.length > 0 && (
-                <div className="relative text-center w-full text-gray-200  p-1  break-words">
+                <div className="relative z-60 text-center w-full text-gray-200  p-1  break-words">
                   {String(bloc.button_text)}
                 </div>
               )}
@@ -100,13 +102,13 @@ function Parallaxe({
             }
             target="_blank"
             className={
-              "absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
+              "absolute z-50 top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/3 block w-[270px] bg-[rgba(0,0,0,0.2)] h-[40px] border-1 border-gray-100 rounded-sm text-white"
             }
           >
             {"button_text" in bloc &&
               typeof bloc.button_text === "string" &&
               bloc.button_text.length > 0 && (
-                <div className="relative text-center w-full text-gray-200  p-1  break-words">
+                <div className="relative z-60 text-center w-full text-gray-200  p-1  break-words">
                   {String(bloc.button_text)}
                 </div>
               )}

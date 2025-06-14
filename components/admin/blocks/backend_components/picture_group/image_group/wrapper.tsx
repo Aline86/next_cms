@@ -8,29 +8,40 @@ import DragAndDrop from "../../../../../../lib/dragzone";
 import { useEffect, useState } from "react";
 import useBlocStore from "../../../../../../store/blocsStore";
 import DropdownData from "../../../../../../lib/dropdown/Dropdown";
+import { Input, Textarea } from "@headlessui/react";
 
 interface CardDatas {
   bloc: PictureGroup;
   page_id: number;
-  data: PictureGroupData;
+
   index: number;
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
-  show_remove: boolean;
+
   toggle: boolean;
 }
 
 function CardData({
   bloc,
   page_id,
-  data,
+
   index,
   setToggle,
-  show_remove,
+
   toggle,
 }: CardDatas) {
   const removeItem = useBlocStore((state) => state.removeItem);
   const updateComponent = useBlocStore((state) => state.updateBloc);
+  const data = bloc.picture_group_data[index] as PictureGroupData;
+  const [dataValue, setDataValue] = useState(data as PictureGroupData);
   const [checked, setChecked] = useState(data.is_data_button);
+  console.log("page_id", page_id);
+  const show_remove =
+    bloc !== undefined &&
+    bloc.picture_group_data !== undefined &&
+    bloc.picture_group_data.length > 4
+      ? true
+      : false;
+
   useEffect(() => {}, [toggle, checked]);
 
   return data !== undefined && bloc !== undefined ? (
@@ -45,6 +56,8 @@ function CardData({
             onClick={() => {
               removeItem(bloc, index);
               setToggle(!toggle);
+              const updatedData = {};
+              setDataValue(updatedData as PictureGroupData);
             }}
           />
         ) : (
@@ -55,25 +68,25 @@ function CardData({
         <DropdownData page_id={page_id} data={data} index={index} bloc={bloc} />
         <div className={s.flex_row}>
           <h3>Couleur du texte</h3>
-          <input
+          <Input
             type="color"
             className={s.color}
-            defaultValue={data.text_color}
+            value={data.text_color}
             onChange={(e) => {
               updateComponent(e, "text_color", undefined, index, bloc);
             }}
           />
-          <h3>Couleur de fond</h3>
-          <input
+          <h3>Couleur du fond</h3>
+          <Input
             type="color"
             className={s.color}
-            defaultValue={data.background_color}
+            value={data.background_color}
             onChange={(e) => {
               updateComponent(e, "background_color", undefined, index, bloc);
             }}
           />
           <h3>Ajouter un bouton</h3>
-          <input
+          <Input
             type="checkbox"
             checked={checked}
             onChange={(e) => {
@@ -97,15 +110,17 @@ function CardData({
           subfield={undefined}
           toggle={toggle}
         />{" "}
-        <textarea
+        <Textarea
           id="message"
-          defaultValue={data.text}
+          value={data.text === dataValue.text ? dataValue.text : ""}
           placeholder="texte de la carte"
           onChange={(e) => {
             updateComponent(e, "text", undefined, index, bloc);
+            const updatedData = { ...dataValue, text: e.target.value };
+            setDataValue(updatedData as PictureGroupData);
           }}
           className="mt-8 block  p-2.5 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        ></textarea>
+        ></Textarea>
       </div>
     </div>
   ) : (

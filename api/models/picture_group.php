@@ -68,7 +68,7 @@ class Picture_group {
     }
     public  function add_picture_group($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
     }
     public  function all_picture_group($parameters)
     {

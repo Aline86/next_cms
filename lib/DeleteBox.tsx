@@ -10,11 +10,11 @@ interface CardDatas {
   refresh: boolean;
 }
 
-function DeleteConfirmation({ bloc, refresh, setRefresh }: CardDatas) {
+function DeleteConfirmation({ bloc }: CardDatas) {
   const removeBloc = useBlocStore((state) => state.removeBloc);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {}, [open, refresh]);
+  useEffect(() => {}, [open]);
   return (
     <>
       <div className="absolute  flex items-center justify-center rounded-4xl cursor-pointer-not-big flex">
@@ -95,7 +95,7 @@ function DeleteConfirmation({ bloc, refresh, setRefresh }: CardDatas) {
                   onClick={() => {
                     removeBloc(bloc.bloc_number);
                     setOpen(!open);
-                    setRefresh(!refresh);
+                    // setRefresh(!refresh);
                   }}
                   type="submit"
                   className="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900"

@@ -38,22 +38,45 @@ const useBlocStore = create<
   // Set all blocs (e.g., from API)
   setBlocs: (newBlocs: ComponentTypes[]) => set({ blocs: newBlocs }),
   // Add a new bloc
-  addBloc: (bloc: ComponentTypes) =>
-    set((state: BlocStoreState) => ({
-      blocs: [...state.blocs, bloc],
-    })),
+  addBloc: async (bloc: ComponentTypes) => {
+    const id = await bloc.save_bloc();
+    if (id !== undefined && id !== null) {
+      console.log("id", id);
+      bloc.set_id(id as number);
+      console.log("bloc", bloc);
+      const blocs = get().blocs;
+      blocs.splice(blocs.length - 1, 0, bloc);
+      blocs.map((bloc_data, index) => {
+        if (!(bloc_data instanceof Header || bloc_data instanceof Footer)) {
+          bloc_data.set_bloc_number(index);
+          return bloc_data;
+        }
+      }) as ComponentTypes[];
+      console.log("blocs", blocs);
+      set((state: BlocStoreState) => ({
+        blocs: blocs.map(
+          (bloc_new, index) =>
+            (state.blocs[index] =
+              state.blocs[index].bloc_number === bloc.bloc_number
+                ? bloc
+                : bloc_new)
+        ) as ComponentTypes[],
+      }));
+    }
+  },
   // Add item (implement as needed, here just adds like addBloc)
   addItem: async (bloc: ComponentTypes) => {
     if (!("add_data" in bloc && typeof bloc.add_data === "function")) {
     } else {
       const plainObj = bloc.add_data();
+
       if (plainObj !== undefined) {
         bloc.hydrate(plainObj);
         set((state: BlocStoreState) => ({
-          blocs: state.blocs.map((bloc, index) =>
-            state.blocs[index].bloc_number === plainObj.bloc_number
-              ? plainObj
-              : bloc
+          blocs: state.blocs.map(
+            (_, index) =>
+              state.blocs[index].bloc_number === plainObj.bloc_number &&
+              plainObj
           ) as ComponentTypes[],
         }));
       }
@@ -61,8 +84,8 @@ const useBlocStore = create<
   },
   saveBloc: async (bloc: ComponentTypes) => {
     await bloc.save_bloc().then(async (plainObj) => {
-      if (plainObj !== undefined) {
-        bloc.hydrate(plainObj);
+      if (plainObj !== undefined && plainObj !== null) {
+        bloc.hydrate(plainObj as unknown as Record<string, unknown>);
         set((state: BlocStoreState) => ({
           blocs: state.blocs.map((bloc_data) =>
             bloc_data.bloc_number === bloc.bloc_number
@@ -174,8 +197,10 @@ const useBlocStore = create<
     );
 
     // On réindexe les blocs
-    blocs_without_deleted_bloc.map((_, index) => {
-      blocs_without_deleted_bloc[index].set_bloc_number(index);
+    blocs_without_deleted_bloc.map((bloc, index) => {
+      if (!(bloc instanceof Header || bloc instanceof Footer)) {
+        blocs_without_deleted_bloc[index].set_bloc_number(index);
+      }
     });
 
     const result = await page.send_blocs(blocs_without_deleted_bloc);
@@ -192,16 +217,6 @@ const useBlocStore = create<
     const blocs = get().modified_blocs;
     const page = new PageModel(1, 1, null);
     await page.send_blocs(blocs);
-    blocs.map(async (bloc: ComponentTypes, index: number) => {
-      if (bloc.type === "header" || bloc.type === "footer") {
-        const result = await bloc.save_bloc();
-        if (result !== undefined) {
-          blocs[index] = result as ComponentTypes;
-        }
-      } else {
-        blocs[index] = bloc as ComponentTypes;
-      }
-    });
   },
 }));
 

@@ -37,7 +37,7 @@ class Common {
     
     public  function add_common($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
     }
     public  function all_common($parameters)
     {

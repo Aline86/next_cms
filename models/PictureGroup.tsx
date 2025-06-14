@@ -133,19 +133,17 @@ export default class PictureGroup extends Container {
         "&associated_table=picture_group_data"
     );
 
-    await this.delete_bloc();
+    const result = await this.delete_bloc();
+    if (result === undefined) {
+      this.picture_group_data.splice(index, 1);
+      this.picture_group_data.map((_, index_) => {
+        this.picture_group_data[index_].card_number = index_;
+      });
+      this.card_number = this.picture_group_data.length;
 
-    this.picture_group_data.splice(index, 1);
-    this.picture_group_data.map((_, index_) => {
-      this.picture_group_data[index_].card_number = index_;
-    });
-    this.card_number = this.picture_group_data.length;
-
-    this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
-    //const res = await this.save_bloc();
-    // if (res !== undefined) {
+      this.set_parameters(this.type + "&id=" + this.id + "&type=" + this.type);
+    }
     return this;
-    //}
   }
   public async add_picture_group_data(
     picture_group_data: Record<string, unknown>
@@ -232,5 +230,8 @@ export default class PictureGroup extends Container {
   }
   public set_page_id(value: number) {
     this.page_id = value;
+  }
+  public get_name(): string {
+    return this.is_grid ? "Grille d'images" : "Groupe d'images";
   }
 }

@@ -18,7 +18,7 @@ export default class Header extends Container {
   background_color: string;
   constructor(
     id: number = -1,
-    bloc_number: number,
+    bloc_number: number = -2,
     title: string = "",
     type: string = "header",
     logo_url: string = "",
@@ -201,5 +201,9 @@ export default class Header extends Container {
   }
   public set_background_color(value: string) {
     this.background_color = value;
+  }
+
+  public get_name(): string {
+    return "En-tête du site";
   }
 }

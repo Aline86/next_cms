@@ -2,8 +2,6 @@ import up from "./../assets/up.png";
 import down from "./../assets/down.png";
 import Image from "next/image";
 import ComponentTypes from "../../../../../lib/types";
-import Carousel from "../../../../../models/Carousel";
-import PictureGroup from "../../../../../models/PictureGroup";
 import { useEffect, useState } from "react";
 interface ShrinkData {
   index: number;
@@ -29,35 +27,9 @@ function Shrink({ props, bloc, index, isOpen }: ShrinkData) {
         {!open ? (
           <div className="flex justify-between items-center w-full">
             <div>
-              {index > 0 && `${"Bloc n° " + Number(index - 1)} : `}{" "}
-              {bloc !== undefined &&
-              bloc instanceof PictureGroup &&
-              bloc.is_grid
-                ? "Grille d'images"
-                : bloc !== undefined && bloc.type === "picture_group"
-                ? "Grille de cartes"
-                : ""}
-              {bloc !== undefined && bloc.type === "video" && "Vidéo"}
-              {bloc !== undefined &&
-                bloc.type === "header" &&
-                "En-tête du site"}
-              {bloc !== undefined &&
-                bloc.type === "footer" &&
-                "Pied de page du site"}
-              {bloc !== undefined &&
-                bloc.type === "text_picture" &&
-                "Bloc texte image"}
-              {bloc !== undefined &&
-                bloc.type === "screen" &&
-                "Image de couverture"}
-              {bloc instanceof Carousel && bloc.carousel_type === "miniatures"
-                ? "Miniatures"
-                : bloc instanceof Carousel && bloc.carousel_type === "carousel"
-                ? "Défilé d'images "
-                : bloc instanceof Carousel &&
-                  bloc.carousel_type === "auto" &&
-                  "Défilé d'images automatique"}
-              {bloc !== undefined && bloc.type === "button" && "Bouton"}
+              {bloc.type !== "header" && bloc.type !== "footer"
+                ? `${"Bloc n° " + Number(index - 1) + " : " + bloc.get_name()}`
+                : bloc.get_name()}
             </div>
             <Image
               src={down}

@@ -87,7 +87,7 @@ class Footer {
     }
     public  function add_footer($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
     }
 
     public  function add_children($data_decoded, $parent_id, $associated_table_name)

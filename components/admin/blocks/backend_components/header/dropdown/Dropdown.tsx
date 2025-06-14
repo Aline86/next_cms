@@ -4,22 +4,18 @@ import DragAndDrop from "../../../../../../lib/dragzone";
 import useBlocStore from "../../../../../../store/blocsStore";
 
 interface DropdownInfo {
-  input_bloc: Header | undefined;
+  bloc: Header | undefined;
 }
 
-function DropdownData({ input_bloc }: DropdownInfo) {
+function DropdownData({ bloc }: DropdownInfo) {
   const [picture, isPicture] = useState<number>(
-    input_bloc?.background_color === "#00000000"
-      ? 2
-      : input_bloc?.image_url != ""
-      ? 1
-      : 0
+    bloc?.background_color === "#00000000" ? 2 : bloc?.image_url != "" ? 1 : 0
   );
   const updateComponent = useBlocStore((state) => state.updateBloc);
 
   useEffect(() => {}, [picture]);
 
-  return input_bloc !== undefined ? (
+  return bloc !== undefined ? (
     <div className="block w-full flex flex-col items-center p-6 bg-white border border-gray-200 rounded-lg shadow-sm  dark:bg-gray-800 dark:border-gray-700 ">
       <select
         onChange={(e) => {
@@ -30,9 +26,9 @@ function DropdownData({ input_bloc }: DropdownInfo) {
               "background_color",
               undefined,
               undefined,
-              input_bloc
+              bloc
             );
-            updateComponent("", "image_url", undefined, undefined, input_bloc);
+            updateComponent("", "image_url", undefined, undefined, bloc);
           }
         }}
         className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm  light:bg-gray-800 light:border-gray-700 "
@@ -60,10 +56,10 @@ function DropdownData({ input_bloc }: DropdownInfo) {
                     field={"image_url"}
                     key={1}
                     index={undefined}
-                    bloc={input_bloc}
+                    bloc={bloc}
                     data_img={
-                      input_bloc !== undefined && input_bloc.image_url !== ""
-                        ? input_bloc.image_url
+                      bloc !== undefined && bloc.image_url !== ""
+                        ? bloc.image_url
                         : ""
                     }
                     subfield={undefined}
@@ -77,24 +73,24 @@ function DropdownData({ input_bloc }: DropdownInfo) {
                 <input
                   type="color"
                   className="flex mt-4 md:mt-6 cursor-pointer"
-                  value={input_bloc?.background_color}
+                  value={bloc?.background_color}
                   onChange={(e) => {
                     updateComponent(
                       e,
                       "background_color",
                       undefined,
                       undefined,
-                      input_bloc
+                      bloc
                     );
                     // Ensure background_color is defined or reset image_url if needed
                     if (
-                      input_bloc?.background_color === "" &&
-                      input_bloc?.image_url !== ""
+                      bloc?.background_color === "" &&
+                      bloc?.image_url !== ""
                     ) {
-                      input_bloc.image_url = "";
+                      bloc.image_url = "";
                     }
-                    if (input_bloc?.image_url !== undefined) {
-                      input_bloc.image_url = "";
+                    if (bloc?.image_url !== undefined) {
+                      bloc.image_url = "";
                     }
                   }}
                 />

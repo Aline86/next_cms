@@ -82,12 +82,12 @@ export default function ClientView({ id }: { id: string }) {
 
   useEffect(() => {
     set_show_message(!show_message);
+    asynchronRequestsToPopulateBlocs();
   }, [refresh]);
 
   useEffect(() => {
     setToggle(!toggle);
   }, [blocs]);
-
   useEffect(() => {}, [toggle]);
   return blocs !== undefined && canshow ? (
     <Layout>
@@ -151,7 +151,6 @@ export default function ClientView({ id }: { id: string }) {
               open={open}
               setOpen={setOpen}
               page={page_type}
-              getPage={asynchronRequestsToPopulateBlocs}
             />
             <h1 className="page_title mb-8 mt-8">{page_type.title}</h1>
             <textarea

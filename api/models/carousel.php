@@ -36,7 +36,7 @@ class Carousel {
     }
     public  function add_carousel($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
     }
     public  function all_carousel($parameters)
     {

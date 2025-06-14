@@ -1,5 +1,9 @@
 @import "tailwindcss";
-
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 .tiptap {
   border: 1px solid black;
   width: 50%;

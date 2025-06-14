@@ -106,5 +106,6 @@
         }
         
         
-        return $SQL_result;  
+    
     }
+    

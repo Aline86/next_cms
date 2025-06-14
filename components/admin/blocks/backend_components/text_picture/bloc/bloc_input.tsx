@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import s from "./style.module.css";
 import TextPicture from "../../../../../../models/TextPicture";
@@ -5,33 +6,38 @@ import DragAndDrop from "../../../../../../lib/dragzone";
 import Tiptap from "../../../RichText/Editor/TipTap";
 import { Input } from "@headlessui/react";
 import useBlocStore from "../../../../../../store/blocsStore";
+import ButtonSaveAll from "../../../../../../lib/buttonSaveAll";
 
 function BlocInput({
-  input_bloc,
-
-  draggable,
+  bloc,
+  toggle,
 }: {
-  input_bloc: TextPicture | undefined;
-  draggable: boolean;
+  bloc: TextPicture | undefined;
+  toggle: boolean;
 }) {
   const updateBloc = useBlocStore((state) => state.updateBloc);
 
-  useEffect(() => {}, [input_bloc]);
+  useEffect(() => {}, [bloc]);
 
-  return input_bloc !== undefined ? (
-    <div className={s.bloc} key={input_bloc?.bloc_number}>
-      <div
-        className="p-[10px] border border-[#ccc] mb-[10px]"
-        draggable={draggable}
-      >
+  return bloc !== undefined ? (
+    <div className={s.bloc} key={bloc?.bloc_number}>
+      <div className="w-full">
+        <div className="">
+          <div className="">
+            <h2>Bloc numéro : {bloc.bloc_number}</h2>
+          </div>
+          <h3 className="underline mt-8">Bloc éditeur de texte</h3>
+        </div>
+      </div>
+      <div className="p-[10px] border border-[#ccc] mb-[10px]">
         <div className="mb-4">
           <h3 className="text-2xl mb-4">Titre du bloc : </h3>
           <Input
             className="mb-8 bg-slate-100 w-full"
             type="text"
-            value={input_bloc?.title}
+            defaultValue={bloc?.title}
             onChange={(e) => {
-              updateBloc(e, "title", "", undefined, input_bloc as TextPicture);
+              updateBloc(e, "title", "", undefined, bloc as TextPicture);
             }}
           />
         </div>
@@ -43,10 +49,8 @@ function BlocInput({
               field="image_url"
               key={1}
               index={undefined}
-              bloc={input_bloc}
-              data_img={
-                input_bloc?.image_url !== undefined ? input_bloc.image_url : ""
-              }
+              bloc={bloc}
+              data_img={bloc?.image_url !== undefined ? bloc.image_url : ""}
               subfield={undefined}
               toggle={false}
             />
@@ -55,21 +59,18 @@ function BlocInput({
           <Input
             type="text"
             className={"mb-8 bg-slate-100 w-full"}
-            value={input_bloc?.alt_image}
+            defaultValue={bloc?.alt_image}
             onChange={(e) => {
-              updateBloc(
-                e,
-                "alt_image",
-                "",
-                undefined,
-                input_bloc as TextPicture
-              );
+              updateBloc(e, "alt_image", "", undefined, bloc as TextPicture);
             }}
             style={{ display: `block` }}
           />
         </div>
 
-        {input_bloc !== undefined && <Tiptap bloc={input_bloc} />}
+        {bloc !== undefined && <Tiptap bloc={bloc} />}
+      </div>
+      <div className="flex justify-end">
+        <ButtonSaveAll bloc={bloc} toggle={toggle} />
       </div>
     </div>
   ) : (

@@ -63,14 +63,9 @@ function DropdownData({ bloc, data, page_id, index }: DropdownInfo) {
     setToggle(!toggle);
     set_choice_type(e.target.value);
   };
-  useEffect(() => {}, [
-    choice_type,
-    toggle,
-    pageID_type,
-    page_id,
-    to_render_type,
-    toggle,
-  ]);
+  useEffect(() => {
+    console.log("page_id", page_id, choice_type);
+  }, [choice_type, toggle, pageID_type, page_id, to_render_type, toggle]);
   return (
     data &&
     bloc !== undefined && (

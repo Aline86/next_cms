@@ -211,7 +211,7 @@ if(isset($_GET['type']) && htmlspecialchars(strip_tags($_GET['type'])) !== null)
              $data_received = $rawPayload;
         } else if(is_json($rawPayload)) {
               
-            $data_received = json_decode(preg_replace('/\s+/', '', $rawPayload), true);
+            $data_received = json_decode(preg_replace('/\s+/', ' ', $rawPayload), true);
         } 
    
         foreach ($data_received as $bloc) {

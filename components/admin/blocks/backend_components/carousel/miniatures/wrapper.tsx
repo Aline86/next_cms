@@ -6,21 +6,11 @@ import useBlocStore from "../../../../../../store/blocsStore";
 
 interface CardDatas {
   gap: number;
-
   index: number;
-
-  show_remove: boolean;
   bloc: Carousel;
 }
 
-function CardData({
-  gap,
-
-  index,
-
-  show_remove,
-  bloc,
-}: CardDatas) {
+function CardData({ gap, index, bloc }: CardDatas) {
   const removeItem = useBlocStore((state) => state.removeItem);
   const image =
     bloc !== undefined && bloc.carousel_data !== undefined
@@ -28,6 +18,12 @@ function CardData({
         ? bloc.carousel_data[index].image_url
         : undefined
       : undefined;
+  const show_remove =
+    bloc !== undefined &&
+    bloc.carousel_data !== undefined &&
+    bloc.carousel_data.length > 4
+      ? true
+      : false;
   return (
     <div
       style={{

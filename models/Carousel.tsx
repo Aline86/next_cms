@@ -158,7 +158,10 @@ export default class Carousel extends Container {
   }
   public async remove_data(index: number | undefined) {
     if (index !== undefined) {
-      return await this.remove_link(index);
+      const result = await this.remove_link(index);
+      if (result !== undefined) {
+        return this;
+      }
     }
   }
 
@@ -220,5 +223,10 @@ export default class Carousel extends Container {
   }
   public set_page_id(value: number) {
     this.page_id = value;
+  }
+  public get_name(): string {
+    return (
+      this.carousel_type.charAt(0).toUpperCase() + this.carousel_type.slice(1)
+    );
   }
 }

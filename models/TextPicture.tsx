@@ -213,4 +213,7 @@ export default class TextPicture extends Container {
   public set_type(value: string) {
     this.type = value;
   }
+  public get_name(): string {
+    return "Bloc de texte et image";
+  }
 }

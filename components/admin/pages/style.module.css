@@ -18,7 +18,7 @@
 .end {
   display: flex;
   flex-direction: row;
-  min-width: 600px;
+  min-width: 400px;
   gap: 30px;
   justify-content: space-between;
 }

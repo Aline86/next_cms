@@ -5,6 +5,7 @@
 
 import { redirect } from "next/navigation";
 import ComponentTypes from "./types";
+import safeJsonStringify from "safe-json-stringify"; // Import safe-json-stringify to handle circular references
 
 export default abstract class Container {
   id: number;
@@ -57,12 +58,12 @@ export default abstract class Container {
    * @param action add or update
    * @returns string with promise status to say if data has been correctly sent
    */
-  public async save_bloc(): Promise<this> {
+  public async save_bloc(): Promise<this | number | undefined> {
     const action = this.id > -1 ? "update" : "add";
 
     const data_to_send = this._create_form(this);
 
-    await fetch(
+    const result = await fetch(
       this.BASE_URL + action + "_" + this._get_class_api_call_parameters(),
       {
         method: "POST",
@@ -82,21 +83,24 @@ export default abstract class Container {
         }
         try {
           const json_object = await response.json();
-          console.log("json_object", json_object);
-          if (json_object !== undefined && typeof json_object === "number") {
-            return this.set_id(json_object as number);
+
+          if (json_object !== undefined && json_object !== null) {
+            console.log("json_object", json_object);
+            return Number(json_object);
+          } else {
+            return this;
           }
         } catch {}
       })
-      .then(() => {
-        return this;
-      })
+
       .catch((error: unknown) => {
         console.error(error);
         redirect("/admin/login");
       });
 
-    return this;
+    if (result !== undefined && result !== null) {
+      return result;
+    }
   }
 
   /**
@@ -110,8 +114,8 @@ export default abstract class Container {
   ): Promise<unknown> {
     const action = "send_blocs";
     const formdata = new FormData();
-
-    const data_to_send = JSON.stringify(blocs);
+    console.log("blocs", blocs);
+    const data_to_send = safeJsonStringify(blocs);
     formdata.append("blocs", data_to_send);
 
     await fetch(

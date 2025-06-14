@@ -1,13 +1,14 @@
+"use client";
 import { Input } from "@headlessui/react";
 import DragAndDrop from "../../../../../lib/dragzone";
-import Button from "../../../../../models/Button";
-
+import ButtonModel from "../../../../../models/Button";
 import { useEffect, useState } from "react";
 import useBlocStore from "../../../../../store/blocsStore";
 import DropdownData from "../../../../../lib/dropdown/Dropdown";
+import ButtonSaveAll from "../../../../../lib/buttonSaveAll";
 
 interface CardDatas {
-  bloc: Button;
+  bloc: ButtonModel;
   page_id: number;
   toggle: boolean;
 }
@@ -23,7 +24,15 @@ function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
 
   useEffect(() => {}, [is_parallaxe, toggle]);
   return bloc !== undefined ? (
-    <div className="">
+    <div className="w-full">
+      <div className="w-full">
+        <div className="">
+          <div className="">
+            <h2>Bloc numéro : {bloc.bloc_number}</h2>
+          </div>
+          <h3 className="underline mt-8">Bouton</h3>
+        </div>
+      </div>
       <div className="">
         <div className="mt-8 mb-8">
           <div className="border-1 border-gray-300 rounded-lg p-4 mb-4">
@@ -110,6 +119,9 @@ function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
             }}
           />
         </div>
+      </div>
+      <div className="flex justify-end">
+        <ButtonSaveAll bloc={bloc} toggle={toggle} />
       </div>
     </div>
   ) : (

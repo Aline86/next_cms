@@ -168,4 +168,7 @@ export default class Button extends Container {
   public set_page_id(value: number) {
     this.page_id = value;
   }
+  public get_name(): string {
+    return "Bouton";
+  }
 }

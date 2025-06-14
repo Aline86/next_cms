@@ -11,20 +11,13 @@ interface GridData {
   bloc: PictureGroup;
   index: number;
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
-  show_remove: boolean;
+
   toggle: boolean;
 }
 
-function Grid({
-  bloc_data,
-  bloc,
-  toggle,
-  index,
-  setToggle,
-  show_remove,
-}: GridData) {
+function Grid({ bloc_data, bloc, toggle, index, setToggle }: GridData) {
   const removeItem = useBlocStore((state) => state.removeItem);
-
+  const show_remove = bloc?.picture_group_data?.length > 2 ? true : false;
   useEffect(() => {}, [toggle]);
   return bloc !== undefined ? (
     <div>

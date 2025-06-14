@@ -12,14 +12,14 @@ import Link from "next/link";
 import LinkNetworksAndOthersHeader from "../../../../../models/LinkNetworksAndOthersHeader";
 
 interface HeaderInfo {
-  input_bloc: Record<string, unknown> | Header;
+  bloc: Record<string, unknown> | Header;
   isResponsive: boolean;
   toggle: boolean;
   full: boolean;
   page_number?: number;
 }
 function HeaderVizualization({
-  input_bloc,
+  bloc,
   full,
   isResponsive,
   toggle,
@@ -48,7 +48,7 @@ function HeaderVizualization({
   }, []);
   useEffect(() => {
     set_classes(
-      (input_bloc !== undefined && isResponsive) || result?.matches
+      (bloc !== undefined && isResponsive) || result?.matches
         ? " uppercase text-xl light top-[1rem]" + s.title_responsive
         : " uppercase text-3xl light " + s.title
     );
@@ -57,41 +57,36 @@ function HeaderVizualization({
   useEffect(() => {
     setTrigger_show_link(false);
   }, [isResponsive]);
+  useEffect(() => {}, [bg]);
   useEffect(() => {
-    console.log("bg", bg);
-  }, [bg]);
-  useEffect(() => {
-    if (input_bloc !== undefined) {
-      console.log("input_bloc", input_bloc, page_number);
+    if (bloc !== undefined) {
       set_bg({
         background:
-          input_bloc.image_url !== ""
+          bloc.image_url !== ""
             ? `url(${
                 process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                 "/api/uploadfile/" +
-                String(input_bloc?.image_url)
+                String(bloc?.image_url)
               })`
             : page_number !== undefined &&
               page_number > 1 &&
-              input_bloc.background_color === "#00000000"
+              bloc.background_color === "#00000000"
             ? "#00000030"
-            : input_bloc.background_color !== "#00000000"
-            ? String(input_bloc.background_color) + "80"
+            : bloc.background_color !== "#00000000"
+            ? String(bloc.background_color) + "80"
             : "#00000000",
 
         backdropFilter:
           page_number !== undefined &&
           page_number > 1 &&
-          input_bloc.background_color === "#00000000"
+          bloc.background_color === "#00000000"
             ? "blur(10px)"
             : "none",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toggle, input_bloc, page_number]);
-  return input_bloc !== undefined &&
-    classes !== undefined &&
-    bg !== undefined ? (
+  }, [toggle, bloc, page_number]);
+  return bloc !== undefined && classes !== undefined && bg !== undefined ? (
     <nav id={full ? s.nav : s.nav_edition} style={bg}>
       <div className={s.nav_bar}>
         <div
@@ -100,31 +95,31 @@ function HeaderVizualization({
           }
         >
           <Link href="/">
-            {input_bloc?.logo_url !== "" && (
+            {bloc?.logo_url !== "" && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={
                   process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
                   "/api/uploadfile/" +
-                  input_bloc?.logo_url
+                  bloc?.logo_url
                 }
                 alt="logo"
               />
             )}
           </Link>
         </div>
-        {input_bloc.background_color === "#00000000" &&
+        {bloc.background_color === "#00000000" &&
         page_number !== undefined &&
         page_number > 1 &&
         classes !== undefined ? (
           <h1 className={s.title_responsive + classes}>
-            {String(input_bloc?.title)}
+            {String(bloc?.title)}
           </h1>
         ) : (
-          input_bloc.background_color !== "#00000000" &&
+          bloc.background_color !== "#00000000" &&
           classes !== undefined && (
             <h1 className={s.title_responsive + classes}>
-              {String(input_bloc?.title)}
+              {String(bloc?.title)}
             </h1>
           )
         )}
@@ -151,11 +146,8 @@ function HeaderVizualization({
             className={`${s.inside_selector} flex gap-4 items-center justify-end`}
           >
             {isResponsive &&
-              Array.isArray(
-                (input_bloc as Header)?.link_networks_an_others_header
-              ) &&
-              (input_bloc as Header).link_networks_an_others_header.length >
-                0 && (
+              Array.isArray((bloc as Header)?.link_networks_an_others_header) &&
+              (bloc as Header).link_networks_an_others_header.length > 0 && (
                 <div className={s.plus} onClick={() => handleShowLinks()}>
                   <Image
                     src={reseaux}
@@ -166,12 +158,9 @@ function HeaderVizualization({
                 </div>
               )}
 
-            {Array.isArray(
-              (input_bloc as Header)?.link_networks_an_others_header
-            ) &&
-              (input_bloc as Header).link_networks_an_others_header.length >
-                0 &&
-              (input_bloc as Header).link_networks_an_others_header.map(
+            {Array.isArray((bloc as Header)?.link_networks_an_others_header) &&
+              (bloc as Header).link_networks_an_others_header.length > 0 &&
+              (bloc as Header).link_networks_an_others_header.map(
                 (
                   value: LinkNetworksAndOthersHeader | Record<string, unknown>,
                   key: number

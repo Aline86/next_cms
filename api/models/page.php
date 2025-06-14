@@ -97,7 +97,7 @@ class page {
     
     public  function add_page($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
     }
     public  function all_page($parameters)
     {

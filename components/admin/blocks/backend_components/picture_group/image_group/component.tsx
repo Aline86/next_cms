@@ -1,8 +1,8 @@
+"use client";
 import s from "./style/style.module.css";
 
 import CardData from "./wrapper";
 import PictureGroup from "../../../../../../models/PictureGroup";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
 
 import { useEffect } from "react";
 
@@ -10,10 +10,17 @@ interface ImageGroupData {
   page_id: number;
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   bloc: PictureGroup;
+  refresh: boolean;
   toggle: boolean;
 }
 
-function ImageGroup({ bloc, page_id, toggle, setToggle }: ImageGroupData) {
+function ImageGroup({
+  bloc,
+  page_id,
+
+  setToggle,
+  toggle,
+}: ImageGroupData) {
   const show_remove =
     bloc !== undefined && bloc.picture_group_data !== undefined
       ? bloc.picture_group_data !== undefined
@@ -23,7 +30,7 @@ function ImageGroup({ bloc, page_id, toggle, setToggle }: ImageGroupData) {
         : undefined
       : undefined;
 
-  useEffect(() => {}, [toggle, bloc.picture_group_data]);
+  useEffect(() => {}, [bloc, toggle, page_id]);
   return (
     show_remove !== undefined &&
     bloc !== undefined && (
@@ -32,7 +39,7 @@ function ImageGroup({ bloc, page_id, toggle, setToggle }: ImageGroupData) {
           className={s.cards}
           style={{
             minHeight: `${bloc.height}px`,
-            width: `100%`,
+
             height: `fit-content`,
             display: "grid",
             gridTemplateColumns: `repeat(2, 1fr)`,
@@ -41,27 +48,23 @@ function ImageGroup({ bloc, page_id, toggle, setToggle }: ImageGroupData) {
           }}
         >
           {bloc.picture_group_data !== undefined &&
-            bloc.picture_group_data.map(
-              (value: PictureGroupData, index: number) => {
-                return (
-                  <div
-                    className={s.cards}
-                    style={{ height: `fit-content` }}
-                    key={index}
-                  >
-                    <CardData
-                      bloc={bloc}
-                      data={value}
-                      index={index}
-                      show_remove={show_remove}
-                      page_id={page_id}
-                      toggle={toggle}
-                      setToggle={setToggle}
-                    />
-                  </div>
-                );
-              }
-            )}
+            bloc.picture_group_data.map((_, index: number) => {
+              return (
+                <div
+                  className={s.cards}
+                  style={{ height: `fit-content` }}
+                  key={index}
+                >
+                  <CardData
+                    bloc={bloc}
+                    index={index}
+                    page_id={page_id}
+                    setToggle={setToggle}
+                    toggle={toggle}
+                  />
+                </div>
+              );
+            })}
         </div>
       </div>
     )

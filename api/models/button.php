@@ -36,7 +36,8 @@ class Button {
     }
     public  function add_button($parameters)
     {
-        include 'model_snippets/add.php';
+        return include 'model_snippets/add.php';
+      
     }
     public  function all_button($parameters)
     {

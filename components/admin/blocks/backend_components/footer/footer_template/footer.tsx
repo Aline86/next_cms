@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import s from "./styles.module.css";
 import remove from "./../../../../../assets/remove.png";
@@ -5,39 +6,45 @@ import Footer from "../../../../../../models/FooterData";
 import Image from "next/image";
 import DragAndDrop from "../../../../../../lib/dragzone";
 import { Button, Input } from "@headlessui/react";
+
 import useBlocStore from "../../../../../../store/blocsStore";
 
 interface FooterInfo {
-  input_bloc: Footer;
+  bloc: Footer;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
   refresh: boolean;
 }
 
-function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
+function FooterInput({ bloc, setRefresh, refresh }: FooterInfo) {
   const [opened, setOpened] = useState(false);
   const updateComponent = useBlocStore((state) => state.updateBloc);
   const saveBlocAll = useBlocStore((state) => state.saveBlocAll);
   const addItem = useBlocStore((state) => state.addItem);
   const removeItem = useBlocStore((state) => state.removeItem);
 
-  useEffect(() => {}, [input_bloc]);
-  return input_bloc !== undefined ? (
+  useEffect(() => {}, [bloc]);
+  return bloc !== undefined ? (
     <div className={s.container}>
       <div className={s.container_column}>
+        <div className="w-full">
+          <div className="">
+            <h3 className="underline mt-8">Pied de page</h3>
+          </div>
+        </div>
         <div className={s.top_container}>
           <div className={s.color}>
             <h3 style={{ textDecoration: "underline" }}>Couleur de fond :</h3>
             <Input
               type="color"
               className="mt-4 mb-4"
-              value={input_bloc.background_color}
+              value={bloc.background_color}
               onChange={(e) => {
                 updateComponent(
                   e,
                   "background_color",
                   undefined,
                   undefined,
-                  input_bloc
+                  bloc
                 );
               }}
             />
@@ -48,9 +55,9 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
             <Input
               className="mt-4 mb-4 bg-slate-100 w-full"
               type="text"
-              value={input_bloc?.address.title}
+              value={bloc?.address.title}
               onChange={(e) => {
-                updateComponent(e, "title", "address", undefined, input_bloc);
+                updateComponent(e, "title", "address", undefined, bloc);
               }}
             />
           </div>
@@ -60,9 +67,9 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
             <Input
               className="mt-4 mb-4 bg-slate-100 w-full"
               type="text"
-              value={input_bloc?.address.address}
+              value={bloc?.address.address}
               onChange={(e) => {
-                updateComponent(e, "address", "address", undefined, input_bloc);
+                updateComponent(e, "address", "address", undefined, bloc);
               }}
             />
           </div>
@@ -71,9 +78,9 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
             <Input
               className="mt-4 mb-4 bg-slate-100 w-full"
               type="text"
-              value={input_bloc?.address.town}
+              value={bloc?.address.town}
               onChange={(e) => {
-                updateComponent(e, "town", "address", undefined, input_bloc);
+                updateComponent(e, "town", "address", undefined, bloc);
               }}
             />
           </div>
@@ -84,8 +91,8 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                 className="mt-4 mb-4 bg-slate-100 w-full"
                 type="text"
                 value={
-                  input_bloc?.map_iframe_url !== "undefined"
-                    ? input_bloc?.map_iframe_url
+                  bloc?.map_iframe_url !== "undefined"
+                    ? bloc?.map_iframe_url
                     : ""
                 }
                 onChange={(e) => {
@@ -94,7 +101,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                     "map_iframe_url",
                     undefined,
                     undefined,
-                    input_bloc
+                    bloc
                   );
                 }}
               />
@@ -105,7 +112,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
               className={s.addCard}
               onClick={(e) => {
                 e.preventDefault();
-                addItem(input_bloc);
+                addItem(bloc);
                 setRefresh(!refresh);
               }}
             >
@@ -118,9 +125,9 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
       </div>
       <div className={s.social_networks}>
         <h2>Liens (ex: réseaux sociaux) : </h2>
-        {input_bloc !== undefined &&
-          input_bloc.links_network_an_others_footer.length > 0 &&
-          input_bloc.links_network_an_others_footer.map((value, key) => {
+        {bloc !== undefined &&
+          bloc.links_network_an_others_footer.length > 0 &&
+          bloc.links_network_an_others_footer.map((value, key) => {
             return (
               <div
                 key={key}
@@ -133,7 +140,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                     src={remove}
                     alt="suppression box"
                     onClick={() => {
-                      removeItem(input_bloc, key);
+                      removeItem(bloc, key);
                     }}
                   />
                 </div>
@@ -144,7 +151,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                     field={"image_url"}
                     key={1}
                     index={key}
-                    bloc={input_bloc}
+                    bloc={bloc}
                     data_img={value.image_url}
                     subfield={""}
                     toggle={false}
@@ -157,7 +164,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                     type="text"
                     value={value.name}
                     onChange={(e) => {
-                      updateComponent(e, "name", undefined, key, input_bloc);
+                      updateComponent(e, "name", undefined, key, bloc);
                     }}
                   />
                 </div>
@@ -173,7 +180,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                         "background_url",
                         undefined,
                         key,
-                        input_bloc
+                        bloc
                       );
                     }}
                   />
@@ -184,7 +191,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
                     type="text"
                     value={value.title}
                     onChange={(e) => {
-                      updateComponent(e, "title", undefined, key, input_bloc);
+                      updateComponent(e, "title", undefined, key, bloc);
                     }}
                   />
                 </div>
@@ -198,7 +205,7 @@ function FooterInput({ input_bloc, setRefresh, refresh }: FooterInfo) {
           onClick={(e) => {
             e.preventDefault();
             saveBlocAll();
-            setRefresh(!refresh);
+            //setRefresh(!refresh);
           }}
         >
           Enregistrer

@@ -6,18 +6,24 @@ import DragAndDrop from "../../../../../../lib/dragzone";
 import CarouselData from "../../../../../../models/CarouselData";
 import Carousel from "../../../../../../models/Carousel";
 import useBlocStore from "../../../../../../store/blocsStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface CardDatas {
   data: CarouselData | Record<string, unknown>;
   index: number;
   bloc: Carousel;
-  show_remove: boolean;
+
   page_id: number;
   toggle: boolean;
 }
 
-function CardData({ data, index, show_remove, bloc, toggle }: CardDatas) {
+function CardData({ data, index, bloc, toggle }: CardDatas) {
+  const show_remove =
+    bloc !== undefined &&
+    bloc.carousel_data !== undefined &&
+    bloc.carousel_data.length > 4
+      ? true
+      : false;
   const updateComponent = useBlocStore((state) => state.updateBloc);
   const removeItem = useBlocStore((state) => state.removeItem);
   const image =
@@ -26,6 +32,8 @@ function CardData({ data, index, show_remove, bloc, toggle }: CardDatas) {
         ? data.image_url
         : undefined
       : undefined;
+  const value = bloc.carousel_data[index] as CarouselData;
+  const [dataValue, setDataValue] = useState(value as CarouselData);
   useEffect(() => {}, [toggle]);
   return data !== undefined ? (
     <div>
@@ -89,6 +97,8 @@ function CardData({ data, index, show_remove, bloc, toggle }: CardDatas) {
         placeholder="texte de la carte"
         onChange={(e) => {
           updateComponent(e, "text", undefined, index, bloc);
+          const updatedData = { ...dataValue, text: e.target.value };
+          setDataValue(updatedData as CarouselData);
         }}
         className="mt-8 block  p-2.5 w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       ></textarea>

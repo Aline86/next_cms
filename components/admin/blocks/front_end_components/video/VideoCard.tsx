@@ -123,7 +123,7 @@ function VideoCard({
                   </div>
                 )}
             </a>
-          ) : external === "PageID" ? (
+          ) : external === "pageID" ? (
             <Link
               href={{ pathname: `/` + page?.slug }}
               className={

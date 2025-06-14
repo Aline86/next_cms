@@ -33,7 +33,9 @@ function RenderPageID({
   const [pages, setPages] = useState<Page[] | undefined>(undefined);
   const getPages = async () => {
     const pages_list = await to_render_type.get_pages(page_id);
+
     if (pages_list !== undefined) {
+      console.log("pages_list", pages_list);
       setPages(pages_list);
     }
   };
