@@ -26,9 +26,7 @@ function ButtonCard({
   external,
   page,
 }: CustomCarouselInfo) {
-  useEffect(() => {
-    console.log("external", external);
-  }, [bloc, toggle, external, page]);
+  useEffect(() => {}, [bloc, toggle, external, page]);
   return bloc !== undefined && external !== undefined ? (
     <div
       className={

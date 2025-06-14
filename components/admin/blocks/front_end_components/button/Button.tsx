@@ -24,6 +24,7 @@ function ButtonVisualization({
   const [page, setPage] = useState<Page>();
   const [result, setResult] = useState<MediaQueryList>();
   const [, setResize] = useState(0);
+
   const array_all_possible_types = {
     external_link: new ExternalLink(String(bloc.href_url)),
     file: new FileLink(String(bloc.href_url)),

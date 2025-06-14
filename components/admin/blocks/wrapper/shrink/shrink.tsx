@@ -11,10 +11,8 @@ interface ShrinkData {
 }
 
 function Shrink({ props, bloc, index, isOpen }: ShrinkData) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    setOpen(isOpen);
-  }, []);
+  const [open, setOpen] = useState(isOpen);
+
   useEffect(() => {}, [open]);
   return (
     <div className="w-full" key={index}>

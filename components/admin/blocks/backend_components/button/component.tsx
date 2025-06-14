@@ -14,6 +14,13 @@ interface CardDatas {
 }
 
 function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
+  const array_all_possible_types = [
+    "external_link",
+    "file",
+    "mailto",
+    "pageID",
+  ];
+
   const [is_parallaxe, setIsParallaxe] = useState(false);
   useEffect(() => {
     if (bloc !== undefined) {
@@ -22,7 +29,7 @@ function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
   }, []);
   const updateComponent = useBlocStore((state) => state.updateBloc);
 
-  useEffect(() => {}, [is_parallaxe, toggle]);
+  useEffect(() => {}, [is_parallaxe]);
   return bloc !== undefined ? (
     <div className="w-full">
       <div className="w-full">
@@ -95,7 +102,12 @@ function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
               />
             </div>
           </div>
-          <DropdownData bloc={bloc} page_id={page_id} data={bloc} />
+          <DropdownData
+            bloc={bloc}
+            page_id={page_id}
+            data={bloc}
+            dropdown_elements={array_all_possible_types}
+          />
           {!is_parallaxe && (
             <textarea
               id="message"

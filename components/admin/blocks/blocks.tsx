@@ -95,27 +95,27 @@ function Blocs({
           type BlocType = keyof typeof blocksToREnder;
           const blocType = bloc.type as BlocType;
 
-          return blocksToREnder !== undefined &&
-            blocksToREnder[blocType] !== undefined ? (
-            <BlockContainer
-              key={index}
-              bloc={bloc}
-              setRefresh={setRefresh}
-              refresh={refresh}
-              drag={drag}
-              index={index}
-              isOpen={false}
-              setDragBegin={setDragBegin}
-              handleDragOver={handleDragOver}
-              updateDragBloc={updateDragBloc}
-              toggle={toggle}
-              isResponsive={false}
-              full={false}
-              page_id={page_id}
-              setToggle={setToggle}
-            />
-          ) : (
-            <></>
+          return (
+            blocksToREnder !== undefined &&
+            blocksToREnder[blocType] !== undefined && (
+              <BlockContainer
+                key={index}
+                bloc={bloc}
+                setRefresh={setRefresh}
+                refresh={refresh}
+                drag={drag}
+                index={index}
+                isOpen={false}
+                setDragBegin={setDragBegin}
+                handleDragOver={handleDragOver}
+                updateDragBloc={updateDragBloc}
+                toggle={toggle}
+                isResponsive={false}
+                full={false}
+                page_id={page_id}
+                setToggle={setToggle}
+              />
+            )
           );
         })}
     </div>

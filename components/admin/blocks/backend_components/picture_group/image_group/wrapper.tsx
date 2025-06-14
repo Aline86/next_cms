@@ -34,7 +34,7 @@ function CardData({
   const data = bloc.picture_group_data[index] as PictureGroupData;
   const [dataValue, setDataValue] = useState(data as PictureGroupData);
   const [checked, setChecked] = useState(data.is_data_button);
-  console.log("page_id", page_id);
+  const array_all_possible_types = ["external_link", "mailto", "pageID"];
   const show_remove =
     bloc !== undefined &&
     bloc.picture_group_data !== undefined &&
@@ -65,7 +65,13 @@ function CardData({
         )}
       </div>
       <div>
-        <DropdownData page_id={page_id} data={data} index={index} bloc={bloc} />
+        <DropdownData
+          page_id={page_id}
+          data={data}
+          index={index}
+          bloc={bloc}
+          dropdown_elements={array_all_possible_types}
+        />
         <div className={s.flex_row}>
           <h3>Couleur du texte</h3>
           <Input

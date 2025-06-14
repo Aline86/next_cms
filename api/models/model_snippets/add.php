@@ -70,7 +70,7 @@
     if($id === "-1") {
      
         return self::$db->lastInsertId();
-        exit();
+   
     }
 
     return null;

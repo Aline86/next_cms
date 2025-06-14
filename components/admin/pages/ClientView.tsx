@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 import User from "../../../models/User";
 import Layout from "../../layout";
-
+import { getSlug } from "./commons/common_page_functions";
 import BlocTools from "../../../lib/bloc_tools";
 import { Button } from "@headlessui/react";
 
@@ -53,7 +53,23 @@ export default function ClientView() {
   const savePage = async (page: Page) => {
     if (pages !== undefined && pages.length > 0) {
       if ("save_bloc" in page && typeof page.save_bloc === "function") {
-        await page.save_bloc();
+        const result = await getSlug(page.slug);
+        if (
+          result !== undefined &&
+          result !== null &&
+          typeof result === "number"
+        ) {
+          alert("Le titre existe déjà, veuillez en choisir un autre.");
+        } else {
+          const result = await page.save_bloc();
+          if (
+            result !== undefined &&
+            result !== null &&
+            result instanceof Page
+          ) {
+            return true;
+          }
+        }
       }
       setRefresh(!refresh);
     }
@@ -69,13 +85,15 @@ export default function ClientView() {
       pages.map(async (bloc_in_blocs: Page, index) => {
         if ("bloc_number" in bloc_in_blocs) {
           bloc_in_blocs.set_bloc_number(index);
-          new_bloc_array[index] = await bloc_in_blocs.save_bloc();
+          const result = await bloc_in_blocs.save_bloc();
+          if (result instanceof Page) {
+            new_bloc_array[index] = result;
+          }
         }
       });
       Promise.all(pages).then((data) => {
         const typedData = data as Array<Page>;
         if (typedData !== undefined && Array.isArray(typedData)) {
-          // setBlocs(new_bloc_array);
           setRefresh(!refresh);
         }
       });
@@ -103,7 +121,10 @@ export default function ClientView() {
 
     const res = Promise.all(new_bloc_array).then((data) => {
       if (data !== undefined && Array.isArray(data)) {
-        const ordered = bloc_tools.sortComponents(data);
+        const filteredData = (data as (Page | undefined | number)[]).filter(
+          (item): item is Page => item instanceof Page
+        );
+        const ordered = bloc_tools.sortComponents(filteredData);
         return ordered;
       }
     });

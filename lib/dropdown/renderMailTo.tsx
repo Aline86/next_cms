@@ -2,26 +2,23 @@
 
 import { Input } from "@headlessui/react";
 import Button from "../../models/Button";
-import CarouselData from "../../models/CarouselData";
 import PictureGroupData from "../../models/PictureGroupData";
+import CarouselData from "../../models/CarouselData";
 import useBlocStore from "../../store/blocsStore";
 import ComponentTypes from "../types";
 import { useEffect } from "react";
 
-interface DropdownInfo {
+interface DropdownElementParams {
   bloc: ComponentTypes;
   data: Button | PictureGroupData | CarouselData;
-  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
-  toggle: boolean;
-  index?: number;
-}
 
-function RenderMailto({ bloc, data, setToggle, toggle, index }: DropdownInfo) {
+  index?: number;
+  page_id?: number;
+}
+function RenderMailto({ bloc, data, index }: DropdownElementParams) {
   const updateComponent = useBlocStore((state) => state.updateBloc);
 
-  useEffect(() => {
-    console.log("RenderMailto component mounted", data.href_url);
-  }, [data.href_url, toggle]);
+  useEffect(() => {}, [data?.href_url]);
 
   return (
     data &&
@@ -41,7 +38,6 @@ function RenderMailto({ bloc, data, setToggle, toggle, index }: DropdownInfo) {
               index,
               bloc
             );
-            setToggle(!toggle);
           }}
         />
       </div>

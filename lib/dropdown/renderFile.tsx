@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
-import Button from "../../models/Button";
 
-import CarouselData from "../../models/CarouselData";
-
-import PictureGroupData from "../../models/PictureGroupData";
 import useBlocStore from "../../store/blocsStore";
-
 import ComponentTypes from "../types";
-
 import DropZone from "../../models/DropZone";
 import { MoonLoader } from "react-spinners";
 import { Input } from "@headlessui/react";
+import Button from "../../models/Button";
+import PictureGroupData from "../../models/PictureGroupData";
+import CarouselData from "../../models/CarouselData";
 
-interface DropdownInfo {
+interface DropdownElementParams {
   bloc: ComponentTypes;
   data: Button | PictureGroupData | CarouselData;
-  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
-  toggle: boolean;
+
   index?: number;
+  page_id?: number;
 }
 
-function RenderFile({ setToggle, toggle, bloc, data, index }: DropdownInfo) {
+function RenderFile({ bloc, data, index }: DropdownElementParams) {
   const updateComponent = useBlocStore((state) => state.updateBloc);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,10 +27,16 @@ function RenderFile({ setToggle, toggle, bloc, data, index }: DropdownInfo) {
     const res = await upload_service.update(file);
     if (res !== undefined) {
       setIsLoading(false);
-      updateComponent(res, "href_url", undefined, index, bloc);
+      updateComponent(
+        res,
+        "href_url",
+        undefined,
+        index,
+        bloc as ComponentTypes | undefined
+      );
     }
   };
-  useEffect(() => {}, [data.href_url, toggle]);
+  useEffect(() => {}, [data?.href_url]);
   return (
     data !== undefined &&
     bloc !== undefined && (
@@ -59,7 +62,6 @@ function RenderFile({ setToggle, toggle, bloc, data, index }: DropdownInfo) {
                 className="hidden"
                 onChange={(e) => {
                   upload(e);
-                  setToggle(!toggle);
                 }}
               />
             </label>

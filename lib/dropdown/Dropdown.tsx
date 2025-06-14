@@ -1,71 +1,75 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import s from "./style/styles.module.css";
+import { JSX, useEffect, useState } from "react";
 
-import ExternalLink from "./dropdown_types/ExrternalLink";
-import PageID from "./dropdown_types/PageID";
-import Mailto from "./dropdown_types/Maito";
-
-import RenderExternalLink from "./renderExternalLink";
-import RenderFile from "./renderFile";
 import PictureGroupData from "../../models/PictureGroupData";
 
 import CarouselData from "../../models/CarouselData";
-import RenderMailto from "./renderMailTo";
-import RenderPageID from "./renderPageID";
-import PictureGroup from "../../models/PictureGroup";
-import Carousel from "../../models/Carousel";
+
 import Button from "../../models/Button";
-import FileLink from "./dropdown_types/File";
+import array_all_possible_types from "./DropdownConfiguration";
+import ComponentTypes from "../types";
 
 interface DropdownInfo {
-  bloc: PictureGroup | Button | Carousel;
+  bloc: ComponentTypes;
   data: Button | PictureGroupData | CarouselData;
+  dropdown_elements: Array<string>;
   index?: number;
-  page_id?: number;
+  page_id: number;
 }
 
-function DropdownData({ bloc, data, page_id, index }: DropdownInfo) {
-  const array_all_possible_types = {
-    external_link: new ExternalLink(String(data.href_url)),
-    file: new FileLink(String(data.href_url)),
-    mailto: new Mailto(String(data.href_url)),
-    pageID: new PageID(data.href_url),
+function DropdownData({
+  bloc,
+  data,
+  page_id,
+  index,
+  dropdown_elements,
+}: DropdownInfo) {
+  type DropdownClassType = {
+    get_type?: () => string;
   };
+  let type = "";
+  const [choice_type, set_choice_type] = useState<string>("");
+  const [ClassToRender, set_class_to_render] = useState<
+    JSX.Element | null | undefined
+  >(undefined);
+  if (data.href_url === undefined) {
+    const Model =
+      array_all_possible_types[
+        data.href_url as keyof typeof array_all_possible_types
+      ].model;
+    // Use type assertion to satisfy TypeScript, but ensure at runtime the methods exist
+    const instance = new Model(data.href_url) as unknown as DropdownClassType;
 
-  const array_dropdown_types = {
-    external_link: "Lien externe ",
-    file: "Fichier (PDF)",
-    mailto: "Lien mailto",
-    pageID: "Page du site",
-  };
-
-  let to_render_type: string = "";
-
-  Object.values(array_all_possible_types).forEach((dropdown_class) => {
-    console.log(dropdown_class.check_type());
-    if (dropdown_class.check_type()) {
-      to_render_type = dropdown_class.get_type();
+    if (typeof instance.get_type === "function") {
+      type = instance.get_type();
     }
-  });
-
-  Object.values(array_all_possible_types).forEach((dropdown_class) => {
-    if (dropdown_class.check_type()) {
-      to_render_type = dropdown_class.get_type();
+    const ToRender =
+      array_all_possible_types[
+        data.href_url as keyof typeof array_all_possible_types
+      ].component;
+    if (ToRender !== undefined && ToRender !== null) {
+      set_class_to_render(
+        <ToRender bloc={bloc} data={data} page_id={page_id} index={index} />
+      );
+      set_choice_type(type);
     }
-  });
-  const [choice_type, set_choice_type] = useState<string>(to_render_type);
-  const [toggle, setToggle] = useState<boolean>(false);
+  }
 
-  const pageID_type = new PageID(data.href_url);
   const updateLink = (e: React.ChangeEvent<HTMLSelectElement>) => {
     data.href_url = "";
-    setToggle(!toggle);
-    set_choice_type(e.target.value);
+
+    const ToRender =
+      array_all_possible_types[
+        e.target.value as keyof typeof array_all_possible_types
+      ].component;
+    if (ToRender !== undefined && ToRender !== null) {
+      set_class_to_render(
+        <ToRender bloc={bloc} data={data} page_id={page_id} index={index} />
+      );
+      set_choice_type(e.target.value);
+    }
   };
-  useEffect(() => {
-    console.log("page_id", page_id, choice_type);
-  }, [choice_type, toggle, pageID_type, page_id, to_render_type, toggle]);
+  useEffect(() => {}, [ClassToRender]);
   return (
     data &&
     bloc !== undefined && (
@@ -80,60 +84,23 @@ function DropdownData({ bloc, data, page_id, index }: DropdownInfo) {
           {data.href_url === "" && (
             <option key={index}>Choisir une redirection</option>
           )}
-          {Object.entries(array_dropdown_types).map(([type, label], index) => {
+          {dropdown_elements.map((type, index) => {
+            const typedType = type as keyof typeof array_all_possible_types;
+
             return (
               <option key={index} value={type}>
-                {label}
+                {array_all_possible_types[typedType].label_name}
               </option>
             );
           })}
         </select>
 
-        {choice_type === "external_link" ? (
-          <RenderExternalLink
-            key={1}
-            bloc={bloc}
-            setToggle={setToggle}
-            toggle={toggle}
-            data={data}
-            index={index}
-          />
-        ) : choice_type === "file" ? (
-          <RenderFile
-            key={1}
-            bloc={bloc}
-            setToggle={setToggle}
-            toggle={toggle}
-            data={data}
-            index={index}
-          />
-        ) : choice_type === "mailto" ? (
-          <RenderMailto
-            key={1}
-            bloc={bloc}
-            setToggle={setToggle}
-            toggle={toggle}
-            data={data}
-            index={index}
-          />
-        ) : choice_type === "pageID" &&
-          page_id !== undefined &&
-          pageID_type !== undefined ? (
-          <RenderPageID
-            page_id={page_id}
-            key={1}
-            bloc={bloc}
-            setToggle={setToggle}
-            toggle={toggle}
-            data={data}
-            to_render_type={pageID_type as PageID}
-            index={index}
-          />
-        ) : (
-          <div key={1} className={s.hidden}></div>
+        {ClassToRender !== undefined && ClassToRender !== null && (
+          <div key={index}>{ClassToRender}</div>
         )}
       </div>
     )
   );
 }
+
 export default DropdownData;
