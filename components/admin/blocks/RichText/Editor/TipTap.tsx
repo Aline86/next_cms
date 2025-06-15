@@ -9,7 +9,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import Paragraph from "@tiptap/extension-paragraph";
-import FontSize from "../../../../../lib/FontSize";
+import FontSize from "./../../../../../lib/FontSize";
 import Image from "next/image";
 import {
   Listbox,
@@ -35,8 +35,8 @@ import H2 from "./../../../../assets/icons8-h2-48.png";
 
 import Bullet from "./../../../../assets/icons8-liste-64.png";
 
-import TextPicture from "../../../../../models/TextPicture";
-import useBlocStore from "../../../../../store/blocsStore";
+import TextPicture from "./../../../../../models/TextPicture";
+import useBlocStore from "./../../../../../store/blocsStore";
 
 const Tiptap = ({ bloc }: { bloc: TextPicture | undefined }) => {
   const [, setJson] = useState<JSONContent>();

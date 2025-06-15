@@ -2,16 +2,16 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-import Page from "../../../../models/Page";
+import Page from "./../../../../models/Page";
 
 import s from "./../style.module.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getSlug } from "./../commons/common_page_functions";
-import User from "../../../../models/User";
-import Layout from "../../../layout";
+import User from "./../../../../models/User";
+import Layout from "./../../../layout";
 
-import BlocTools from "../../../../lib/bloc_tools";
+import BlocTools from "./../../../../lib/bloc_tools";
 import { Button } from "@headlessui/react";
 
 export function ButtonDemo() {

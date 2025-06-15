@@ -1,5 +1,5 @@
 import Image from "next/image";
-import PictureGroupData from "../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 
 function rotateToMouse(e: React.MouseEvent<HTMLElement>): void {
   const card = e.currentTarget as HTMLElement;

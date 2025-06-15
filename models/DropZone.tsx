@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadService } from "../lib/upload_service";
+import { UploadService } from "./../lib/upload_service";
 
 export default class DropZone {
   public async update(image: File) {

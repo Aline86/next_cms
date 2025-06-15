@@ -3,12 +3,12 @@ import Link from "next/link";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import CarouselData from "../../../../../../models/CarouselData";
-import FileLink from "../../../../../../lib/dropdown/dropdown_types/File";
-import ExternalLink from "../../../../../../lib/dropdown/dropdown_types/ExrternalLink";
-import Mailto from "../../../../../../lib/dropdown/dropdown_types/Maito";
-import PageID from "../../../../../../lib/dropdown/dropdown_types/PageID";
-import Page from "../../../../../../models/Page";
+import CarouselData from "./../../../../../../models/CarouselData";
+import FileLink from "./../../../../../../lib/dropdown/dropdown_types/File";
+import ExternalLink from "./../../../../../../lib/dropdown/dropdown_types/ExrternalLink";
+import Mailto from "./../../../../../../lib/dropdown/dropdown_types/Maito";
+import PageID from "./../../../../../../lib/dropdown/dropdown_types/PageID";
+import Page from "./../../../../../../models/Page";
 
 interface CardDatas {
   value: CarouselData | Record<string, unknown>;

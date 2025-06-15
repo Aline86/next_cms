@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 
 import s from "./style.module.css";
-import Page from "../../../../models/Page";
+import Page from "./../../../../models/Page";
 import remove from "./../../../assets/fermer.png";
 import Image from "next/image";
-import ComponentTypes from "../../../../lib/types";
-import useBlocStore from "../../../../store/blocsStore";
-import blocksToRender from "../../../../lib/config/blocsToRender";
+
+import ComponentTypes from "./../../../../lib/types";
+import useBlocStore from "./../../../../store/blocsStore";
+import blocksToRender from "./../../../../lib/config/blocsToRender";
+
 
 interface BlocData {
   blocs: Array<ComponentTypes>;
@@ -17,6 +19,7 @@ interface BlocData {
 
 function BlocDisplay({ blocs, open, setOpen, page }: BlocData) {
   const addBloc = useBlocStore((state) => state.addBloc);
+
 
   useEffect(() => {}, []);
   return (
@@ -39,6 +42,21 @@ function BlocDisplay({ blocs, open, setOpen, page }: BlocData) {
             Object.values(blocksToRender).map((item, index) => {
               const ModelData =
                 item.model !== undefined ? item.model : undefined;
+              interface BlocModelVariantConstructor {
+                new (
+                  pageId: number,
+                  blocNumber: number,
+                  id: number,
+                  speaciaty: string
+                ): ComponentTypes;
+              }
+              interface BlocModelConstructor {
+                new (
+                  pageId: number,
+                  blocNumber: number,
+                  id: number
+                ): ComponentTypes;
+              }
               return (
                 item.icon_picture !== undefined &&
                 ModelData !== undefined && (
@@ -59,7 +77,7 @@ function BlocDisplay({ blocs, open, setOpen, page }: BlocData) {
                               onClick={(e) => {
                                 e.preventDefault();
                                 addBloc(
-                                  new ModelData(
+                                  new (ModelData as BlocModelVariantConstructor)(
                                     page.id,
                                     blocs.length - 1,
                                     -1,
@@ -87,7 +105,11 @@ function BlocDisplay({ blocs, open, setOpen, page }: BlocData) {
                           onClick={(e) => {
                             e.preventDefault();
                             addBloc(
-                              new ModelData(page.id, blocs.length - 1, -1)
+                              new (ModelData as BlocModelConstructor)(
+                                page.id,
+                                blocs.length - 1,
+                                -1
+                              )
                             );
 
                             setOpen(!open);

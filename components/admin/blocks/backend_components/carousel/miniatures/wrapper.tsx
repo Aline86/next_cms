@@ -1,8 +1,8 @@
 import remove from "./../../../../../assets/remove.png";
-import Carousel from "../../../../../../models/Carousel";
+import Carousel from "./../../../../../../models/Carousel";
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
-import useBlocStore from "../../../../../../store/blocsStore";
+import DragAndDrop from "./../../../../../../lib/dragzone";
+import useBlocStore from "./../../../../../../store/blocsStore";
 
 interface CardDatas {
   gap: number;
@@ -85,7 +85,6 @@ function CardData({ gap, index, bloc }: CardDatas) {
                 : ""
             }
             subfield={""}
-            toggle={false}
           />
         </div>
       </div>

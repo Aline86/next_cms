@@ -1,5 +1,5 @@
-import Container from "../lib/Container";
-import InputTypes from "../lib/InputTypes";
+import Container from "./../lib/Container";
+import InputTypes from "./../lib/InputTypes";
 
 import CarouselData from "./CarouselData";
 import { ModelUpdateData } from "./ModelUpdateData";
@@ -18,7 +18,7 @@ export default class Carousel extends Container {
   constructor(
     page_id: number,
     bloc_number: number,
-    id: number = -1,
+    id: number,
     carousel_type: string = "carousel",
     card_number: number = 4,
     width: number = 16,
@@ -110,13 +110,16 @@ export default class Carousel extends Container {
       await this.add_carousel_data(carousel_data);
     }
   }
-  public add_data() {
+  public async add_data() {
     this.card_number++;
     this.carousel_data.push(
       new CarouselData(-1, Number(this.carousel_data.length) + 1, this.id)
     );
-    this.save_bloc();
-    return this;
+
+    const result = await this.save_bloc();
+    if (result !== undefined) {
+      return this;
+    }
   }
 
   public async remove_link(index: number) {

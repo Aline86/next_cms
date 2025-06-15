@@ -2,9 +2,9 @@
 import { useEffect } from "react";
 
 import { Input, Textarea } from "@headlessui/react";
-import Video from "../../../../../../models/Video";
-import useBlocStore from "../../../../../../store/blocsStore";
-import ButtonSaveAll from "../../../../../../lib/buttonSaveAll";
+import Video from "./../../../../../../models/Video";
+import useBlocStore from "./../../../../../../store/blocsStore";
+import ButtonSaveAll from "./../../../../../../lib/buttonSaveAll";
 
 function VideoInput({
   bloc,

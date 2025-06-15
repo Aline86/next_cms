@@ -1,7 +1,7 @@
 "use client";
 import { useSwipeable } from "react-swipeable";
 
-import CarouselData from "../../../../../models/CarouselData";
+import CarouselData from "./../../../../../../models/CarouselData";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 

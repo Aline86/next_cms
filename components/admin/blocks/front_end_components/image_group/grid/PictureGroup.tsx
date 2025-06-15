@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 
 import PictureGroupContainer from "./PictureGroupContainer";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
-import PictureGroup from "../../../../../../models/PictureGroup";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
+import PictureGroup from "./../../../../../../models/PictureGroup";
 
 interface CustomCarouselInfo {
   bloc: Record<string, unknown> | PictureGroup;

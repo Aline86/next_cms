@@ -2,7 +2,7 @@
 import s from "./styles.module.css";
 
 import { useEffect, useState } from "react";
-import Page from "../../../../../../models/Page";
+import Page from "./../../../../../../models/Page";
 import Link from "next/link";
 
 interface NavInfo {

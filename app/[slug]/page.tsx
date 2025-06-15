@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import React, { JSX } from "react";
-import Layout from "../../components/layout";
-import PageModel from "../../models/Page";
+import Layout from "./../../components/layout";
+import PageModel from "./../../models/Page";
 import ClientView from "./ClientView";
 import { Metadata } from "next";
 

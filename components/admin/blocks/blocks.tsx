@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-import ComponentTypes from "../../../lib/types";
+import ComponentTypes from "./../../../lib/types";
 
-import useBlocStore from "../../../store/blocsStore";
-import blocksToREnder from "../../../lib/config/blocsToRender";
+import useBlocStore from "./../../../store/blocsStore";
+import blocksToREnder from "./../../../lib/config/blocsToRender";
 import BlockContainer from "./wrapper/BlockContainer";
 
 interface BlocData {
@@ -85,7 +85,7 @@ function Blocs({
 
   useEffect(() => {}, [toggle]);
   useEffect(() => {
-    setToggle(!toggle);
+    // setToggle(!toggle);
   }, [blocs]);
   return (
     <div className="w-full">

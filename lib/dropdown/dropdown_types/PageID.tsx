@@ -1,4 +1,4 @@
-import Page from "../../../models/Page";
+import Page from "./../../../models/Page";
 import DropdownTypes from "./DropdownType";
 
 export default class PageID extends DropdownTypes {

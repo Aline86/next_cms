@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Header from "../../../../../../models/Header";
-import DragAndDrop from "../../../../../../lib/dragzone";
-import useBlocStore from "../../../../../../store/blocsStore";
+import Header from "./../../../../../../models/Header";
+import DragAndDrop from "./../../../../../../lib/dragzone";
+import useBlocStore from "./../../../../../../store/blocsStore";
 
 interface DropdownInfo {
   bloc: Header | undefined;
@@ -63,7 +63,6 @@ function DropdownData({ bloc }: DropdownInfo) {
                         : ""
                     }
                     subfield={undefined}
-                    toggle={false}
                   />
                 </div>
               </div>

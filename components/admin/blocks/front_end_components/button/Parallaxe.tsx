@@ -1,8 +1,8 @@
 "use client";
 
-import ButtonModel from "../../../../../models/Button";
+import ButtonModel from "./../../../../../models/Button";
 
-import Page from "../../../../../models/Page";
+import Page from "./../../../../../models/Page";
 import Link from "next/link";
 
 import { useEffect } from "react";

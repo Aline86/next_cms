@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PictureGroupData from "../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 
 import Picture from "./Picture";
 

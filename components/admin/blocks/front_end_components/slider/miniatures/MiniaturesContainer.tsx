@@ -5,7 +5,7 @@ import Card from "./Card";
 import BigCard from "./BigCard";
 import fleche from "./img/fleche.png";
 import s from "./styles/style.module.css";
-import CarouselData from "../../../../../models/CarouselData";
+import CarouselData from "./../../../../../../models/CarouselData";
 import Image from "next/image";
 
 interface CarouselDataValue {

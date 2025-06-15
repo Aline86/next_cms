@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useEffect, useState } from "react";
-import Page from "../../../../models/Page";
-import BlocTools from "../../../../lib/bloc_tools";
+import Page from "./../../../../models/Page";
+import BlocTools from "./../../../../lib/bloc_tools";
 import Link from "next/link";
-import BlocDisplay from "../../../../components/admin/blocks/picker/block_picker";
-import Blocs from "../../../../components/admin/blocks/blocks";
+import BlocDisplay from "./../../../../components/admin/blocks/picker/block_picker";
+import Blocs from "./../../../../components/admin/blocks/blocks";
 import s from "./style.module.css";
 import { useParams } from "next/navigation";
-import Layout from "../../../../components/layout";
-import Toast from "../../../../lib/Toast";
+import Layout from "./../../../../components/layout";
+import Toast from "./../../../../lib/Toast";
 
 import { Button } from "@headlessui/react";
 
-import User from "../../../../models/User";
-import useBlocStore from "../../../../store/blocsStore";
+import User from "./../../../../models/User";
+import useBlocStore from "./../../../../store/blocsStore";
 
 export default function ClientView({ id }: { id: string }) {
   const params = useParams();
@@ -85,9 +85,7 @@ export default function ClientView({ id }: { id: string }) {
     asynchronRequestsToPopulateBlocs();
   }, [refresh]);
 
-  useEffect(() => {
-    setToggle(!toggle);
-  }, [blocs]);
+  useEffect(() => {}, [blocs]);
   useEffect(() => {}, [toggle]);
   return blocs !== undefined && canshow ? (
     <Layout>

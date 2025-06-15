@@ -1,9 +1,9 @@
 "use client";
 import { useEffect } from "react";
-import Carousel from "../../../../../../models/Carousel";
+import Carousel from "./../../../../../../models/Carousel";
 
 import CardData from "./wrapper";
-import ButtonSaveAll from "../../../../../../lib/buttonSaveAll";
+import ButtonSaveAll from "./../../../../../../lib/buttonSaveAll";
 
 interface CardDatas {
   bloc: Carousel;

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import VideoModel from "../../../../../models/Video";
+import VideoModel from "./../../../../../models/Video";
 
 interface CustomCarouselInfo {
   bloc: VideoModel | Record<string, unknown>;

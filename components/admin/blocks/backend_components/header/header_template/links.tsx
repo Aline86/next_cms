@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Header from "../../../../../../models/Header";
-import LinkNetworksAndOthersHeader from "../../../../../../models/LinkNetworksAndOthersHeader";
+import Header from "./../../../../../../models/Header";
+import LinkNetworksAndOthersHeader from "./../../../../../../models/LinkNetworksAndOthersHeader";
 
-import DragAndDrop from "../../../../../../lib/dragzone";
+import DragAndDrop from "./../../../../../../lib/dragzone";
 import { Label } from "@radix-ui/react-label";
 import { Button, Input } from "@headlessui/react";
-import useBlocStore from "../../../../../../store/blocsStore";
+import useBlocStore from "./../../../../../../store/blocsStore";
 
 interface HeaderInfo {
   bloc: Header;
@@ -40,7 +40,6 @@ function Links({ bloc, toggle, setToggle, index }: HeaderInfo) {
           data_img={
             String(value.image_url) !== undefined ? String(value.image_url) : ""
           }
-          toggle={toggle}
           subfield={"image_url"}
         />
       </div>

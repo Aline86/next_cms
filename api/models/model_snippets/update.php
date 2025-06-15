@@ -4,7 +4,7 @@
     $id_type = null;
     $bloc_number = null;
     $associated_component_ids = [];
-
+    print_r($parameters);
     foreach($parameters as $parameter => $data_value) {
         if($parameter === 'id') {
             $id = $data_value;

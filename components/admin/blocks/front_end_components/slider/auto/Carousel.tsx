@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
-import CarouselModel from "../../../../../../models/Carousel";
+import CarouselModel from "./../../../../../../models/Carousel";
 import InsideCardDataShow from "./InsideCardDataShow";
 
 type CardDatas = {

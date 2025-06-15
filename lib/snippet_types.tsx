@@ -1,9 +1,9 @@
-import Button from "../models/Button";
-import Carousel from "../models/Carousel";
-import PictureGroup from "../models/PictureGroup";
-import ScreenHome from "../models/Screen";
-import TextPicture from "../models/TextPicture";
-import Video from "../models/Video";
+import Button from "./../models/Button";
+import Carousel from "./../models/Carousel";
+import PictureGroup from "./../models/PictureGroup";
+import ScreenHome from "./../models/Screen";
+import TextPicture from "./../models/TextPicture";
+import Video from "./../models/Video";
 
 type SnippetTypes =
   | PictureGroup

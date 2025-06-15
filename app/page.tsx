@@ -1,12 +1,12 @@
 export const dynamic = "force-dynamic";
 
-import Page from "../models/Page";
+import Page from "./../models/Page";
 import Layout from "./../components/layout";
 import Head from "next/head";
 import { Metadata } from "next";
 import { JSX } from "react";
 import ClientView from "./[slug]/ClientView";
-import BlocTools from "../lib/bloc_tools";
+import BlocTools from "./../lib/bloc_tools";
 const getPageId = async (slug: string) => {
   // Convert plain objects back into Page instances
   try {

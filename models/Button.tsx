@@ -1,5 +1,5 @@
-import Container from "../lib/Container";
-import InputTypes from "../lib/InputTypes";
+import Container from "./../lib/Container";
+import InputTypes from "./../lib/InputTypes";
 import { ModelUpdateData } from "./ModelUpdateData";
 
 export default class Button extends Container {

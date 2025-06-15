@@ -1,12 +1,12 @@
 import remove from "./../../../../../assets/remove.png";
 
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
-import CarouselData from "../../../../../../models/CarouselData";
-import Carousel from "../../../../../../models/Carousel";
-import useBlocStore from "../../../../../../store/blocsStore";
+import DragAndDrop from "./../../../../../../lib/dragzone";
+import CarouselData from "./../../../../../../models/CarouselData";
+import Carousel from "./../../../../../../models/Carousel";
+import useBlocStore from "./../../../../../../store/blocsStore";
 import { useEffect, useState } from "react";
-import DropdownData from "../../../../../../lib/dropdown/Dropdown";
+import DropdownData from "./../../../../../../lib/dropdown/Dropdown";
 
 interface CardDatas {
   data: CarouselData | Record<string, unknown>;
@@ -25,6 +25,8 @@ function CardData({
   bloc,
   page_id,
 }: CardDatas) {
+  const dropdown_types = ["external_link", "pageID"];
+
   const updateComponent = useBlocStore((state) => state.updateBloc);
   const removeItem = useBlocStore((state) => state.removeItem);
   const image =
@@ -62,9 +64,10 @@ function CardData({
       </div>
       <DropdownData
         bloc={bloc}
-        data={data as CarouselData}
+        dropdown_elements={dropdown_types}
+        value={bloc.carousel_data[index].image_url as string}
         page_id={page_id}
-        index={index}
+        field="image_url"
       />
       <div
         style={{
@@ -98,7 +101,6 @@ function CardData({
                   : ""
               }
               subfield={""}
-              toggle={false}
             />
           </div>
         </div>

@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { JSX, useEffect, useState } from "react";
 
-import PictureGroupData from "../../models/PictureGroupData";
-
-import CarouselData from "../../models/CarouselData";
-
-import Button from "../../models/Button";
-import array_all_possible_types from "./DropdownConfiguration";
-import ComponentTypes from "../types";
+import ComponentTypes from "./../types";
+import array_all_possible_types from "./renderDropdownConfiguration";
+import useBlocStore from "../../store/blocsStore";
 
 interface DropdownInfo {
   bloc: ComponentTypes;
-  data: Button | PictureGroupData | CarouselData;
+  field: string;
+  value: string;
   dropdown_elements: Array<string>;
   index?: number;
   page_id: number;
@@ -19,59 +16,63 @@ interface DropdownInfo {
 
 function DropdownData({
   bloc,
-  data,
+  field,
+  value,
   page_id,
   index,
   dropdown_elements,
 }: DropdownInfo) {
-  type DropdownClassType = {
-    get_type?: () => string;
-  };
-  let type = "";
   const [choice_type, set_choice_type] = useState<string>("");
   const [ClassToRender, set_class_to_render] = useState<
     JSX.Element | null | undefined
   >(undefined);
-  if (data.href_url === undefined) {
-    const Model =
-      array_all_possible_types[
-        data.href_url as keyof typeof array_all_possible_types
-      ].model;
-    // Use type assertion to satisfy TypeScript, but ensure at runtime the methods exist
-    const instance = new Model(data.href_url) as unknown as DropdownClassType;
-
-    if (typeof instance.get_type === "function") {
-      type = instance.get_type();
-    }
-    const ToRender =
-      array_all_possible_types[
-        data.href_url as keyof typeof array_all_possible_types
-      ].component;
-    if (ToRender !== undefined && ToRender !== null) {
-      set_class_to_render(
-        <ToRender bloc={bloc} data={data} page_id={page_id} index={index} />
-      );
-      set_choice_type(type);
-    }
-  }
-
+  const updateComponent = useBlocStore((state) => state.updateBloc);
   const updateLink = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    data.href_url = "";
+    value = "";
 
+    updateComponent("", field, undefined, index, bloc);
     const ToRender =
       array_all_possible_types[
         e.target.value as keyof typeof array_all_possible_types
       ].component;
-    if (ToRender !== undefined && ToRender !== null) {
-      set_class_to_render(
-        <ToRender bloc={bloc} data={data} page_id={page_id} index={index} />
-      );
-      set_choice_type(e.target.value);
-    }
+    set_class_to_render(
+      <ToRender
+        bloc={bloc}
+        page_id={page_id}
+        index={index}
+        field={field}
+        value={value}
+      />
+    );
+    set_choice_type(e.target.value);
   };
-  useEffect(() => {}, [ClassToRender]);
+  useEffect(() => {}, [choice_type, ClassToRender]);
+  useEffect(() => {
+    dropdown_elements.forEach((element_type) => {
+      const instance = new array_all_possible_types[
+        element_type as keyof typeof array_all_possible_types
+      ].model(value);
+
+      if (instance.check_type()) {
+        type blocksToRender = keyof typeof array_all_possible_types;
+        const elementType = element_type as blocksToRender;
+        const ToRender = array_all_possible_types[elementType].component;
+
+        set_class_to_render(
+          <ToRender
+            bloc={bloc}
+            page_id={page_id}
+            index={index}
+            field={field}
+            value={value}
+          />
+        );
+        set_choice_type(instance.get_type());
+      }
+    });
+  }, []);
+
   return (
-    data &&
     bloc !== undefined && (
       <div className="flex flex-col items-center justify-center gap-[15px] w-[calc(100%-20px)] mx-auto border border-gray-300 box-border p-5 mt-8">
         <select
@@ -81,9 +82,7 @@ function DropdownData({
             choice_type !== "" ? choice_type : "Choisir un type de redirection"
           }
         >
-          {data.href_url === "" && (
-            <option key={index}>Choisir une redirection</option>
-          )}
+          {value === "" && <option key={index}>Choisir une redirection</option>}
           {dropdown_elements.map((type, index) => {
             const typedType = type as keyof typeof array_all_possible_types;
 

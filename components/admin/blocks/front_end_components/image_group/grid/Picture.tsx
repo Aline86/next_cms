@@ -3,7 +3,7 @@
 import Image from "next/image";
 import fermer from "./../../../../../assets/fermer.png";
 
-import PictureGroupData from "../../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 import { useEffect, useState } from "react";
 
 interface CardDatas {

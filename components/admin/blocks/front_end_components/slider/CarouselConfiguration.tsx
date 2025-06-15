@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import Carousel from "../../../../../models/Carousel";
-import carouselTypes from "../../../../../lib/config/carouselTypes";
+import Carousel from "./../../../../../models/Carousel";
+import carouselTypes from "./../../../../../lib/config/carouselTypes";
 
 interface CardDatas {
   bloc: Carousel;

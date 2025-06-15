@@ -1,11 +1,11 @@
 import remove from "./../../../../../assets/remove.png";
 
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
+import DragAndDrop from "./../../../../../../lib/dragzone";
 
-import CarouselData from "../../../../../../models/CarouselData";
-import Carousel from "../../../../../../models/Carousel";
-import useBlocStore from "../../../../../../store/blocsStore";
+import CarouselData from "./../../../../../../models/CarouselData";
+import Carousel from "./../../../../../../models/Carousel";
+import useBlocStore from "./../../../../../../store/blocsStore";
 import { useEffect, useState } from "react";
 
 interface CardDatas {
@@ -85,7 +85,6 @@ function CardData({ data, index, bloc, toggle }: CardDatas) {
                   : ""
               }
               subfield={""}
-              toggle={false}
             />
           </div>
         </div>

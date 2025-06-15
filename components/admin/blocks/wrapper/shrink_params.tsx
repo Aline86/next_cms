@@ -1,6 +1,6 @@
 import Shrink from "./shrink/shrink";
-import DeleteConfirmation from "../../../../lib/DeleteBox";
-import ComponentTypes from "../../../../lib/types";
+import DeleteConfirmation from "./../../../../lib/DeleteBox";
+import ComponentTypes from "./../../../../lib/types";
 import { useEffect } from "react";
 
 interface BlocData {

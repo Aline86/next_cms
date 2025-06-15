@@ -1,5 +1,4 @@
 export const getSlug = async (slug: string) => {
-  // Convert plain objects back into Page instances
   try {
     const response = await fetch(
       process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
@@ -10,7 +9,6 @@ export const getSlug = async (slug: string) => {
         mode: "cors",
         headers: {
           Accept: "application/json",
-          // Any other headers needed for the request
         },
       }
     );

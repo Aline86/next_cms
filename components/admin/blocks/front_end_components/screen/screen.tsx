@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import ScreenHome from "../../../../../models/Screen";
+import ScreenHome from "./../../../../../models/Screen";
 import s from "./style.module.css";
 
 import { useEffect, useState } from "react";

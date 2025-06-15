@@ -18,7 +18,7 @@
             $data_bind_content[':' . $parameter] = $data_value;
         }
     }
-
+  
     $inside_SQL_string_1[] = $this->type . '_id';
     $inside_SQL_string_2[] = ':' . $this->type . '_id';
     $data_bind_content[':' . $this->type . '_id'] = $parent_id;

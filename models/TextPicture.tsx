@@ -1,8 +1,8 @@
 import { JSONContent } from "@tiptap/react";
-import Container from "../lib/Container";
+import Container from "./../lib/Container";
 import OptionsCss from "./OptionsCss";
 
-import InputTypes from "../lib/InputTypes";
+import InputTypes from "./../lib/InputTypes";
 import { ModelUpdateData } from "./ModelUpdateData";
 
 export default class TextPicture extends Container {

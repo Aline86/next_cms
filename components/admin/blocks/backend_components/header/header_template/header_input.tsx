@@ -1,14 +1,15 @@
 "use client";
 import s from "./style.module.css";
 import { useEffect } from "react";
-import Header from "../../../../../../models/Header";
-import LinkNetworksAndOthersHeader from "../../../../../../models/LinkNetworksAndOthersHeader";
-import DropdownData from "../dropdown/Dropdown";
-import DragAndDrop from "../../../../../../lib/dragzone";
+import Header from "./../../../../../../models/Header";
+import LinkNetworksAndOthersHeader from "./../../../../../../models/LinkNetworksAndOthersHeader";
+
+import DragAndDrop from "./../../../../../../lib/dragzone";
 import { Label } from "@radix-ui/react-label";
 import { Button, Input } from "@headlessui/react";
-import useBlocStore from "../../../../../../store/blocsStore";
+import useBlocStore from "./../../../../../../store/blocsStore";
 import Links from "./links";
+import DropdownData from "../../../../../../lib/dropdown/Dropdown";
 
 interface HeaderInfo {
   bloc: Header;
@@ -19,7 +20,7 @@ function HeaderInput({ bloc, toggle, setToggle }: HeaderInfo) {
   const updateComponent = useBlocStore((state) => state.updateBloc);
   const saveBlocAll = useBlocStore((state) => state.saveBlocAll);
   const addItem = useBlocStore((state) => state.addItem);
-
+  const dropdown_elements = ["no_color", "unified_color", "picture"];
   useEffect(() => {}, [bloc]);
   return bloc !== undefined ? (
     <>
@@ -53,12 +54,19 @@ function HeaderInput({ bloc, toggle, setToggle }: HeaderInfo) {
                 bloc={bloc}
                 subfield={undefined}
                 data_img={bloc.logo_url}
-                toggle={toggle}
               />
             </div>
             <br />
           </div>
-          <DropdownData bloc={bloc} />
+          <DropdownData
+            bloc={bloc}
+            dropdown_elements={dropdown_elements}
+            value={
+              bloc.image_url !== "" ? bloc.image_url : bloc.background_color
+            }
+            page_id={0}
+            field={bloc.image_url !== "" ? "image_url" : "background_color"}
+          />
           <div className={s.add_file}>
             <label
               className={s.addLink}

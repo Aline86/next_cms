@@ -1,14 +1,14 @@
 "use client";
 import * as React from "react";
-import ButtonModel from "../../../../../models/Button";
+import ButtonModel from "./../../../../../models/Button";
 import { useEffect, useState } from "react";
-import Page from "../../../../../models/Page";
+import Page from "./../../../../../models/Page";
 import ButtonCard from "./ButtonCard";
 import Parallaxe from "./Parallaxe";
-import ExternalLink from "../../../../../lib/dropdown/dropdown_types/ExrternalLink";
-import FileLink from "../../../../../lib/dropdown/dropdown_types/File";
-import Mailto from "../../../../../lib/dropdown/dropdown_types/Maito";
-import PageID from "../../../../../lib/dropdown/dropdown_types/PageID";
+import ExternalLink from "./../../../../../lib/dropdown/dropdown_types/ExrternalLink";
+import FileLink from "./../../../../../lib/dropdown/dropdown_types/File";
+import Mailto from "./../../../../../lib/dropdown/dropdown_types/Maito";
+import PageID from "./../../../../../lib/dropdown/dropdown_types/PageID";
 interface CustomCarouselInfo {
   bloc: ButtonModel | Record<string, unknown>;
   full: boolean;

@@ -1,9 +1,9 @@
 "use client";
 import { useEffect } from "react";
-import Carousel from "../../../../../models/Carousel";
-import carouselTypes from "../../../../../lib/config/carouselTypes";
+import Carousel from "./../../../../../models/Carousel";
+import carouselTypes from "./../../../../../lib/config/carouselTypes";
 import { Button } from "@headlessui/react";
-import useBlocStore from "../../../../../store/blocsStore";
+import useBlocStore from "./../../../../../store/blocsStore";
 
 interface CardDatas {
   bloc: Carousel;

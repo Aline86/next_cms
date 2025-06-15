@@ -1,9 +1,9 @@
 "use server";
 
-import Page from "../../models/Page";
-import BlocTools from "../../lib/bloc_tools";
-import FooterVizualization from "../../components/admin/blocks/front_end_components/footer/footer";
-import blocksToRender from "../../lib/config/blocsToRender";
+import Page from "./../../models/Page";
+import BlocTools from "./../../lib/bloc_tools";
+import FooterVizualization from "./../../components/admin/blocks/front_end_components/footer/footer";
+import blocksToRender from "./../../lib/config/blocsToRender";
 
 export default async function ClientView({
   params,

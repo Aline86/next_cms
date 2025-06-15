@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import remove from "./../../../wrapper/assets/remove.png";
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
-import useBlocStore from "../../../../../../store/blocsStore";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
-import PictureGroup from "../../../../../../models/PictureGroup";
+import DragAndDrop from "./../../../../../../lib/dragzone";
+import useBlocStore from "./../../../../../../store/blocsStore";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
+import PictureGroup from "./../../../../../../models/PictureGroup";
 
 interface GridData {
   bloc_data: PictureGroupData;
@@ -53,7 +53,6 @@ function Grid({ bloc_data, bloc, toggle, index, setToggle }: GridData) {
             bloc={bloc}
             data_img={bloc_data.image_url}
             subfield={undefined}
-            toggle={toggle}
           />
         </div>
       )}

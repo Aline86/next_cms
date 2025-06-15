@@ -1,7 +1,7 @@
 import { Button } from "@headlessui/react";
 import { useEffect } from "react";
 import ComponentTypes from "./types";
-import useBlocStore from "../store/blocsStore";
+import useBlocStore from "./../store/blocsStore";
 
 interface CardDatas {
   bloc: ComponentTypes;

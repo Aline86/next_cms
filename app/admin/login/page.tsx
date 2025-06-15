@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./../../../components/global.css";
 
-import User from "../../../models/User";
+import User from "./../../../models/User";
 
 import { Label } from "@radix-ui/react-label";
 import { Button, Input } from "@headlessui/react";

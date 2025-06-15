@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import SnippetTypes from "../lib/snippet_types";
-import ComponentTypes from "../lib/types";
-import InputTypes from "../lib/InputTypes";
-import PageModel from "../models/Page";
-import Header from "../models/Header";
-import Footer from "../models/FooterData";
+import SnippetTypes from "./../lib/snippet_types";
+import ComponentTypes from "./../lib/types";
+import InputTypes from "./../lib/InputTypes";
+import PageModel from "./../models/Page";
+import Header from "./../models/Header";
+import Footer from "./../models/FooterData";
 
 type BlocStoreState = {
   blocs: ComponentTypes[];
@@ -38,12 +38,12 @@ const useBlocStore = create<
   // Set all blocs (e.g., from API)
   setBlocs: (newBlocs: ComponentTypes[]) => set({ blocs: newBlocs }),
   // Add a new bloc
+
   addBloc: async (bloc: ComponentTypes) => {
     const id = await bloc.save_bloc();
     if (id !== undefined && id !== null) {
-      console.log("id", id);
       bloc.set_id(id as number);
-      console.log("bloc", bloc);
+
       const blocs = get().blocs;
       blocs.splice(blocs.length - 1, 0, bloc);
       blocs.map((bloc_data, index) => {
@@ -52,7 +52,7 @@ const useBlocStore = create<
           return bloc_data;
         }
       }) as ComponentTypes[];
-      console.log("blocs", blocs);
+
       set((state: BlocStoreState) => ({
         blocs: blocs.map(
           (bloc_new, index) =>
@@ -64,11 +64,12 @@ const useBlocStore = create<
       }));
     }
   },
+
   // Add item (implement as needed, here just adds like addBloc)
   addItem: async (bloc: ComponentTypes) => {
     if (!("add_data" in bloc && typeof bloc.add_data === "function")) {
     } else {
-      const plainObj = bloc.add_data();
+      const plainObj = await bloc.add_data();
 
       if (plainObj !== undefined) {
         bloc.hydrate(plainObj);
@@ -77,7 +78,7 @@ const useBlocStore = create<
             (_, index) =>
               state.blocs[index].bloc_number === plainObj.bloc_number &&
               plainObj
-          ) as ComponentTypes[],
+          ) as unknown as ComponentTypes[],
         }));
       }
     }

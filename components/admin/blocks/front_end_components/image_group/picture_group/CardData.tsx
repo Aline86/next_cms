@@ -5,12 +5,12 @@ import InsideCardData from "./InsideCardData";
 
 import { useEffect, useState } from "react";
 
-import FileLink from "../../../../../../lib/dropdown/dropdown_types/File";
-import Mailto from "../../../../../../lib/dropdown/dropdown_types/Maito";
-import PageID from "../../../../../../lib/dropdown/dropdown_types/PageID";
-import Page from "../../../../../../models/Page";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
-import ExternalLink from "../../../../../../lib/dropdown/dropdown_types/ExrternalLink";
+import FileLink from "./../../../../../../lib/dropdown/dropdown_types/File";
+import Mailto from "./../../../../../../lib/dropdown/dropdown_types/Maito";
+import PageID from "./../../../../../../lib/dropdown/dropdown_types/PageID";
+import Page from "./../../../../../../models/Page";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
+import ExternalLink from "./../../../../../../lib/dropdown/dropdown_types/ExrternalLink";
 
 interface CardDatas {
   toggle: boolean;

@@ -4,16 +4,15 @@ import remove from "./../components/assets/remove.png";
 import Image from "next/image";
 import ComponentTypes from "./types";
 import { MoonLoader } from "react-spinners";
-import Header from "../models/Header";
+import Header from "./../models/Header";
 
-import DropZone from "../models/DropZone";
-import useBlocStore from "../store/blocsStore";
+import DropZone from "./../models/DropZone";
+import useBlocStore from "./../store/blocsStore";
 
 export default function DragAndDrop({
   field,
   subfield,
   bloc,
-  toggle,
   index,
   data_img,
 }: {
@@ -21,14 +20,14 @@ export default function DragAndDrop({
   subfield: string | undefined;
 
   bloc: ComponentTypes | undefined;
-  toggle: boolean;
+
   index: number | undefined;
 
   data_img: string;
 }) {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [file, set_file] = useState<string>();
   const dropzone = new DropZone();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const update = useBlocStore((state) => state.updateBloc);
@@ -43,6 +42,11 @@ export default function DragAndDrop({
       if (picture !== undefined && bloc !== undefined) {
         await update(picture, field, subfield, index, bloc);
         setIsLoading(false);
+        set_file(
+          process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+            "/api/uploadfile/" +
+            picture
+        );
       }
     }
   }
@@ -58,6 +62,11 @@ export default function DragAndDrop({
       if (picture !== undefined && bloc !== undefined) {
         await update(picture, field, subfield, index, bloc);
         setIsLoading(false);
+        set_file(
+          process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+            "/api/uploadfile/" +
+            picture
+        );
       }
     }
   }
@@ -88,11 +97,12 @@ export default function DragAndDrop({
         await update(e, "remove", subfield, index, bloc);
       } else {
         await update(e, "remove", field, undefined, bloc);
-        bloc.background_color = "#ffffff";
+        bloc.background_color = "";
       }
     }
-    console.log("field", field, index, bloc);
+
     await update("", field, undefined, index, bloc);
+    set_file("");
   }
 
   function openFileExplorer() {
@@ -103,8 +113,14 @@ export default function DragAndDrop({
       inputRef.current.click();
     }
   }
-
-  useEffect(() => {}, [bloc, toggle]);
+  useEffect(() => {
+    set_file(
+      process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
+        "/api/uploadfile/" +
+        data_img
+    );
+  }, [data_img]);
+  useEffect(() => {}, [file]);
   return (
     <div className="flex items-center justify-center">
       <form
@@ -143,7 +159,9 @@ export default function DragAndDrop({
           {isLoading ? (
             <MoonLoader />
           ) : (
-            data_img !== "" && (
+            file !== "" &&
+            data_img !== undefined &&
+            file?.includes(data_img) && (
               <div key={1} className="gridspace-x-5">
                 <span>{data_img}</span>
                 <div
@@ -151,11 +169,7 @@ export default function DragAndDrop({
                   className="mt-6 grid justify-end space-x-5 grid-flow-col"
                 >
                   <img
-                    src={
-                      process.env.NEXT_PUBLIC_VITE_REACT_APP_BACKEND_URL +
-                      "/api/uploadfile/" +
-                      data_img
-                    }
+                    src={file}
                     alt="drag and drop image"
                     width="200px"
                     height="auto"

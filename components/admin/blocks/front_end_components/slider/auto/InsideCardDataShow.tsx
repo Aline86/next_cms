@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import CarouselData from "../../../../../..//models/CarouselData";
+import CarouselData from "./../../../../../..//models/CarouselData";
 
 interface CardDatas {
   value: CarouselData | Record<string, unknown>;

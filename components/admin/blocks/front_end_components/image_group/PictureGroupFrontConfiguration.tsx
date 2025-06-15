@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import PictureGroup from "../../../../../models/PictureGroup";
-import picturegroupTypes from "../../../../../lib/config/pictureGroupTypes";
+import PictureGroup from "./../../../../../models/PictureGroup";
+import picturegroupTypes from "./../../../../../lib/config/pictureGroupTypes";
 
 interface CardDatas {
   bloc: PictureGroup;

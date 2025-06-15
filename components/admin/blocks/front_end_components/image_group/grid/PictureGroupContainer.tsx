@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import CardDataGrid from "./CardData";
-import PictureGroupData from "../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 import OneTwoGrid from "./One_two_grid";
 
 interface CarouselData {

@@ -1,7 +1,7 @@
-import Container from "../lib/Container";
+import Container from "./../lib/Container";
 
 import LinkNetworksAndOthersHeader from "./LinkNetworksAndOthersHeader";
-import InputTypes from "../lib/InputTypes";
+import InputTypes from "./../lib/InputTypes";
 import { ModelUpdateData } from "./ModelUpdateData";
 
 export default class Header extends Container {
@@ -69,14 +69,17 @@ export default class Header extends Container {
       plainObj as LinkNetworksAndOthersHeader
     );
   }
-  public add_data() {
+  public async add_data() {
     this.link_networks_an_others_header.push(
       new LinkNetworksAndOthersHeader(
         Number(this.link_networks_an_others_header.length),
         -1
       )
     );
-    return this;
+    const result = await this.save_bloc();
+    if (result !== undefined) {
+      return this;
+    }
   }
   public async remove_data(index: number) {
     this.set_parameters(

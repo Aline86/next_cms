@@ -1,11 +1,11 @@
 "use client";
 import { useEffect } from "react";
 import s from "./style.module.css";
-import ScreenHome from "../../../../../../models/Screen";
-import DragAndDrop from "../../../../../../lib/dragzone";
+import ScreenHome from "./../../../../../../models/Screen";
+import DragAndDrop from "./../../../../../../lib/dragzone";
 import { Input, Textarea } from "@headlessui/react";
-import useBlocStore from "../../../../../../store/blocsStore";
-import ButtonSaveAll from "../../../../../../lib/buttonSaveAll";
+import useBlocStore from "./../../../../../../store/blocsStore";
+import ButtonSaveAll from "./../../../../../../lib/buttonSaveAll";
 
 function ScreenInput({
   bloc,
@@ -38,7 +38,6 @@ function ScreenInput({
             bloc={bloc}
             data_img={bloc?.image_url !== undefined ? bloc.image_url : ""}
             subfield={undefined}
-            toggle={toggle}
           />
         </div>
       </div>

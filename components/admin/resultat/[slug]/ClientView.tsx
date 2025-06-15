@@ -2,14 +2,14 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import Page from "../../../../models/Page";
-import useBlocStore from "../../../../store/blocsStore";
-import Layout from "../../../layout";
+import Page from "./../../../../models/Page";
+import useBlocStore from "./../../../../store/blocsStore";
+import Layout from "./../../../layout";
 import Link from "next/link";
-import BlocTools from "../../../../lib/bloc_tools";
-import blocksToRender from "../../../../lib/config/blocsToRender";
-import Footer from "../../../../models/FooterData";
-import FooterVizualization from "../../blocks/front_end_components/footer/footer";
+import BlocTools from "./../../../../lib/bloc_tools";
+import blocksToRender from "./../../../../lib/config/blocsToRender";
+import Footer from "./../../../../models/FooterData";
+import FooterVizualization from "./../../blocks/front_end_components/footer/footer";
 
 export const dynamic = "force-dynamic";
 export default function ClientView({ id }: { id: string }) {

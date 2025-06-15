@@ -2,7 +2,7 @@
 import s from "./style/style.module.css";
 
 import CardData from "./wrapper";
-import PictureGroup from "../../../../../../models/PictureGroup";
+import PictureGroup from "./../../../../../../models/PictureGroup";
 
 import { useEffect } from "react";
 

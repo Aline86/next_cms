@@ -1,4 +1,4 @@
-import ComponentTypes from "../lib/types";
+import ComponentTypes from "./../lib/types";
 
 interface UpdateCommand {
   execute(target: ComponentTypes): void;

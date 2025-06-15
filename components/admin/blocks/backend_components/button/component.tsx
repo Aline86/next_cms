@@ -1,11 +1,11 @@
 "use client";
 import { Input } from "@headlessui/react";
-import DragAndDrop from "../../../../../lib/dragzone";
-import ButtonModel from "../../../../../models/Button";
+import DragAndDrop from "./../../../../../lib/dragzone";
+import ButtonModel from "./../../../../../models/Button";
 import { useEffect, useState } from "react";
-import useBlocStore from "../../../../../store/blocsStore";
-import DropdownData from "../../../../../lib/dropdown/Dropdown";
-import ButtonSaveAll from "../../../../../lib/buttonSaveAll";
+import useBlocStore from "./../../../../../store/blocsStore";
+import DropdownData from "./../../../../../lib/dropdown/Dropdown";
+import ButtonSaveAll from "./../../../../../lib/buttonSaveAll";
 
 interface CardDatas {
   bloc: ButtonModel;
@@ -98,15 +98,15 @@ function ButtonInput({ bloc, page_id, toggle }: CardDatas) {
                 bloc={bloc}
                 data_img={bloc.image_url !== undefined ? bloc.image_url : ""}
                 subfield={""}
-                toggle={false}
               />
             </div>
           </div>
           <DropdownData
             bloc={bloc}
             page_id={page_id}
-            data={bloc}
             dropdown_elements={array_all_possible_types}
+            field={"href_url"}
+            value={bloc.href_url !== undefined ? bloc.href_url : ""}
           />
           {!is_parallaxe && (
             <textarea

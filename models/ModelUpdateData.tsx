@@ -1,5 +1,5 @@
 import { JSONContent } from "@tiptap/react";
-import SubModelTypes from "../lib/subModelTypes";
+import SubModelTypes from "./../lib/subModelTypes";
 import UpdateCommand from "./UpdateCommand";
 
 export class ModelUpdateData<T, K extends keyof T> implements UpdateCommand {

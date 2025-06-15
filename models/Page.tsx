@@ -1,6 +1,6 @@
-import Container from "../lib/Container";
+import Container from "./../lib/Container";
 import slugify from "react-slugify";
-import ComponentTypes from "../lib/types";
+import ComponentTypes from "./../lib/types";
 
 export default class Page extends Container {
   parameters: string;

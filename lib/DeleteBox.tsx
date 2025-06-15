@@ -2,7 +2,7 @@ import remove from "./../components/assets/bouton-supprimer.png";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ComponentTypes from "./types";
-import useBlocStore from "../store/blocsStore";
+import useBlocStore from "./../store/blocsStore";
 
 interface CardDatas {
   bloc: ComponentTypes;

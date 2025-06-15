@@ -1,5 +1,5 @@
-import Container from "../lib/Container";
-import InputTypes from "../lib/InputTypes";
+import Container from "./../lib/Container";
+import InputTypes from "./../lib/InputTypes";
 import { ModelUpdateData } from "./ModelUpdateData";
 
 import PictureGroupData from "./PictureGroupData";
@@ -115,13 +115,15 @@ export default class PictureGroup extends Container {
       await this.add_picture_group_data(picture_group_data);
     }
   }
-  public add_data() {
+  public async add_data() {
     this.card_number++;
     this.picture_group_data.push(
       new PictureGroupData(-1, Number(this.picture_group_data.length), this.id)
     );
-    this.save_bloc();
-    return this;
+    const result = await this.save_bloc();
+    if (result !== undefined) {
+      return this;
+    }
   }
 
   public async remove_link(index: number) {

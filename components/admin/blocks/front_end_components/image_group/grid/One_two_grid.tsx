@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 import CardDataGrid from "./CardData";
-import PictureGroupData from "../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 
 interface CarouselData {
   data: PictureGroupData[] | undefined | Record<string, unknown>[];

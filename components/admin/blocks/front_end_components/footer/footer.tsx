@@ -1,9 +1,9 @@
 // app/components/FooterVizualization.tsx (Server Component)
 "use client";
 import s from "./styles.module.css";
-import Footer from "../../../../../models/FooterData";
-import isLightOrDark from "../../../../../lib/snippet";
-import LinkNetworksAndOthersFooter from "../../../../../models/LinkNetworksAndOthersFooter";
+import Footer from "./../../../../../models/FooterData";
+import isLightOrDark from "./../../../../../lib/snippet";
+import LinkNetworksAndOthersFooter from "./../../../../../models/LinkNetworksAndOthersFooter";
 import Image from "next/image";
 import { useEffect } from "react";
 

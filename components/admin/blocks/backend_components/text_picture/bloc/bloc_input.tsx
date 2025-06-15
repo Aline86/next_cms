@@ -1,12 +1,12 @@
 "use client";
 import { useEffect } from "react";
 import s from "./style.module.css";
-import TextPicture from "../../../../../../models/TextPicture";
-import DragAndDrop from "../../../../../../lib/dragzone";
-import Tiptap from "../../../RichText/Editor/TipTap";
+import TextPicture from "./../../../../../../models/TextPicture";
+import DragAndDrop from "./../../../../../../lib/dragzone";
+import Tiptap from "./../../../RichText/Editor/TipTap";
 import { Input } from "@headlessui/react";
-import useBlocStore from "../../../../../../store/blocsStore";
-import ButtonSaveAll from "../../../../../../lib/buttonSaveAll";
+import useBlocStore from "./../../../../../../store/blocsStore";
+import ButtonSaveAll from "./../../../../../../lib/buttonSaveAll";
 
 function BlocInput({
   bloc,
@@ -52,7 +52,6 @@ function BlocInput({
               bloc={bloc}
               data_img={bloc?.image_url !== undefined ? bloc.image_url : ""}
               subfield={undefined}
-              toggle={false}
             />
           </div>
           <h3 className="mb-8 mt-8">Texte de la balise image :</h3>

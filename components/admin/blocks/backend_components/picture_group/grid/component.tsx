@@ -1,6 +1,6 @@
 "use client";
-import PictureGroup from "../../../../../../models/PictureGroup";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
+import PictureGroup from "./../../../../../../models/PictureGroup";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 import Grid from "./wrapper";
 import { useEffect } from "react";
 

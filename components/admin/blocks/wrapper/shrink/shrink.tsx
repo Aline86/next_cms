@@ -1,7 +1,7 @@
 import up from "./../assets/up.png";
 import down from "./../assets/down.png";
 import Image from "next/image";
-import ComponentTypes from "../../../../../lib/types";
+import ComponentTypes from "./../../../../../lib/types";
 import { useEffect, useState } from "react";
 interface ShrinkData {
   index: number;

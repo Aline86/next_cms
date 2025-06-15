@@ -1,13 +1,13 @@
 import s from "./style/style.module.css";
 import remove from "./../../../../../assets/remove.png";
-import PictureGroup from "../../../../../../models/PictureGroup";
-import PictureGroupData from "../../../../../../models/PictureGroupData";
+import PictureGroup from "./../../../../../../models/PictureGroup";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
+import DragAndDrop from "./../../../../../../lib/dragzone";
 import { useEffect, useState } from "react";
-import useBlocStore from "../../../../../../store/blocsStore";
-import DropdownData from "../../../../../../lib/dropdown/Dropdown";
+import useBlocStore from "./../../../../../../store/blocsStore";
+import DropdownData from "./../../../../../../lib/dropdown/Dropdown";
 import { Input, Textarea } from "@headlessui/react";
 
 interface CardDatas {
@@ -34,7 +34,7 @@ function CardData({
   const data = bloc.picture_group_data[index] as PictureGroupData;
   const [dataValue, setDataValue] = useState(data as PictureGroupData);
   const [checked, setChecked] = useState(data.is_data_button);
-  const array_all_possible_types = ["external_link", "mailto", "pageID"];
+  const dropdown_types = ["external_link", "mailto", "pageID"];
   const show_remove =
     bloc !== undefined &&
     bloc.picture_group_data !== undefined &&
@@ -66,11 +66,11 @@ function CardData({
       </div>
       <div>
         <DropdownData
-          page_id={page_id}
-          data={data}
-          index={index}
           bloc={bloc}
-          dropdown_elements={array_all_possible_types}
+          dropdown_elements={dropdown_types}
+          value={bloc.picture_group_data[index].image_url as string}
+          page_id={page_id}
+          field="image_url"
         />
         <div className={s.flex_row}>
           <h3>Couleur du texte</h3>
@@ -114,7 +114,6 @@ function CardData({
           bloc={bloc}
           data_img={data.image_url}
           subfield={undefined}
-          toggle={toggle}
         />{" "}
         <Textarea
           id="message"

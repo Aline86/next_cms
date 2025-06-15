@@ -1,6 +1,6 @@
-import Container from "../lib/Container";
+import Container from "./../lib/Container";
 
-import InputTypes from "../lib/InputTypes";
+import InputTypes from "./../lib/InputTypes";
 import LinkNetworksAndOthersFooter from "./LinkNetworksAndOthersFooter";
 import Address from "./AddressData";
 import { ModelUpdateData } from "./ModelUpdateData";
@@ -60,7 +60,7 @@ export default class Footer extends Container {
     );
   }
 
-  public add_data() {
+  public async add_data() {
     this.links_network_an_others_footer.push(
       new LinkNetworksAndOthersFooter(
         "",
@@ -71,8 +71,10 @@ export default class Footer extends Container {
         this.links_network_an_others_footer.length - 1
       )
     );
-    this.save_bloc();
-    return this;
+    const result = await this.save_bloc();
+    if (result !== undefined) {
+      return this;
+    }
   }
 
   public async remove_data(index: number) {

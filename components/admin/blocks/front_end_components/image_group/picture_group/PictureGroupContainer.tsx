@@ -1,6 +1,6 @@
 import CardData from "./CardData";
 
-import PictureGroupData from "../../../../../models/PictureGroupData";
+import PictureGroupData from "./../../../../../../models/PictureGroupData";
 import { useEffect } from "react";
 
 interface CarouselData {

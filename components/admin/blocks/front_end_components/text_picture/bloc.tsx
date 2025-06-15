@@ -12,9 +12,9 @@ import {
   useCallback,
 } from "react";
 
-import TextPicture from "../../../../../models/TextPicture";
+import TextPicture from "./../../../../../models/TextPicture";
 import { JSONContent } from "@tiptap/react";
-import isLightOrDark from "../../../../../lib/snippet";
+import isLightOrDark from "./../../../../../lib/snippet";
 
 export interface Content {
   type: string;
@@ -233,8 +233,6 @@ function Bloc({ bloc, toggle, isResponsive, refresh }: BlocParams) {
       }
 
       if (nodes?.type === "bulletList" && nodes?.content !== undefined) {
-        // const list = extractTextFromNodeBullet(nodes?.content);
-
         const list = extractTextFromNodeBullet(nodes?.content);
 
         paragraphHTML += `<div class="ml-8 "><ul class="flex flex-col">`;
@@ -244,21 +242,6 @@ function Bloc({ bloc, toggle, isResponsive, refresh }: BlocParams) {
         });
 
         paragraphHTML += "</ul></div>";
-
-        html += paragraphHTML;
-      }
-
-      if (nodes?.type === "orderedList" && nodes?.content !== undefined) {
-        //const alignment = extractAlignment(nodes);
-        const list = extractTextFromNodeBullet(nodes?.content);
-
-        paragraphHTML += `<div class="ml-8"><ol class="flex flex-col w-full">`;
-
-        list.forEach((enf: string) => {
-          paragraphHTML += `<li class=" w-full"><span class="mr-2 mt-1"></span>${enf}</li>`;
-        });
-
-        paragraphHTML += "</ol></div>";
 
         html += paragraphHTML;
       }

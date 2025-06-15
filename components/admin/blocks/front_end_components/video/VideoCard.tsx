@@ -1,11 +1,11 @@
 "use client";
 import * as React from "react";
 import Image from "next/image";
-import ButtonModel from "../../../../../models/Button";
+import ButtonModel from "./../../../../../models/Button";
 
-import Page from "../../../../../models/Page";
+import Page from "./../../../../../models/Page";
 import Link from "next/link";
-import Button from "../../../../../models/Button";
+import Button from "./../../../../../models/Button";
 
 interface CustomCarouselInfo {
   bloc: ButtonModel | Record<string, unknown>;

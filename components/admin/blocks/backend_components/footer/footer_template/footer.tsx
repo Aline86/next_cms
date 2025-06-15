@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import s from "./styles.module.css";
 import remove from "./../../../../../assets/remove.png";
-import Footer from "../../../../../../models/FooterData";
+import Footer from "./../../../../../../models/FooterData";
 import Image from "next/image";
-import DragAndDrop from "../../../../../../lib/dragzone";
+import DragAndDrop from "./../../../../../../lib/dragzone";
 import { Button, Input } from "@headlessui/react";
 
-import useBlocStore from "../../../../../../store/blocsStore";
+import useBlocStore from "./../../../../../../store/blocsStore";
 
 interface FooterInfo {
   bloc: Footer;
@@ -154,7 +154,6 @@ function FooterInput({ bloc, setRefresh, refresh }: FooterInfo) {
                     bloc={bloc}
                     data_img={value.image_url}
                     subfield={""}
-                    toggle={false}
                   />
                 </div>
                 <h3>Nom :</h3>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { encrypt } from "../../lib/session";
+import { encrypt } from "./../../lib/session";
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();

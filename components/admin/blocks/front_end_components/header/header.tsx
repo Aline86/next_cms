@@ -6,24 +6,24 @@ import s from "./style.module.css";
 import Nav from "./Nav/Nav";
 
 import reseaux from "./../../../../assets/reseaux.png";
-import Header from "../../../../../models/Header";
+import Header from "./../../../../../models/Header";
 import Image from "next/image";
 import Link from "next/link";
-import LinkNetworksAndOthersHeader from "../../../../../models/LinkNetworksAndOthersHeader";
+import LinkNetworksAndOthersHeader from "./../../../../../models/LinkNetworksAndOthersHeader";
 
 interface HeaderInfo {
   bloc: Record<string, unknown> | Header;
   isResponsive: boolean;
   toggle: boolean;
   full: boolean;
-  page_number?: number;
+  page_id?: number;
 }
 function HeaderVizualization({
   bloc,
   full,
   isResponsive,
   toggle,
-  page_number,
+  page_id,
 }: HeaderInfo) {
   const [open, setOpen] = useState(false);
   const [, setResize] = useState(0);
@@ -68,24 +68,25 @@ function HeaderVizualization({
                 "/api/uploadfile/" +
                 String(bloc?.image_url)
               })`
-            : page_number !== undefined &&
-              page_number > 1 &&
-              bloc.background_color === "#00000000"
+
+            : page_id !== undefined &&
+              page_id > 1 &&
+              bloc.background_color === ""
             ? "#00000030"
-            : bloc.background_color !== "#00000000"
+            : bloc.background_color !== ""
             ? String(bloc.background_color) + "80"
-            : "#00000000",
+            : "",
+
 
         backdropFilter:
-          page_number !== undefined &&
-          page_number > 1 &&
-          bloc.background_color === "#00000000"
+          page_id !== undefined && page_id > 1 && bloc.background_color === ""
             ? "blur(10px)"
-            : "none",
+            : "blur(10px)",
       });
     }
+    console.log("page_id", page_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toggle, bloc, page_number]);
+  }, [toggle, bloc, page_id]);
   return bloc !== undefined && classes !== undefined && bg !== undefined ? (
     <nav id={full ? s.nav : s.nav_edition} style={bg}>
       <div className={s.nav_bar}>
@@ -108,15 +109,15 @@ function HeaderVizualization({
             )}
           </Link>
         </div>
-        {bloc.background_color === "#00000000" &&
-        page_number !== undefined &&
-        page_number > 1 &&
+        {bloc.background_color === "" &&
+        page_id !== undefined &&
+        page_id > 1 &&
         classes !== undefined ? (
           <h1 className={s.title_responsive + classes}>
             {String(bloc?.title)}
           </h1>
         ) : (
-          bloc.background_color !== "#00000000" &&
+          bloc.background_color !== "" &&
           classes !== undefined && (
             <h1 className={s.title_responsive + classes}>
               {String(bloc?.title)}

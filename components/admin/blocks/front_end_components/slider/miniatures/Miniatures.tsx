@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 
 import MiniaturesContainer from "./MiniaturesContainer";
-import Carousel from "../../../../../../models/Carousel";
-import CarouselData from "../../../../../../models/CarouselData";
+import Carousel from "./../../../../../../models/Carousel";
+import CarouselData from "./../../../../../../models/CarouselData";
 interface CustomCarouselInfo {
   bloc: Carousel | Record<string, unknown> | undefined;
   toggle: boolean;

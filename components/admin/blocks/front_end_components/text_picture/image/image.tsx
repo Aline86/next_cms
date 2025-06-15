@@ -2,7 +2,7 @@
 "use client";
 import { useEffect } from "react";
 
-import TextPicture from "../../../../../../models/TextPicture";
+import TextPicture from "./../../../../../../models/TextPicture";
 
 interface ImageParams {
   bloc: TextPicture | Record<string, unknown>;

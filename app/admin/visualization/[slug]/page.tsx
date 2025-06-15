@@ -1,6 +1,6 @@
 "use client";
 
-import Layout from "../../../../components/layout";
+import Layout from "./../../../../components/layout";
 import ClientView from "./ClientView";
 import { useEffect, useState } from "react";
 import React from "react";

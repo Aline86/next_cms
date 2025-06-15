@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
-import PictureGroup from "../../../../../models/PictureGroup";
-import picturegroupTypes from "../../../../../lib/config/pictureGroupTypes";
+import PictureGroup from "./../../../../../models/PictureGroup";
+import picturegroupTypes from "./../../../../../lib/config/pictureGroupTypes";
 import { Button } from "@headlessui/react";
-import useBlocStore from "../../../../../store/blocsStore";
-import ButtonSaveAll from "../../../../../lib/buttonSaveAll";
+import useBlocStore from "./../../../../../store/blocsStore";
+import ButtonSaveAll from "./../../../../../lib/buttonSaveAll";
 
 interface CardDatas {
   bloc: PictureGroup;

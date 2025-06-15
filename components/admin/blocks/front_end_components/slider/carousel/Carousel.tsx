@@ -11,8 +11,8 @@ import {
 import InsideCardDataShow from "./InsideCardDataShow";
 
 import { useEffect, useState } from "react";
-import CarouselModel from "../../../../../../models/Carousel";
-import CarouselData from "../../../../../../models/CarouselData";
+import CarouselModel from "./../../../../../../models/Carousel";
+import CarouselData from "./../../../../../../models/CarouselData";
 interface CustomCarouselInfo {
   bloc: CarouselModel | Record<string, unknown>;
   full: boolean;

@@ -1,7 +1,7 @@
 import ShrinkParams from "./shrink_params";
-import ComponentTypes from "../../../../lib/types";
+import ComponentTypes from "./../../../../lib/types";
 import { SetStateAction, useEffect, useState } from "react";
-import blocksToRender from "../../../../lib/config/blocsToRender";
+import blocksToRender from "./../../../../lib/config/blocsToRender";
 
 interface BlocData {
   bloc: ComponentTypes | Record<string, unknown>;
