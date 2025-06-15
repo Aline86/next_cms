@@ -68,7 +68,6 @@ function HeaderVizualization({
                 "/api/uploadfile/" +
                 String(bloc?.image_url)
               })`
-
             : page_id !== undefined &&
               page_id > 1 &&
               bloc.background_color === ""
@@ -77,14 +76,13 @@ function HeaderVizualization({
             ? String(bloc.background_color) + "80"
             : "",
 
-
         backdropFilter:
           page_id !== undefined && page_id > 1 && bloc.background_color === ""
             ? "blur(10px)"
-            : "blur(10px)",
+            : "none",
       });
     }
-    console.log("page_id", page_id);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toggle, bloc, page_id]);
   return bloc !== undefined && classes !== undefined && bg !== undefined ? (

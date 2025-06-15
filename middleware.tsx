@@ -4,6 +4,7 @@ import { decrypt } from "./app/lib/session";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  console.log("Running middleware on:", pathname);
   const isProtectedRoute =
     pathname.startsWith("/admin") && pathname !== "/admin/login";
 
